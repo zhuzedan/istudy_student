@@ -36,6 +36,14 @@ const routes = [
                 meta: {
                     requireAuth: true
                 }
+            },
+            {
+                path: 'notebooks',
+                name: 'notebooks',
+                component: () => import("@/views/note/MyNotes.vue"),
+                meta: {
+                    requireAuth: true
+                }
             }]
     },
     {
