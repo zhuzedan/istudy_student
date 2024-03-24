@@ -8,10 +8,14 @@ import axios from 'axios'
 import VueAxios from 'axios-vue';
 import * as echarts from 'echarts';
 import '@/theme/font.less' // 引入思源字体
+import VideoPlayer from 'vue-video-player'
+import 'vue-video-player/src/custom-theme.css'
+import 'video.js/dist/video-js.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(VueAxios, axios);
+Vue.use(VideoPlayer)
 Vue.prototype.$echarts = echarts
 
 new Vue({

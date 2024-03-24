@@ -300,7 +300,7 @@ export default {
 
       .course_dialog {
         margin-left: 20px;
-        color: rgba(153, 153, 153, 1);
+        color: @primaryNoSelected;
         cursor: pointer;
 
         &.active {
@@ -310,7 +310,7 @@ export default {
       }
 
       .course_commit {
-        color: rgba(153, 153, 153, 1);
+        color: @primaryNoSelected;
         margin-left: 20px;
         cursor: pointer;
 
@@ -366,7 +366,7 @@ export default {
 
           .commit_date {
             margin-top: 10px;
-            color: rgba(153, 153, 153, 1);
+            color: @primaryNoSelected;
           }
         }
       }

@@ -43,7 +43,24 @@ const routes = [
                 component: () => import("@/views/course/CourseDetail.vue"),
                 meta: {
                     requireAuth: true
-                }
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'courseOperation',
+                        component: () => import("@/views/course/CourseOperation.vue"),
+                        meta: {
+                            requireAuth: true
+                        }
+                    },
+                    {
+                        path: 'videoCourse',
+                        name: 'videoCourse',
+                        component: () => import("@/views/course/VideoCourse.vue"),
+                        meta: {
+                            requireAuth: true
+                        }
+                    }]
             },
             {
                 path: 'notebooks',
