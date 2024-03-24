@@ -38,6 +38,14 @@ const routes = [
                 }
             },
             {
+                path: 'courseDetail',
+                name: 'courseDetail',
+                component: () => import("@/views/course/CourseDetail.vue"),
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
                 path: 'notebooks',
                 name: 'notebooks',
                 component: () => import("@/views/note/MyNotes.vue"),
