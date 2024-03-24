@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="discipline_list">
-          <div class="discipline_class">
+          <div class="discipline_class" @click="gotoCourseIntroduction()">
             <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                  alt="">
             <div class="about_course">
@@ -160,6 +160,9 @@ export default {
     }
   },
   methods: {
+    gotoCourseIntroduction() {
+      this.$router.push('/introduction')
+    },
     sendMessage() {
       console.log('发送消息给ai')
     },
