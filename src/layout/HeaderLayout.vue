@@ -6,7 +6,7 @@
         <div class="logo_text">iStudy</div>
       </a>
       <div class="header_tab_bar">
-        <router-link to="/" class="header_tab_name" active-class="header_tab_name_active">首页</router-link>
+        <router-link to="/" class="header_tab_name" active-class="header_tab_name_active" exact>首页</router-link>
         <router-link to="/myCourses" class="header_tab_name" active-class="header_tab_name_active">我的课程</router-link>
         <router-link to="/notebooks" class="header_tab_name" active-class="header_tab_name_active">笔记全集</router-link>
         <router-link to="/mistakes" class="header_tab_name" active-class="header_tab_name_active">错题小本</router-link>

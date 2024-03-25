@@ -71,6 +71,11 @@ const routes = [
                 }
             },
             {
+                path: 'noteDetail',
+                name: 'noteDetail',
+                component: () => import("@/views/note/NoteDetail.vue")
+            },
+            {
                 path: 'mistakes',
                 name: 'mistakes',
                 component: () => import("@/views/mistakes/MistakeNotes.vue"),
@@ -96,7 +101,7 @@ const router = new VueRouter({
     mode: 'hash',
     scrollBehavior(to, from, savedPosition) {
         // 滚动到顶部
-        return { x: 0, y: 0 }
+        return {x: 0, y: 0}
     }
 })
 

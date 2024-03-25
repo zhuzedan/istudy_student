@@ -18,36 +18,36 @@
       </el-row>
       <!--全部笔记列表-->
       <div class="discipline_list">
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <!-- 新增的文字描述div -->
           <div class="discipline_title">笔记标题</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">数据结构与算法俗人afafs</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
         </div>
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
         </div>
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoNoteDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
@@ -77,6 +77,11 @@ export default {
         label: '2022-2023第二学期'
       }],
       value: ''
+    }
+  },
+  methods: {
+    gotoNoteDetail() {
+      this.$router.push('/noteDetail')
     }
   }
 }
