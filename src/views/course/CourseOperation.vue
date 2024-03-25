@@ -226,7 +226,7 @@ export default {
                 },
                 {
                   id: 12,
-                  label: '错题重做',
+                  label: '错题',
                 },
               ],
             },
@@ -248,7 +248,7 @@ export default {
                 },
                 {
                   id: 12,
-                  label: '错题重做',
+                  label: '错题',
                 },
               ],
             }
@@ -277,7 +277,7 @@ export default {
                 },
                 {
                   id: 612,
-                  label: '错题重做',
+                  label: '错题',
                 },
               ],
             },
@@ -304,6 +304,9 @@ export default {
       }
       if (data.label === '习题') {
         this.$router.push('/courseDetail/homework')
+      }
+      if (data.label === '错题') {
+        this.$router.push('/courseDetail/wrongTitle')
       }
     },
     renderTreeNode(h, {node, data, store}) {

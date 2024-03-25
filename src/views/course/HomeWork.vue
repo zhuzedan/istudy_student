@@ -60,7 +60,7 @@
                 v-model="textarea">
             </el-input>
             <div class="answer_icon_btn">
-              <div>上传附件</div>
+              <div class="upload_name">上传附件</div>
               <i class="el-icon-upload"></i>
               <el-button class="answer_btn" type="primary">提交</el-button>
             </div>
@@ -125,14 +125,13 @@ export default {
       border-radius: 8px 8px 0 0;
       margin-right: 10px;
       transition: background-color 0.3s, color 0.3s;
-      border-width: 1px 1px 0 1px; // 设置上、右、左有边框，下边框为0
-      border-style: solid;
-      border-color: @primaryColor;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      background-color: @primaryBackgroundColor;
       cursor: pointer;
 
       &.selected {
         background-color: @primaryColor;
-        color: #fff;
+        color: @primaryBackgroundColor;
       }
 
     }
@@ -210,10 +209,10 @@ export default {
       .answer_area {
         height: 300px;
         border-radius: 8px;
-        background-color: #E5E5E5;
+        background-color: @primaryBackgroundColor;
 
         ::v-deep .el-textarea__inner {
-          background-color: #E5E5E5;
+          background-color: @primaryBackgroundColor;
         }
 
         .summit_btn {
@@ -228,8 +227,13 @@ export default {
         margin: 20px 50px 20px 0;
         align-items: center;
 
+        .upload_name {
+          color: @primaryNoSelected;
+        }
+
         i {
           font-size: 30px;
+          color: @primaryNoSelected;
         }
 
         .answer_btn {

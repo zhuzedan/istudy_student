@@ -68,6 +68,14 @@ const routes = [
                         meta: {
                             requireAuth: true
                         }
+                    },
+                    {
+                        path: 'wrongTitle',
+                        name: 'wrongTitle',
+                        component: () => import("@/views/course/WrongTitle.vue"),
+                        meta: {
+                            requireAuth: true
+                        }
                     }]
             },
             {
