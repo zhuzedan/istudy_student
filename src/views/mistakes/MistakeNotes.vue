@@ -28,19 +28,19 @@
         <div class="discipline_class">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">数据结构与算法俗人afafs</div>
+          <div class="discipline_title">瓦罗兰特</div>
         </div>
 
         <div class="discipline_class">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">笔记标题</div>
+          <div class="discipline_title">永劫无间</div>
         </div>
 
         <div class="discipline_class">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">笔记标题</div>
+          <div class="discipline_title">怪物猎人世界</div>
         </div>
         <div class="discipline_class">
           <img src="@/assets/notes/book_ground.png"
@@ -57,10 +57,9 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
-  name: "MyNotes",
+  name: "MistakeNotes",
   data() {
     return {
       options: [{
@@ -76,7 +75,8 @@ export default {
         value: '选项4',
         label: '2022-2023第二学期'
       }],
-      value: ''
+      value:
+          ''
     }
   }
 }
@@ -86,6 +86,7 @@ export default {
 .parent_container {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center; // 如果需要垂直居中也加上这句
 
   .course_container {

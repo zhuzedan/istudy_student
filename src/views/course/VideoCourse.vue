@@ -229,12 +229,12 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   margin-top: 20px;
   margin-bottom: 20px;
-  width: 1500px;
-  height: 820px;
+  width: 1200px;
+  //height: 700px;
   display: flex;
 
   .left_layout {
-    width: 1150px;
+    width: 860px;
     padding: 20px;
 
     .chapter {
@@ -257,13 +257,13 @@ export default {
     }
 
     .input_video {
-      width: 1150px;
+      width: 860px;
       //margin: 0 auto;
     }
   }
 
   .right_layout {
-    width: 100%;
+    width: 200px;
     padding: 20px;
     flex: 1;
     overflow-y: auto; // 如果需要的话，确保内容区域可以滚动
@@ -296,8 +296,8 @@ export default {
     }
 
     .chat_frame {
-      width: 270px;
-      height: 660px;
+      width: 260px;
+      height: 560px;
       background-color: #fff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
       border-radius: 4px;
@@ -354,12 +354,12 @@ export default {
         border-radius: 4px;
         align-items: center;
         color: #fff;
-        width: 35px;
-        height:35px;
+        width: 30px;
+        height:30px;
       }
 
       .title_description{
-        margin: 20px 0;
+        margin: 20px 0 20px 14px;
       }
 
       .question_option {
@@ -368,6 +368,7 @@ export default {
 
         .el-radio {
           margin-top: 10px;
+          margin-left: 14px;
         }
       }
     }

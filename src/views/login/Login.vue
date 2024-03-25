@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('提交登录请求')
+      this.$router.push('/')
     }
   }
 }
@@ -179,18 +179,17 @@ export default {
 
   .welcome_title {
     font-size: 72px;
-    margin-bottom: 60px;
     font-family: HanSansBold;
     color: rgba(24, 45, 154, 1);
     text-shadow: 4px 3px 0 rgba(0, 0, 0, 0.25);
     text-align: left;
     vertical-align: top;
+    margin-bottom: 20px;
   }
 
   .login_bottom {
     display: flex;
     justify-content: space-between;
-    margin-top: 100px;
 
     /* 确保子div不会换行 */
 

@@ -17,7 +17,7 @@
             prefix-icon="el-icon-search"
             v-model="inquireKey">
         </el-input>
-        <div class="avatar">
+        <div class="avatar" @click="gotoLogin">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
         </div>
       </div>
@@ -34,6 +34,11 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     }
   },
+  methods: {
+    gotoLogin() {
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 

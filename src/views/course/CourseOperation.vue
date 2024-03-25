@@ -190,7 +190,7 @@ export default {
   name: "CourseOperation",
   data() {
     return {
-      currentMenuIndex: '1',
+      currentMenuIndex: '3',
       url: 'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       srcList: [
         'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
@@ -334,7 +334,7 @@ export default {
     margin-top: 20px;
 
     .menu_tab {
-      width: 300px;
+      width: 260px;
       padding-right: 20px;
     }
 

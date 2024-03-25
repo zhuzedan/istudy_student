@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoCourseDetail()">
           <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                alt="">
           <div class="about_course">
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoCourseDetail()">
           <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                alt="">
           <div class="about_course">
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoCourseDetail()">
           <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                alt="">
           <div class="about_course">

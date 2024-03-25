@@ -69,6 +69,14 @@ const routes = [
                 meta: {
                     requireAuth: true
                 }
+            },
+            {
+                path: 'mistakes',
+                name: 'mistakes',
+                component: () => import("@/views/mistakes/MistakeNotes.vue"),
+                meta: {
+                    requireAuth: true
+                }
             }]
     },
     {
@@ -85,7 +93,11 @@ const routes = [
 
 const router = new VueRouter({
     routes,
-    mode: 'hash'
+    mode: 'hash',
+    scrollBehavior(to, from, savedPosition) {
+        // 滚动到顶部
+        return { x: 0, y: 0 }
+    }
 })
 
 export default router

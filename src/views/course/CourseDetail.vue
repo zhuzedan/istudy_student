@@ -4,7 +4,7 @@
       <div class="course_box">
         <i class="el-icon-arrow-left"></i>
         <img class="course_pic"
-             src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b">
+             src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"  alt="">
         <div class="course_about">
           <div class="course_name">生物学</div>
           <div class="course_teacher">网易 张二 李三</div>
@@ -32,7 +32,7 @@ export default {
 
   .course_correlation {
     margin-top: 26px;
-    width: 1500px;
+    width: 1200px;
     height: 120px;
     //opacity: 0.55;
     border-radius: 8px;

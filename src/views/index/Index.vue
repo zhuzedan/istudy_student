@@ -49,7 +49,7 @@
             <div class="studying_count">8888人正在学习</div>
           </div>
 
-          <div class="discipline_class">
+          <div class="discipline_class" @click="gotoCourseIntroduction()">
             <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                  alt="">
             <div class="about_course">
@@ -67,7 +67,7 @@
             <div class="studying_count">8888人正在学习</div>
           </div>
 
-          <div class="discipline_class">
+          <div class="discipline_class" @click="gotoCourseIntroduction()">
             <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                  alt="">
             <div class="about_course">
@@ -85,7 +85,7 @@
             <div class="studying_count">8888人正在学习</div>
           </div>
 
-          <div class="discipline_class">
+          <div class="discipline_class" @click="gotoCourseIntroduction()">
             <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
                  alt="">
             <div class="about_course">
@@ -110,7 +110,7 @@
         <div class="hot_class_title">
           热门课程
         </div>
-        <div class="hot_class_concrete">
+        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
           <div class="hot_class_num">1</div>
           <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
                alt="">
@@ -121,7 +121,7 @@
           </div>
         </div>
 
-        <div class="hot_class_concrete">
+        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
           <div class="hot_class_num">1</div>
           <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
                alt="">
@@ -132,7 +132,7 @@
           </div>
         </div>
 
-        <div class="hot_class_concrete">
+        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
           <div class="hot_class_num">1</div>
           <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
                alt="">
@@ -240,6 +240,7 @@ export default {
     margin-right: 20px;
     background-color: #fff;
     border-radius: 8px;
+
     .discipline_category {
       display: flex;
       height: 46px;
@@ -320,7 +321,7 @@ export default {
   .hot_class {
     width: 300px;
     background-color: @primaryBackgroundColor;
-    box-shadow: 0 2px 4px  rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     padding: 0 10px 0 20px;
 
@@ -336,14 +337,16 @@ export default {
     .hot_class_concrete {
       display: flex;
       margin-bottom: 10px;
+
       .hot_class_num {
         display: flex;
         position: relative;
         align-items: center;
         margin-right: 10px;
         color: rgba(227, 60, 100, 1);
-        font-size:20px;
+        font-size: 20px;
       }
+
       img {
         width: 80px;
         height: 96px;
@@ -356,7 +359,8 @@ export default {
         .hot_class_name {
           font-family: HanSansBold;
         }
-        .hot_class_description{
+
+        .hot_class_description {
           margin-top: 6px;
         }
       }
