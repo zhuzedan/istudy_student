@@ -98,6 +98,14 @@ const routes = [
                 meta: {
                     requireAuth: true
                 }
+            },
+            {
+                path: 'mine',
+                name: 'mine',
+                component: () => import("@/views/mine/Personal.vue"),
+                meta: {
+                    requireAuth: true
+                }
             }]
     },
     {
@@ -121,4 +129,9 @@ const router = new VueRouter({
     }
 })
 
+//重复点击相同路由报错解决
+const VueRouterPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(to) {
+    return VueRouterPush.call(this, to).catch(err => err)
+}
 export default router

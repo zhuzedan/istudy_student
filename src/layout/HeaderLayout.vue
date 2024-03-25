@@ -17,9 +17,18 @@
             prefix-icon="el-icon-search"
             v-model="inquireKey">
         </el-input>
-        <div class="avatar" @click="gotoLogin">
+        <div class="avatar" @click="gotoLogin" v-if="this.$root.loginFlag === false">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
         </div>
+        <el-dropdown v-if="this.$root.loginFlag === true">
+          <div class="avatar">
+            <el-avatar :size="50" :src="loginAvatarUrl"></el-avatar>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="gotoPersonal">个人</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
   </div>
@@ -32,11 +41,30 @@ export default {
     return {
       inquireKey: '',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      loginAvatarUrl: 'https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b'
     }
   },
   methods: {
     gotoLogin() {
       this.$router.push('/login')
+    },
+    logout() {
+      this.$confirm('确定要退出吗', '退出提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+          .then(() => {
+            this.$message.success('成功退出')
+          })
+          .catch(() => {
+            this.$message.info('取消退出登录')
+          })
+      this.$root.loginFlag = false
+      console.log(this.$root.loginFlag)
+    },
+    gotoPersonal() {
+      this.$router.push('/mine')
     }
   }
 }

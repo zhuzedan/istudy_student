@@ -21,5 +21,10 @@ Vue.prototype.$echarts = echarts
 new Vue({
     router,
     store,
+    data: function(){
+        return {
+            loginFlag: false,
+        }
+    },
     render: h => h(App)
 }).$mount('#app')

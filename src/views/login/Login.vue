@@ -87,6 +87,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.$root.loginFlag = true
       this.$router.push('/')
     }
   }
