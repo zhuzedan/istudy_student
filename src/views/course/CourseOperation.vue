@@ -302,6 +302,9 @@ export default {
       if (data.label === '视频') {
         this.$router.push('/courseDetail/videoCourse')
       }
+      if (data.label === '习题') {
+        this.$router.push('/courseDetail/homework')
+      }
     },
     renderTreeNode(h, {node, data, store}) {
       const hasChildren = node.childNodes && node.childNodes.length;

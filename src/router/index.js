@@ -60,6 +60,14 @@ const routes = [
                         meta: {
                             requireAuth: true
                         }
+                    },
+                    {
+                        path: 'homework',
+                        name: 'homework',
+                        component: () => import("@/views/course/HomeWork.vue"),
+                        meta: {
+                            requireAuth: true
+                        }
                     }]
             },
             {
