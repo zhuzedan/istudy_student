@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="general_header">
-      <a href="/" class="logo">
+      <router-link to="/" class="logo">
         <img src="@/assets/logo.png" alt=""/>
         <div class="logo_text">iStudy</div>
-      </a>
+      </router-link>
       <div class="header_tab_bar">
         <router-link to="/" class="header_tab_name" active-class="header_tab_name_active" exact>首页</router-link>
         <router-link to="/myCourses" class="header_tab_name" active-class="header_tab_name_active">我的课程</router-link>
