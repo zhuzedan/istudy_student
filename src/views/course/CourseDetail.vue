@@ -31,7 +31,7 @@ export default {
   flex-direction: column;
 
   .course_correlation {
-    margin-top: 26px;
+    margin: 20px 0;
     width: 1200px;
     height: 120px;
     //opacity: 0.55;

@@ -134,7 +134,6 @@ export default {
       this.selectedType = type;
     },
     unOrUpload() {
-      console.log('点击了图表')
       this.unfoldStatus = !this.unfoldStatus;
       this.iconClass = this.unfoldStatus ? 'el-icon-arrow-up' : 'el-icon-arrow-down';
     }
@@ -145,9 +144,8 @@ export default {
 <style lang="less" scoped>
 .homework_container {
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  margin-top: 20px;
   width: 1200px;
   display: flex;
   flex-direction: column;
@@ -209,7 +207,6 @@ export default {
   .homework_list {
     .homework_box {
       margin: 10px 50px;
-
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -218,7 +215,6 @@ export default {
       .radio_box {
         display: flex;
         flex-direction: column;
-        width: 1100px;
 
         .el-radio {
           margin-top: 10px;

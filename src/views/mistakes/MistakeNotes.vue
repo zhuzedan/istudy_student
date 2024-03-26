@@ -18,36 +18,36 @@
       </el-row>
       <!--全部笔记列表-->
       <div class="discipline_list">
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <!-- 新增的文字描述div -->
           <div class="discipline_title">笔记标题</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">瓦罗兰特</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">永劫无间</div>
         </div>
 
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">怪物猎人世界</div>
         </div>
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
         </div>
-        <div class="discipline_class">
+        <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <div class="discipline_title">笔记标题</div>
@@ -77,6 +77,11 @@ export default {
       }],
       value:
           ''
+    }
+  },
+  methods: {
+    gotoMistakeDetail() {
+      this.$router.push('/mistakeDetail')
     }
   }
 }

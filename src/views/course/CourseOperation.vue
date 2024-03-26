@@ -339,7 +339,6 @@ export default {
 
   .menu_click_operation {
     display: flex;
-    margin-top: 20px;
 
     .menu_tab {
       width: 260px;

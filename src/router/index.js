@@ -100,6 +100,14 @@ const routes = [
                 }
             },
             {
+                path: 'mistakeDetail',
+                name: 'mistakeDetail',
+                component: () => import("@/views/mistakes/MistakeNoteDetail.vue"),
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
                 path: 'mine',
                 name: 'mine',
                 component: () => import("@/views/mine/Personal.vue"),
