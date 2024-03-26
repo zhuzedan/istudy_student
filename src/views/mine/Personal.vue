@@ -19,7 +19,7 @@
       </div>
       <div class="menu_click_view">
         <!--学习情况开始-->
-        <div class="study_situation">
+        <div class="study_situation" v-if="currentMenuIndex==='1'">
           <div class="study_situation_top">
             <div class="situation_top_left">
               <el-select v-model="value" placeholder="请选择学学期">
@@ -68,42 +68,56 @@
           </div>
         </div>
         <!--学习情况结束-->
-        <!--评分开始-->
-        <div class="scoring_standard" v-if="currentMenuIndex==='2'">
-          本课程本学期的评分标准为单元测验占40%，讨论题占10%，期末线上考试占50%。
-          请注意：
-          单元测验由6个单元测验组成，均为客观题。
-          讨论题指在学习中，课堂交流区中的思考讨论题（由老师分布的讨论题）。每位同学需完成5个以上思考题。
-          期末线上考试有一套试卷：客观题（40-60道选择题），主观题（2-4道问答题）。
-        </div>
-        <!--评分结束-->
-        <!--课程开始-->
-        <div class="course_list" v-if="currentMenuIndex==='3'">
-          <!--选择框-->
-          <el-row :gutter="20">
-            <el-col :span="6" :offset="18">
-              <div class="grid-content">
-                <el-select v-model="value" placeholder="请选择">
-                  <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-                </el-select>
+        <!--个人信息开始-->
+        <div class="person_information" v-if="currentMenuIndex==='2'">
+          <el-button type="primary">编辑</el-button>
+          <div style="display: flex">
+            <div class="avatar_box">
+              <el-avatar :size="150" shape="square" :src="url"></el-avatar>
+            </div>
+            <div class="information_list">
+              <div class="information">
+                <div class="account_id">账号</div>
+                <div class="account_name">13315397985</div>
               </div>
-            </el-col>
-          </el-row>
-          <el-tree
-              :data="treeData"
-              :default-expand-all=true
-              :props="defaultProps"
-              node-key="id"
-              :render-content="renderTreeNode"
-              @node-click="handleNodeClick"
-          />
+              <div class="information">
+                <div class="account_id">姓名</div>
+                <div class="account_name">朱泽丹</div>
+              </div>
+              <div class="information">
+                <div class="account_id">昵称</div>
+                <div class="account_name">阿瓦达啃大瓜</div>
+              </div>
+              <div class="information">
+                <div class="account_id">性别</div>
+                <div class="account_name">女</div>
+              </div>
+              <div class="information">
+                <div class="account_id">出生年份</div>
+                <div class="account_name">2001</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!--课程结束-->
+        <!--个人信息结束-->
+        <!--账户安全开始-->
+        <div class="account_security" v-if="currentMenuIndex==='3'">
+          <div class="update_password_box">
+            <div  class="password_top_container">
+              <i class="el-icon-lock"></i>
+              <div>
+                <div>修改密码</div>
+                <div>为了您的账号安全，请不要向他人透露账号和密码</div>
+              </div>
+            </div>
+
+            <el-input placeholder="请输入原密码"></el-input>
+            <el-input placeholder="请输入新密码"></el-input>
+            <el-input placeholder="请确认新密码"></el-input>
+            <el-button type="primary">确认修改</el-button>
+          </div>
+        </div>
+        <!--账户安全结束-->
       </div>
     </div>
   </div>
@@ -114,7 +128,7 @@ export default {
   name: "Personal",
   data() {
     return {
-      currentMenuIndex: '1',
+      currentMenuIndex: '3',
       url: 'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       srcList: [
         'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
@@ -353,91 +367,85 @@ export default {
           height: 400px;
           justify-content: center;
           margin-bottom: 20px;
+
           .course_process {
             width: 45%;
             background-color: #fff;
             border-radius: 8px;
             padding: 10px;
             margin: 0 10px 0 10px;
-            box-shadow: 0 2px 4px  rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+
             .course_title {
               font-size: 16px;
               font-family: HanSansBold;
             }
-
           }
         }
       }
 
-      .scoring_standard {
+      .person_information {
         margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+
+        .el-button {
+          width: 70px;
+          margin-left: 20px;
+        }
+
+        .avatar_box {
+          width: 200px;
+          height: 200px;
+          display: flex;
+          position: relative;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .information_list {
+          display: flex;
+          flex-direction: column;
+
+          .information {
+            display: flex;
+            height: 30px;
+            align-items: center;
+            margin-left: 40px;
+
+            .account_id {
+              width: 100px;
+              color: #666;
+            }
+          }
+        }
+
       }
 
       .course_list {
         margin-top: 20px;
       }
 
-      .mind_map {
-        img {
-          width: 900px;
-          height: 600px;
-        }
-      }
+    }
 
-      .recently_notebook {
-        .recent {
-          margin-top: 26px;
-          font-size: 16px;
-        }
+    .account_security {
+      .update_password_box {
+        height: 300px;
+        background-color: #666666;
+        margin: 20px;
 
-        .chapter_box {
-          margin-top: 20px;
-        }
-
-        .el-button {
+        .password_top_container {
           display: flex;
-          margin-left: auto;
-          margin-top: 10px;
-        }
-      }
-
-      .recently_wrong_title_book {
-        width: 860px;
-        margin-top: 20px;
-        background-color: @primaryBackgroundColor;
-        padding: 20px;
-
-        .recent_wrong_title {
-          font-size: 16px;
-        }
-
-        .wrong_title_name {
-          margin-top: 20px;
-          background-color: rgba(232, 236, 250, 1);
-          padding: 20px;
-          height: 192px;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        .answer {
-          margin-top: 20px;
-          font-size: 16px;
-        }
-
-        .answer_detail {
-          padding: 20px;
-          margin-top: 10px;
-          background-color: rgba(232, 236, 250, 1);
-          height: 192px;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        .el-button {
-          display: flex;
-          margin-left: auto;
-          margin-top: 20px;
+          position: relative;
+           i {
+             height: 100%;
+             font-size: 20px;
+             display: flex;
+             position: relative;
+             align-items: center;
+             justify-content: center;
+           }
         }
       }
     }

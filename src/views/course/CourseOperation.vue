@@ -162,7 +162,7 @@
             下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
           </div>
         </div>
-        <el-button type="primary">更多笔记</el-button>
+        <el-button @click.native="gotoNoteDetail" type="primary">更多笔记</el-button>
       </div>
       <!--笔记本结束-->
       <!--错题本开始-->
@@ -292,6 +292,9 @@ export default {
     }
   },
   methods: {
+    gotoNoteDetail() {
+      this.$router.push('/noteDetail')
+    },
     handleSelect(index) {
       console.log('Selected menu index:', index);
       // 这里你可以保存或处理 index 值
