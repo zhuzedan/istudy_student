@@ -15,7 +15,7 @@
       </div>
       <div class="course_action">
         <div class="student_count">8888人正在学习</div>
-        <el-button type="primary">添加课程</el-button>
+        <el-button type="primary" @click.native="addCourse">添加课程</el-button>
       </div>
     </div>
 
@@ -199,6 +199,18 @@ export default {
   },
 
   methods: {
+    addCourse() {
+      this.$confirm('是否添加本课程', '退出提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+          .then(() => {
+            this.$message.success('添加成功')
+          })
+          .catch(() => {
+            this.$message.info('取消添加')
+          })
+    },
     toggleActive(tabName) {
       this.activeTab = tabName;
     },

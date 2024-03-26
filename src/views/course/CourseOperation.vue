@@ -176,7 +176,7 @@
           分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。
           所以监听用户的截图操作，提示用户进行分享，既缩短了以前分享截图的操作路径，避免了在之前长路径中的行为流失（比如截...
         </div>
-        <el-button type="primary">更多错题</el-button>
+        <el-button type="primary" @click.native="moreMistakes">更多错题</el-button>
       </div>
       <!--错题本结束-->
 
@@ -292,6 +292,9 @@ export default {
     }
   },
   methods: {
+    moreMistakes() {
+      this.$router.push('/mistakeDetail')
+    },
     gotoNoteDetail() {
       this.$router.push('/noteDetail')
     },
