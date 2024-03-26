@@ -296,7 +296,6 @@ export default {
       this.$router.push('/noteDetail')
     },
     handleSelect(index) {
-      console.log('Selected menu index:', index);
       // 这里你可以保存或处理 index 值
       this.currentMenuIndex = index;
     },

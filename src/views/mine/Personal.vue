@@ -103,17 +103,27 @@
         <!--账户安全开始-->
         <div class="account_security" v-if="currentMenuIndex==='3'">
           <div class="update_password_box">
-            <div  class="password_top_container">
+            <div class="password_top_container">
               <i class="el-icon-lock"></i>
-              <div>
-                <div>修改密码</div>
-                <div>为了您的账号安全，请不要向他人透露账号和密码</div>
-              </div>
+              <div class="change_pwd">修改密码</div>
             </div>
-
             <el-input placeholder="请输入原密码"></el-input>
             <el-input placeholder="请输入新密码"></el-input>
             <el-input placeholder="请确认新密码"></el-input>
+            <el-button type="primary">确认修改</el-button>
+          </div>
+
+          <div class="update_password_box">
+            <div class="password_top_container">
+              <i class="el-icon-mobile-phone"></i>
+              <div class="change_pwd">修改关联手机号</div>
+            </div>
+            <div class="input_phone_box">
+              <el-input placeholder="请输入手机号"></el-input>
+              <div class="authentication_code" style="width: 100px">获取验证码</div>
+            </div>
+
+            <el-input placeholder="请输入验证码"></el-input>
             <el-button type="primary">确认修改</el-button>
           </div>
         </div>
@@ -237,7 +247,6 @@ export default {
   },
   methods: {
     handleSelect(index) {
-      console.log('Selected menu index:', index);
       // 这里你可以保存或处理 index 值
       this.currentMenuIndex = index;
     },
@@ -431,21 +440,47 @@ export default {
 
     .account_security {
       .update_password_box {
-        height: 300px;
-        background-color: #666666;
         margin: 20px;
+        padding: 20px;
+        border-bottom: 1px solid #e1e1e1;
 
         .password_top_container {
           display: flex;
           position: relative;
-           i {
-             height: 100%;
-             font-size: 20px;
-             display: flex;
-             position: relative;
-             align-items: center;
-             justify-content: center;
-           }
+          height: 50px;
+          text-align: center;
+          align-items: center;
+
+          i {
+            font-size: 30px;
+            display: flex;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .change_pwd {
+            margin-left: 10px;
+          }
+        }
+
+        .input_phone_box {
+          display: flex;
+          position: relative;
+          align-items: center;
+          justify-content: center;
+
+          .authentication_code{
+            margin-left: 10px;
+            color: @primaryNoSelected;
+          }
+        }
+        .el-input {
+          margin: 10px 0;
+        }
+
+        .el-button{
+          margin-top: 10px;
         }
       }
     }
