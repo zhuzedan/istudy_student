@@ -138,7 +138,7 @@ export default {
   name: "Personal",
   data() {
     return {
-      currentMenuIndex: '3',
+      currentMenuIndex: '1',
       url: 'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       srcList: [
         'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
@@ -405,12 +405,18 @@ export default {
         }
 
         .avatar_box {
+          border-right: 1px solid #e1e1e1;
           width: 200px;
+          flex-direction: column;
           height: 200px;
           display: flex;
           position: relative;
           align-items: center;
           justify-content: center;
+
+          .avatar_setting {
+            color: @primaryColor;
+          }
         }
 
         .information_list {
@@ -419,13 +425,16 @@ export default {
 
           .information {
             display: flex;
-            height: 30px;
+            height: 40px;
             align-items: center;
             margin-left: 40px;
 
             .account_id {
               width: 100px;
               color: #666;
+            }
+
+            .account_name {
             }
           }
         }
@@ -443,6 +452,8 @@ export default {
         margin: 20px;
         padding: 20px;
         border-bottom: 1px solid #e1e1e1;
+        display: flex;
+        flex-direction: column;
 
         .password_top_container {
           display: flex;
@@ -468,18 +479,28 @@ export default {
           display: flex;
           position: relative;
           align-items: center;
-          justify-content: center;
 
-          .authentication_code{
+          .authentication_code {
             margin-left: 10px;
             color: @primaryNoSelected;
           }
         }
+
         .el-input {
           margin: 10px 0;
+          width: 400px;
         }
 
-        .el-button{
+        /deep/ .el-input__inner {
+          height: 30px;
+          // 设置字号
+          font-size: 14px;
+          // 设置输入字体的颜色
+          color: #2c2c2c;
+        }
+
+        .el-button {
+          width: 100px;
           margin-top: 10px;
         }
       }
