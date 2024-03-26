@@ -34,7 +34,9 @@
             </div>
             <div class="situation_top_right">
               <div class="star_level">课程星级</div>
-              <div class="star_level_chart">星图</div>
+              <div class="star_level_chart">
+                <v-chart :option="option"/>
+              </div>
               <div class="start_commit">
                 <div class="start_commit_left">
                   <div class="commit_left_content">您好像对第七章：微生物 中</div>
@@ -61,9 +63,11 @@
           <div class="study_situation_bottom">
             <div class="course_process">
               <div class="course_title">课程总体进度</div>
+              <v-chart :option="processOption"/>
             </div>
             <div class="course_process">
               <div class="course_title">课程评价</div>
+              <v-chart :option="commitOption"></v-chart>
             </div>
           </div>
         </div>
@@ -138,6 +142,70 @@ export default {
   name: "Personal",
   data() {
     return {
+      commitOption: {
+        title: [
+        ],
+        polar: {
+          radius: [30, '80%']
+        },
+        angleAxis: {
+          max: 4,
+          startAngle: 75
+        },
+        radiusAxis: {
+          type: 'category',
+          data: ['a', 'b', 'c', 'd']
+        },
+        tooltip: {},
+        series: {
+          type: 'bar',
+          data: [2, 1.2, 2.4, 3.6],
+          coordinateSystem: 'polar',
+          label: {
+            show: true,
+            position: 'middle',
+            formatter: '{b}: {c}'
+          }
+        }
+      },
+      processOption: {
+        xAxis: {
+          data: ['数据结构', '毛概', '母猪的产后护理', '如何摸鱼', '上班三要素']
+        },
+        yAxis: {},
+        series: [
+          {
+            type: 'bar',
+            data: [23, 24, 183, 24, 18]
+          }
+        ]
+      },
+      option: {
+        title: {
+          left: 'center',
+          top: 'center'
+        },
+        series: [
+          {
+            type: 'pie',
+            data: [
+              {
+                value: 335,
+                name: '1星'
+              },
+              {
+                value: 234,
+                name: '2星'
+              },
+              {
+                value: 1548,
+                name: '3星'
+              }
+            ],
+            radius: ['50%', '87%']
+          }
+        ]
+      },
       currentMenuIndex: '1',
       url: 'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       srcList: [

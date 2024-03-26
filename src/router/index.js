@@ -7,7 +7,6 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'index',
         component: Layout,
         meta: {
             requireAuth: true
