@@ -30,7 +30,7 @@
                     :value="item.value">
                 </el-option>
               </el-select>
-              <div class="course" v-for="(number, index) in 3" :key="index">毛泽东思想概论</div>
+              <div class="course" v-for="(item, index) in courseList" :key="index">{{ item.courseName }}</div>
             </div>
             <div class="situation_top_right">
               <div class="star_level">课程星级</div>
@@ -39,21 +39,21 @@
               </div>
               <div class="start_commit">
                 <div class="start_commit_left">
-                  <div class="commit_left_content">您好像对第七章：微生物 中</div>
-                  <div class="commit_left_content">第七章：微生物 中的微生物的生态环境一节很不熟悉呢。您这一节的平均</div>
-                  <div class="commit_left_content">第七章：微生物 中的微生物的生态环境一节很不熟悉呢。您这一节的平均</div>
+                  <div class="commit_left_content">您好像对第一章：行列式 中的计算行列式的常见题型与方法一节很不熟悉呢。您这一节的平均星级为1.56，少于您其他课程平均星级。</div>
+                  <div class="commit_left_content">您好像对第一章：行列式 中的行列式按行（列）展开一节很不熟悉呢。您这一节的平均星级为1.89，少于您其他课程平均星级。</div>
+                  <div class="commit_left_content">您好像对第二章：矩阵 中的矩阵的概念一节很不熟悉呢。您这一节的平均星级为1.39，少于您其他课程平均星级。</div>
                 </div>
                 <div class="start_commit_left">
                   <div class="improve_box">
-                    <div class="commit_improve">快来提高一下8-9章的完成度吧</div>
+                    <div class="commit_improve">第一章第四节真的不再争取一下吗</div>
                     <i class="el-icon-arrow-right"></i>
                   </div>
                   <div class="improve_box">
-                    <div class="commit_improve">快来提高一下8-9章的完成度吧</div>
+                    <div class="commit_improve">快来提高一下第一章的完成度吧</div>
                     <i class="el-icon-arrow-right"></i>
                   </div>
                   <div class="improve_box">
-                    <div class="commit_improve">快来提高一下8-9章的完成度吧</div>
+                    <div class="commit_improve">第二章第一节真的不再争取一下吗</div>
                     <i class="el-icon-arrow-right"></i>
                   </div>
                 </div>
@@ -74,27 +74,58 @@
         <!--学习情况结束-->
         <!--个人信息开始-->
         <div class="person_information" v-if="currentMenuIndex==='2'">
-          <el-button type="primary">编辑</el-button>
+          <div style="display: flex">
+            <el-button type="primary" @click.native="editOneAccount">编辑</el-button>
+            <el-button @click.native="saveOneAccount" v-if="editTheAccount">保存</el-button>
+          </div>
           <div style="display: flex">
             <div class="avatar_box">
-              <el-avatar :size="150" shape="square" :src="url"></el-avatar>
+              <el-tooltip effect="dark" content="点击更换头像" placement="top">
+                <el-upload
+                    class="avatar-uploader"
+                    :show-file-list="false"
+                >
+                  <img v-if="avatar" :src="avatar" class="avatar" alt=""/>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"/>
+                </el-upload>
+              </el-tooltip>
             </div>
             <div class="information_list">
               <div class="information">
                 <div class="account_id">账号</div>
-                <div class="account_name">13315397985</div>
+                <div class="account_name" v-if="!editTheAccount">13315397985</div>
+                <div class="account_name" v-if="editTheAccount">
+                  <el-input v-model="inputPhone" placeholder="请输入内容"></el-input>
+                </div>
               </div>
               <div class="information">
                 <div class="account_id">姓名</div>
-                <div class="account_name">朱泽丹</div>
+                <div class="account_name" v-if="!editTheAccount">{{ inputName }}</div>
+                <div class="account_name" v-if="editTheAccount">
+                  <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+                </div>
+
               </div>
               <div class="information">
                 <div class="account_id">昵称</div>
-                <div class="account_name">阿瓦达啃大瓜</div>
+                <div class="account_name" v-if="!editTheAccount">{{ inputName }}</div>
+                <div class="account_name" v-if="editTheAccount">
+                  <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+                </div>
               </div>
               <div class="information">
                 <div class="account_id">性别</div>
-                <div class="account_name">女</div>
+                <div class="account_name" v-if="!editTheAccount">女</div>
+                <div class="account_name" v-if="editTheAccount">
+                  <el-select v-model="inputSex" placeholder="请选择">
+                    <el-option
+                        v-for="item in sexList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
               </div>
               <div class="information">
                 <div class="account_id">出生年份</div>
@@ -142,9 +173,45 @@ export default {
   name: "Personal",
   data() {
     return {
+      inputPhone: '13315397985',
+      inputName: '张王李',
+      inputSex: '女',
+      editTheAccount: false,
+      sexList: [
+        {
+          value: '女',
+          label: '女'
+        },
+        {
+          value: '男',
+          label: '男'
+        },
+      ],
+      courseList: [
+        {
+          id: 1,
+          courseName: '操作系统'
+        },
+        {
+          id: 1,
+          courseName: '软件工程'
+        },
+        {
+          id: 1,
+          courseName: '人工智能导论'
+        },
+        {
+          id: 1,
+          courseName: '马克思主义基本原理'
+        },
+
+        {
+          id: 1,
+          courseName: '数据结构与算法'
+        },
+      ],
       commitOption: {
-        title: [
-        ],
+        title: [],
         polar: {
           radius: [30, '80%']
         },
@@ -313,7 +380,29 @@ export default {
       },
     }
   },
+  computed: {
+    avatar() {
+      return 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
+    }
+  },
   methods: {
+    editOneAccount() {
+      this.editTheAccount = true
+    },
+    saveOneAccount() {
+      this.$confirm('确定保存当前信息吗', '退出提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+          .then(() => {
+            this.$message.success('成功保存')
+            this.editTheAccount = false
+          })
+          .catch(() => {
+            this.$message.info('取消保存')
+          })
+    },
     handleSelect(index) {
       // 这里你可以保存或处理 index 值
       this.currentMenuIndex = index;
@@ -390,8 +479,10 @@ export default {
               padding-left: 10px;
               flex-direction: column;
               border-radius: 4px;
-              //background-color: #fff;
+              background-color: #fff;
               justify-content: center;
+              margin-top: 10px;
+              box-shadow: 0 2.67px 5.33px rgba(0, 0, 0, 0.25);
             }
           }
 
@@ -496,6 +587,7 @@ export default {
             height: 40px;
             align-items: center;
             margin-left: 40px;
+            margin-bottom: 10px;
 
             .account_id {
               width: 100px;
