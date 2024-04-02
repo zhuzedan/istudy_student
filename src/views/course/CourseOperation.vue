@@ -57,31 +57,6 @@
           </div>
           <div class="notification_date">2024-03-23 12:23:34 张老师</div>
         </div>
-        <div class="notification_box">
-          <div class="notification-content">
-            请同学在规定时间内完成如下任务：
-            1、观看教学视频6.4-6.7
-            2、完成课前任务23.1
-          </div>
-          <div class="notification_date">2024-03-23 12:23:34 张老师</div>
-        </div>
-        <div class="notification_box">
-          <div class="notification-content">
-            请同学在规定时间内完成如下任务：
-            1、观看教学视频6.4-6.7
-            2、完成课前任务23.1
-          </div>
-          <div class="notification_date">2024-03-23 12:23:34 张老师</div>
-        </div>
-
-        <div class="notification_box">
-          <div class="notification-content">
-            请同学在规定时间内完成如下任务：
-            1、观看教学视频6.4-6.7
-            2、完成课前任务23.1
-          </div>
-          <div class="notification_date">2024-03-23 12:23:34 张老师</div>
-        </div>
       </div>
       <!--公告结束-->
       <!--评分开始-->
@@ -234,7 +209,8 @@ export default {
                   "hasChildren": false,
                   "tenantId": 0,
                   "type": "video",
-                  "children": null
+                  "children": null,
+                  "star": 3
                 },
                 // 其他资源...
               ]
@@ -272,19 +248,32 @@ export default {
                   "hasChildren": false,
                   "tenantId": 0,
                   "type": "video",
-                  "children": null
+                  "children": null,
+                  "star": 3
                 },
-                // {
-                //   "id": "video1-1-1-id",
-                //   "name": "2.1.2 资源",
-                //   "parentId": "section1-1-id",
-                //   "showStatus": 0,
-                //   "lockStatus": 0,
-                //   "hasChildren": false,
-                //   "tenantId": 0,
-                //   "type": "recourses",
-                //   "children": null
-                // }
+                {
+                  "id": "video1--id",
+                  "name": "2.1.2 资源",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 'https://zzd-picgo.oss-cn-hangzhou.aliyuncs.com/0402test.pptx',
+                  "type": "recourses",
+                  "children": null,
+                  "star": 3
+                }, {
+                  "id": "video1id",
+                  "name": "2.1.3 PPT资源",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 'https://zzd-picgo.oss-cn-hangzhou.aliyuncs.com/0403test%20-%20%E5%89%AF%E6%9C%AC.pptx',
+                  "type": "recourses",
+                  "children": null,
+                  "star": 3
+                }
               ]
             },
             // 更多小节...
@@ -345,7 +334,8 @@ export default {
                   "hasChildren": false,
                   "tenantId": 0,
                   "type": "video",
-                  "children": null
+                  "children": null,
+                  "star": 3
                 },
                 {
                   "id": "homework5-1-1-id",
@@ -356,7 +346,8 @@ export default {
                   "hasChildren": false,
                   "tenantId": 0,
                   "type": "homework",
-                  "children": null
+                  "children": null,
+                  "star": 3
                 },
                 {
                   "id": "wrong-1-1-id",
@@ -367,7 +358,8 @@ export default {
                   "hasChildren": false,
                   "tenantId": 0,
                   "type": "wrongTitle",
-                  "children": null
+                  "children": null,
+                  "star": 3
                 },
                 // 其他资源...
               ]
@@ -405,18 +397,38 @@ export default {
         this.$router.push('/courseDetail/wrongTitle')
       }
       if (data.type === 'recourses') {
-          this.$router.push('/courseDetail/recourses')
+        window.open('https://view.xdocin.com/view?src=' + data.tenantId)
       }
     },
     renderTreeNode(h, {node, data, store}) {
-      const hasChildren = node.childNodes && node.childNodes.length;
+      const iconNameMap = {
+        chapter: 'folder',
+        section: 'file',
+        video: 'video-play',
+        recourses: 'document',
+        homework: 'edit',
+        wrongTitle: 'warning',
+        // ... 添加更多节点类型与对应图标名的映射
+      };
 
+      const iconName = iconNameMap[data.type];
+      const iconClass = `el-icon-${iconName}`;
+
+      let ratingComponent = null;
+
+      if (node.level === 2) {
+        // 对于第三级（level为2）的特定类型节点，添加评分星星
+        ratingComponent = '<el-rate></el-rate>';
+      }
       return (
-          <span>
-          {node.level === 2 && (<i class="el-icon-folder-opened"></i>)}
-            {node.level === 3 && (<i class="el-icon-document"></i>)}
-            {node.label}
-        </span>
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            <i class={iconClass}/>
+            {data.name}
+            {/* 如果节点级别为3，插入评分组件 */}
+            {node.level === 3 && (
+                <el-rate disabled  max={3} value={data.star || 0} style={{ marginLeft: '8px' }} />
+            )}
+          </span>
       );
     },
   }

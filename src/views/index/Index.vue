@@ -7,7 +7,7 @@
         <transition-group name="chat-bubble" tag="div">
           <div
               v-for="(message, index) in messages"
-              :key="index"
+              :key="message.id"
               class="chat_content_left"
               :class="{ 'chat_content_right': message.isSender }"
           >
@@ -187,7 +187,7 @@ export default {
       sendMsg: '',
       messages: [
         // 初始化一条消息（可省略，仅用于演示）
-        {text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
+        {id: '1',text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
       ],
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       selectedCategory: 0,

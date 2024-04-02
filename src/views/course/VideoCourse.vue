@@ -38,38 +38,53 @@
       </div>
 
       <div class="course_note_ai" v-if="selectedCategory === 1">
-        123123ai生成的##############长剑连招
-        1.B S B 升龙松开所有按键 空A 落地后 再W+小跳A
-        2.B S B 升龙在最高点前按住W 落地后B A B1.0
-        3.B S B A 按住W 小跳A
-        4.B S B 升龙 CA 2A
-        5.B S B 升龙 人物落地后 跳A 跳A
+
+        <div>1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称排列.
+        </div>
+        <div>2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆序数.
+        </div>
       </div>
 
       <div class="chat_frame" v-if="selectedCategory === 2">
-        <div class="chat_demo">
-          <img src="@/assets/teacher_default_avatar.png" alt="">
-          <div class="chat_content_left">
-            如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！
+
+        <transition-group name="chat-bubble" tag="div">
+          <div
+              v-for="(message, index) in messages"
+              :key="message.id"
+              class="chat_content_left"
+              :class="{ 'chat_content_right': message.isSender }"
+          >
+            {{ message.text }}
           </div>
-        </div>
-        <div class="send_msg">
+        </transition-group>
+
+        <div class="send_msg" @click="sendMessage">
           <el-input
               placeholder="请输入内容"
+              v-model="sendMsg"
           >
-            <img slot="append" src="@/assets/index/send.png" alt="">
+            <img
+                slot="append"
+                src="@/assets/index/send.png"
+                alt=""
+            />
           </el-input>
         </div>
       </div>
 
       <div class="course_test" v-if="selectedCategory === 3">
         <div class="title_num" v-for="(number, index) in 12" :key="index">{{ number }}</div>
-        <div class="title_description">深度为5的二叉树至多有 （ ）个节点</div>
+        <div class="title_description"> A，B均为n阶矩阵，且(A-B)^2=A^2-2AB+B^2，则必有( )</div>
         <div class="question_option">
-          <el-radio v-model="radio" label="1">备选项</el-radio>
-          <el-radio v-model="radio" label="2">备选项</el-radio>
-          <el-radio v-model="radio" label="3">备选项</el-radio>
-          <el-radio v-model="radio" label="4">备选项</el-radio>
+          <el-radio v-model="radio" label="1">A = E</el-radio>
+          <el-radio v-model="radio" label="2">B = E</el-radio>
+          <el-radio v-model="radio" label="3">A = B</el-radio>
+          <el-radio v-model="radio" label="4">AB = BA</el-radio>
+        </div>
+        <div class="title_description">
+          <div>解析</div>
+          选D
+          矩阵的乘法运算不满足交换律即在一般情况下，AB不等于BA，(A-B)^2=A^2-2AB+B^2，只有A与B可交换时才成立。
         </div>
       </div>
 
@@ -82,6 +97,11 @@ export default {
   name: "VideoCourse",
   data() {
     return {
+      sendMsg: '',
+      messages: [
+        // 初始化一条消息（可省略，仅用于演示）
+        {id: '1', text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
+      ],
       radio: '1',
       selectedCategory: 0,
       categoryNames: ['目录', '笔记', '提问', '小测'],
@@ -113,93 +133,120 @@ export default {
       },
       treeData: [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": "chapter1-id",
+          "name": "第一章 课程导论与概述",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
+              "id": "section1-1-id",
+              "name": "1.1 章节背景与目标",
+              "parentId": "chapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
             },
-            {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
-            }
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
+          "id": "chapter2-id",
+          "name": "第二章 数据结构基础",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 64,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 69,
-                  label: '视频',
-                },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题重做',
-                },
-              ],
+              "id": "section2-1-id",
+              "name": "2.1 数组与链表",
+              "parentId": "chapter2-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
             },
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
+        {
+          "id": "chapter3-id",
+          "name": "第三章 树与图",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            // 第三章下的小节和资源...
+          ]
+        },
+        {
+          "id": "chapter4-id",
+          "name": "第四章 堆栈与队列",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            // 第四章下的小节和资源...
+          ]
+        },
+        {
+          "id": "chapter5-id",
+          "name": "第五章 排序与搜索算法",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            {
+              "id": "section5-1-id",
+              "name": "5.1 快速排序与归并排序",
+              "parentId": "chapter5-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            },
+            // 更多小节...
+          ]
+        }
       ],
       defaultProps: {
         children: 'children',
-        label: 'label',
+        label: 'name',
       },
     };
   },
   methods: {
+    sendMessage() {
+      if (this.sendMsg.trim()) {
+        this.messages.push({
+          text: this.sendMsg,
+          isSender: true,
+        });
+        this.sendMsg = '';
+      }
+    },
     handleCategoryClick(index) {
       this.selectedCategory = index;
     },
@@ -305,24 +352,38 @@ export default {
       justify-content: space-between; /* 使子元素在垂直方向两端对齐 */
       overflow-y: auto; /* 添加滚动条 */
 
-      .chat_demo {
+      .chat_bubble-enter-active,
+      .chat_bubble-leave-active {
+        transition: all 0.9s ease;
+      }
+
+      .chat_bubble-enter,
+      .chat_bubble-leave-to {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+
+      .chat_content_left {
+        opacity: 1;
+        border-radius: 4px;
+        background: rgba(245, 247, 254, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        font-size: 14px;
+        margin-left: 10px;
+        margin-bottom: 14px;
+        padding: 8px 4px;
+      }
+
+      .chat_content_right {
+        background: #409EFE; /* 自定义发送者消息背景色 */
+        color: #fff;
+        margin-bottom: 14px;
+        padding: 8px 4px;
+        border-radius: 4px;
         display: flex;
-
-        img {
-          width: 30px;
-          height: 30px;
-        }
-
-        .chat_content_left {
-          width: 220.88px;
-          height: 63px;
-          opacity: 1;
-          border-radius: 4.44px;
-          background: rgba(245, 247, 254, 1);
-          box-shadow: 0 px2px4pxrgba(0, 0, 0, 0.25);
-          font-size: 14px;
-          margin-left: 10px;
-        }
+        flex-direction: column;
+        align-items: flex-end;
+        margin-left: auto;
       }
 
       .send_msg {
@@ -340,10 +401,11 @@ export default {
 
     }
 
-    .course_test{
+    .course_test {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+
       .title_num {
         margin-top: 10px;
         display: flex;
@@ -354,10 +416,10 @@ export default {
         align-items: center;
         color: #fff;
         width: 30px;
-        height:30px;
+        height: 30px;
       }
 
-      .title_description{
+      .title_description {
         margin: 20px 0 20px 14px;
       }
 
