@@ -3,6 +3,7 @@
     <div class="detail_container">
       <!--左边栏笔记目录-->
       <div class="left_category">
+        <div class="category_name">目录</div>
         <el-tree
             :data="treeData"
             :default-expand-all=true
@@ -15,8 +16,11 @@
       <div class="right_note">
         <el-button size="small" type="primary" @click="dialogFormVisible = true">新增本节笔记</el-button>
         <div class="one_note_operation" v-for=" index in 3" :key="index">
+          <div class="note_title">行列式的形式和意义</div>
           <div class="note_content">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
+            1、行列式的形式和意义
+            1）形式：将n2个数排成一个n行n列的表格，两边界以竖线，就成为一个n阶 行列式:
+            2）意义：行列式是一个算式，即把这n2个元素按一定法则运算，得到的数值称为这个行列式的值
           </div>
           <div class="one_note_bottom">
             <div class="release_time">2024-02-02 11:11:11</div>
@@ -84,85 +88,62 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       treeData: [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": 1,
+          "label": "第一章：线性方程组与矩阵",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
+              "id": 11,
+              "label": "1.1 线性方程组的基本概念与解法",
+              "children": []
             },
             {
-              id: 4,
-              label: '二级 1-1',
-              children: [
+              "id": 12,
+              "label": "1.2 矩阵的概念与运算",
+              "children": [
                 {
-                  id: 9,
-                  label: '视频',
+                  "id": 121,
+                  "label": "1.2.1 矩阵的加法与数乘",
+                  "children": []
                 },
                 {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
-            }
-            // 更多第二级节点...
-          ],
+                  "id": 122,
+                  "label": "1.2.2 矩阵的乘法与转置",
+                  "children": []
+                }
+              ]
+            },
+            // 更多第一级小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
+          "id": 2,
+          "label": "第二章：行列式",
+          "children": [
             {
-              id: 64,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 69,
-                  label: '视频',
-                },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题重做',
-                },
-              ],
+              "id": 21,
+              "label": "2.1 二阶与三阶行列式的定义与计算",
+              "children": []
             },
-            // 更多第二级节点...
-          ],
+            {
+              "id": 22,
+              "label": "2.2 n阶行列式的定义与性质",
+              "children": [
+                {
+                  "id": 221,
+                  "label": "2.2.1 行列式的展开定理",
+                  "children": []
+                },
+                {
+                  "id": 222,
+                  "label": "2.2.2 行列式的性质与计算技巧",
+                  "children": []
+                }
+              ]
+            },
+            // 更多第二级小节...
+          ]
         },
+        // 更多章节...
       ],
       defaultProps: {
         children: 'children',
@@ -222,6 +203,13 @@ export default {
 
     .left_category {
       width: 280px;
+      background-color: #fff;
+      padding: 20px;
+
+      .category_name {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
     }
 
     .right_note {
@@ -239,6 +227,14 @@ export default {
         border-radius: 4px;
         margin-bottom: 10px;
 
+        .note_title {
+          font-size: 16px;
+        }
+
+        .note_content {
+          line-height: 1.8;
+        }
+
         .one_note_bottom {
           display: flex;
           margin-top: 8px;
@@ -251,6 +247,8 @@ export default {
             margin-left: auto;
 
             i {
+              color: #666666;
+              font-size: 18px;
               margin-left: 10px;
             }
           }

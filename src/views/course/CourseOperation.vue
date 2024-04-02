@@ -108,34 +108,19 @@
       <div class="recently_notebook" v-if="currentMenuIndex==='5'">
         <div class="recent">最近笔记</div>
         <div class="chapter_box">
-          <div class="chapter">1.1节 顺序查找</div>
+          <div class="chapter">排列和逆序数</div>
           <div class="chapter_notes">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
+            1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称
+            排列.比如354216就是这6个元素的一个排列
           </div>
-        </div>
-        <div class="chapter_box">
-          <div class="chapter">1.1节 顺序查找</div>
           <div class="chapter_notes">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
+            2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆
+            序数.
           </div>
-        </div>
-        <div class="chapter_box">
-          <div class="chapter">1.1节 顺序查找</div>
           <div class="chapter_notes">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
+            3、奇排列和偶排列：逆序数为偶数的排列称为偶排列，逆序数为奇数的排列为奇排列
           </div>
-        </div>
-        <div class="chapter_box">
-          <div class="chapter">1.1节 顺序查找</div>
-          <div class="chapter_notes">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
-          </div>
-        </div>
-        <div class="chapter_box">
-          <div class="chapter">1.1节 顺序查找</div>
-          <div class="chapter_notes">
-            下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。尤其是刚上线的产品，很难通过产品的内部体系来实现快速的用户增长，所以会更加依赖于分享来达到广泛的传播，获取目标用户。分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。用户主动点击分享 绝大多数APP都是在详...
-          </div>
+
         </div>
         <el-button @click.native="gotoNoteDetail" type="primary">更多笔记</el-button>
       </div>
@@ -421,12 +406,12 @@ export default {
         ratingComponent = '<el-rate></el-rate>';
       }
       return (
-          <span style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{display: 'flex', alignItems: 'center'}}>
             <i class={iconClass}/>
             {data.name}
             {/* 如果节点级别为3，插入评分组件 */}
             {node.level === 3 && (
-                <el-rate disabled  max={3} value={data.star || 0} style={{ marginLeft: '8px' }} />
+                <el-rate disabled max={3} value={data.star || 0} style={{marginLeft: '8px'}}/>
             )}
           </span>
       );
@@ -491,6 +476,15 @@ export default {
 
         .chapter_box {
           margin-top: 20px;
+
+          .chapter {
+            font-size: 16px;
+            margin-bottom: 10px;
+          }
+
+          .chapter_notes {
+            line-height: 1.8;
+          }
         }
 
         .el-button {

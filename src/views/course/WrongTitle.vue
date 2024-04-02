@@ -52,14 +52,7 @@
           <div class="title_name"> 设0< X1 <3 , Xn+1=Xn(3-Xn)^1/2 (n=1、2...) 证明数列{Xn} 的极限存在，并求此极限.</div>
           <div class="answer_area">
             <div class="analysis_name">解析</div>
-            <div class="analysis">《永劫无间》S12淬炼赛季即将于4月11日开始，为您带来全新的战斗体验。以下是相关前瞻信息：
-              　　- 天赋系统经过重新设计，现在有四大分支可供选择，玩家可以自由组合来展示自己独特的战斗风格。这项改动将于4月3日在测试服上线。
-              　　- 新英雄司南星·刘炼将在4月19日进入测试服。
-              　　- 赛季中将会有哈迪和天海两位英雄进行调整；而岳山和玉玲珑在赛季末会有所改动。
-              　　- 在娱乐方面，游戏将新增两种玩法：热血斗振球（4月3日上线测试服）和变身英雄大乱斗（目前处于制作阶段）。
-              　　- 对于天人模式进行了多处调整，例如落物堆道具品质降为良品、货郎上新品等，同时地脉仪也将代替飓风客出现。这些改动都将使战斗更加激烈。
-              　　- 水节期间会出现一窝“水”特色玩法，在落物堆和飓风客都可获取。一起来玩夏日水仗吧！
-              　　此外，在S12淬炼赛季中还将推出主题时装、青花瓷妖刀姬等新内容。更多详细资讯，请关注《永劫无间》专区。
+            <div class="analysis">由题干易知数列有界，因此可使用单调有界数列必有极限来证明数列极限存在，再将题干求极限即可得到数列极限．
             </div>
           </div>
           <div class="answer_area">
@@ -72,7 +65,7 @@
                     <div class="commentator_name">张大伟</div>
                   </div>
                   <div class="commit_content">
-                    分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。为了借助社交产品的流量，让用户主动分享APP中的内容到社交平台来达到拉新和促活的目的，市场上是业的营销成本。现在很多APP在用户截图时会自动提示用户是否要进行分享。这个时机确实抓的很棒，一般来说，用户截图大多数时候都是为了分享给他人，少部分是为了留底备份。
+                    本题考查数列极限的判定及求解．对于给出递推关系的数列，一般利用“单调有界数列必有极限”来判断极限的存在性．
                   </div>
                   <div class="commit_date">2024年3月24日13:25:00</div>
                 </div>
@@ -84,7 +77,7 @@
                     <div class="commentator_name">张大伟</div>
                   </div>
                   <div class="commit_content">
-                    分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。为了借助社交产品的流量，让用户主动分享APP中的内容到社交平台来达到拉新和促活的目的，市场上是业的营销成本。现在很多APP在用户截图时会自动提示用户是否要进行分享。这个时机确实抓的很棒，一般来说，用户截图大多数时候都是为了分享给他人，少部分是为了留底备份。
+                    函数极限存在性的判别和证明综合．
                   </div>
                   <div class="commit_date">2024年3月24日13:25:00</div>
                 </div>
@@ -123,9 +116,9 @@ export default {
       iconClass: 'el-icon-arrow-up',
       selectedOption: 'option1', // 初始选择为空或预设值
       options: [
-        {label: '选项一', value: 'option1'},
-        {label: '选项二', value: 'option2'},
-        {label: '选项三', value: 'option3'},
+        {label: 'A = E', value: 'option1'},
+        {label: 'B = E', value: 'option2'},
+        {label: 'A = B', value: 'option3'},
       ],
     }
   },
@@ -259,12 +252,9 @@ export default {
         //评论
         .course_commit_list {
           padding: 20px;
-          //background-color: @primaryBackgroundColor;
-          //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
           display: flex;
           position: relative;
           justify-content: center;
-          align-items: center;
           flex-direction: column;
 
           .commit_detail {

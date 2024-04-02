@@ -3,6 +3,7 @@
     <div class="detail_container">
       <!--左边栏笔记目录-->
       <div class="left_category">
+        <div class="category_name">目录</div>
         <el-tree
             :data="treeData"
             :default-expand-all=true
@@ -37,85 +38,62 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       treeData: [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": 1,
+          "label": "第一章：线性方程组与矩阵",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
+              "id": 11,
+              "label": "1.1 线性方程组的基本概念与解法",
+              "children": []
             },
             {
-              id: 4,
-              label: '二级 1-1',
-              children: [
+              "id": 12,
+              "label": "1.2 矩阵的概念与运算",
+              "children": [
                 {
-                  id: 9,
-                  label: '视频',
+                  "id": 121,
+                  "label": "1.2.1 矩阵的加法与数乘",
+                  "children": []
                 },
                 {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
-            }
-            // 更多第二级节点...
-          ],
+                  "id": 122,
+                  "label": "1.2.2 矩阵的乘法与转置",
+                  "children": []
+                }
+              ]
+            },
+            // 更多第一级小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
+          "id": 2,
+          "label": "第二章：行列式",
+          "children": [
             {
-              id: 64,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 69,
-                  label: '视频',
-                },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题重做',
-                },
-              ],
+              "id": 21,
+              "label": "2.1 二阶与三阶行列式的定义与计算",
+              "children": []
             },
-            // 更多第二级节点...
-          ],
+            {
+              "id": 22,
+              "label": "2.2 n阶行列式的定义与性质",
+              "children": [
+                {
+                  "id": 221,
+                  "label": "2.2.1 行列式的展开定理",
+                  "children": []
+                },
+                {
+                  "id": 222,
+                  "label": "2.2.2 行列式的性质与计算技巧",
+                  "children": []
+                }
+              ]
+            },
+            // 更多第二级小节...
+          ]
         },
+        // 更多章节...
       ],
       defaultProps: {
         children: 'children',
@@ -158,6 +136,13 @@ export default {
 
     .left_category {
       width: 280px;
+      background-color: #fff;
+      padding: 20px;
+
+      .category_name {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
     }
 
     .right_note {

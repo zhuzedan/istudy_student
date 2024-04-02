@@ -22,35 +22,35 @@
           <img src="@/assets/notes/book_ground.png"
                alt="">
           <!-- 新增的文字描述div -->
-          <div class="discipline_title">笔记标题</div>
+          <div class="discipline_title">操作系统</div>
         </div>
 
         <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">瓦罗兰特</div>
+          <div class="discipline_title">数据结构与算法</div>
         </div>
 
         <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">永劫无间</div>
+          <div class="discipline_title">数据库原理和应用</div>
         </div>
 
         <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">怪物猎人世界</div>
+          <div class="discipline_title">计算机组成原理</div>
         </div>
         <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">笔记标题</div>
+          <div class="discipline_title">软件工程</div>
         </div>
         <div class="discipline_class" @click="gotoMistakeDetail">
           <img src="@/assets/notes/book_ground.png"
                alt="">
-          <div class="discipline_title">笔记标题</div>
+          <div class="discipline_title">Android课程设计</div>
         </div>
 
       </div>

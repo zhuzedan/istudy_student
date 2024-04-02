@@ -6,8 +6,8 @@
         <img class="course_pic"
              src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"  alt="">
         <div class="course_about">
-          <div class="course_name">生物学</div>
-          <div class="course_teacher">网易 张二 李三</div>
+          <div class="course_name">线性代数</div>
+          <div class="course_teacher">王富贵</div>
         </div>
         <img class="course_teacher_ai" src="@/assets/course/course_teacher_ai.png" alt="">
       </div>
