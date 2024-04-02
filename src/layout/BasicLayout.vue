@@ -4,7 +4,7 @@
     <div class="content-wrap">
       <router-view></router-view>
     </div>
-    <footer-layout></footer-layout>
+<!--    <footer-layout></footer-layout>-->
   </div>
 </template>
 

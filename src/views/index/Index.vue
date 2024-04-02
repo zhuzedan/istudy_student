@@ -3,17 +3,28 @@
     <div class="basic_container">
       <img src="@/assets/index/index_ai .png" alt="">
       <div class="chat_frame">
-        <div class="chat_demo">
-          <img src="@/assets/teacher_default_avatar.png" alt="">
-          <div class="chat_content_left">
-            如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！
+
+        <transition-group name="chat-bubble" tag="div">
+          <div
+              v-for="(message, index) in messages"
+              :key="index"
+              class="chat_content_left"
+              :class="{ 'chat_content_right': message.isSender }"
+          >
+            {{ message.text }}
           </div>
-        </div>
-        <div class="send_msg">
+        </transition-group>
+
+        <div class="send_msg" @click="sendMessage">
           <el-input
               placeholder="请输入内容"
-              v-model="sendMsg">
-            <img slot="append" src="@/assets/index/send.png" alt="">
+              v-model="sendMsg"
+          >
+            <img
+                slot="append"
+                src="@/assets/index/send.png"
+                alt=""
+            />
           </el-input>
         </div>
       </div>
@@ -31,78 +42,36 @@
           </div>
         </div>
         <div class="discipline_list">
-          <div class="discipline_class" @click="gotoCourseIntroduction()">
-            <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
-                 alt="">
-            <div class="about_course">
-              <div class="avatar">
-                <el-avatar :size="50" :src="circleUrl"></el-avatar>
-              </div>
-              <div class="course_name_teacher">
-                <div class="course_name">数据结构</div>
-                <div class="course_teacher">王富贵</div>
-              </div>
-            </div>
-            <div class="course_description">
-              高等数学以微积分为主要内容。微积 分是研究运动和变化的数学……
-            </div>
-            <div class="studying_count">8888人正在学习</div>
-          </div>
+          <div
+              class="discipline_class"
+              v-for="(course, index) in courses"
+              :key="index"
+              @click="gotoCourseIntroduction()"
+          >
+            <!-- 课程图片 -->
+            <img :src="course.imageSrc" alt="">
 
-          <div class="discipline_class" @click="gotoCourseIntroduction()">
-            <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
-                 alt="">
             <div class="about_course">
+              <!-- 头像 -->
               <div class="avatar">
-                <el-avatar :size="50" :src="circleUrl"></el-avatar>
+                <el-avatar :size="50" :src="course.circleUrl"></el-avatar>
               </div>
-              <div class="course_name_teacher">
-                <div class="course_name">计算机组成原理</div>
-                <div class="course_teacher">张有财</div>
-              </div>
-            </div>
-            <div class="course_description">
-              高等数学以微积分为主要内容。微积 分是研究运动和变化的数学……
-            </div>
-            <div class="studying_count">8888人正在学习</div>
-          </div>
 
-          <div class="discipline_class" @click="gotoCourseIntroduction()">
-            <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
-                 alt="">
-            <div class="about_course">
-              <div class="avatar">
-                <el-avatar :size="50" :src="circleUrl"></el-avatar>
-              </div>
+              <!-- 课程名及教师名 -->
               <div class="course_name_teacher">
-                <div class="course_name">计算机组成原理</div>
-                <div class="course_teacher">张有财</div>
+                <div class="course_name">{{ course.name }}</div>
+                <div class="course_teacher">{{ course.teacher }}</div>
               </div>
             </div>
-            <div class="course_description">
-              高等数学以微积分为主要内容。微积 分是研究运动和变化的数学……
-            </div>
-            <div class="studying_count">8888人正在学习</div>
-          </div>
 
-          <div class="discipline_class" @click="gotoCourseIntroduction()">
-            <img src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"
-                 alt="">
-            <div class="about_course">
-              <div class="avatar">
-                <el-avatar :size="50" :src="circleUrl"></el-avatar>
-              </div>
-              <div class="course_name_teacher">
-                <div class="course_name">计算机网络</div>
-                <div class="course_teacher">李来钱</div>
-              </div>
+            <!-- 课程描述，使用 CSS 控制省略号显示 -->
+            <div class="course_description" :title="course.description">
+              {{ course.description }}
             </div>
-            <div class="course_description">
-              高等数学以微积分为主要内容。微积 分是研究运动和变化的数学……
-            </div>
-            <div class="studying_count">8888人正在学习</div>
-          </div>
 
+            <!-- 学习人数 -->
+            <div class="studying_count">{{ course.studyingCount }}人正在学习</div>
+          </div>
         </div>
       </div>
 
@@ -110,36 +79,14 @@
         <div class="hot_class_title">
           热门课程
         </div>
-        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
-          <div class="hot_class_num">1</div>
-          <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
+        <div class="hot_class_concrete" v-for="(item,index) in hotCourses" @click="gotoCourseIntroduction()">
+          <div class="hot_class_num">{{ index + 1 }}</div>
+          <img :src="item.circleUrl"
                alt="">
           <div class="hot_class_container">
-            <div class="hot_class_name">高等数学</div>
-            <div class="hot_class_teacher">王国维</div>
-            <div class="hot_class_description">农学专业培养具有坚实的现代生物学基础知识</div>
-          </div>
-        </div>
-
-        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
-          <div class="hot_class_num">1</div>
-          <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
-               alt="">
-          <div class="hot_class_container">
-            <div class="hot_class_name">高等数学</div>
-            <div class="hot_class_teacher">王国维</div>
-            <div class="hot_class_description">农学专业培养具有坚实的现代生物学基础知识</div>
-          </div>
-        </div>
-
-        <div class="hot_class_concrete" @click="gotoCourseIntroduction()">
-          <div class="hot_class_num">1</div>
-          <img src="https://img.js.design/assets/img/6584ffe728ad689a8641b72d.jpg#c44bfa91bf2ce339668037cf61ed9b5b"
-               alt="">
-          <div class="hot_class_container">
-            <div class="hot_class_name">高等数学</div>
-            <div class="hot_class_teacher">王国维</div>
-            <div class="hot_class_description">农学专业培养具有坚实的现代生物学基础知识</div>
+            <div class="hot_class_name">{{ item.name }}</div>
+            <div class="hot_class_teacher">{{ item.teacher }}</div>
+            <div class="hot_class_description">{{ item.description }}</div>
           </div>
         </div>
       </div>
@@ -152,11 +99,99 @@ export default {
   name: "Index",
   data() {
     return {
+      courses: [
+        {
+          imageSrc: "https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b",
+          circleUrl: "https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b",
+          name: "数据结构",
+          teacher: "王富贵",
+          description: "高等数学以微积分为主要内容。微积分是研究运动和变化的数学……",
+          studyingCount: 8888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/img/65f54aaa07d33fd122319f4b.jpg#60a54b641fad1dbff4b29aea4d558583",
+          circleUrl: "https://img.js.design/assets/img/65f54aaa07d33fd122319f4b.jpg#60a54b641fad1dbff4b29aea4d558583",
+          name: "数据结构",
+          teacher: "王富贵",
+          description: "高等数学以微积分为主要内容。微积分是研究运动和变化的数学规律，是解决自然科学、工程技术等领域实际问题的重要工具。",
+          studyingCount: 8888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img430164da758808.jpeg",
+          circleUrl: "https://img.js.design/assets/smartFill/img430164da758808.jpeg",
+          name: "计算机组成原理",
+          teacher: "张有财",
+          description: "计算机组成原理课程深入探讨计算机硬件系统的构成原理，包括处理器设计、存储系统、输入输出设备及其接口技术等核心内容。",
+          studyingCount: 888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img418164da758808.jpg",
+          circleUrl: "https://img.js.design/assets/smartFill/img418164da758808.jpg",
+          name: "操作系统",
+          teacher: "赵智慧",
+          description: "操作系统课程系统讲解进程管理、内存管理、文件系统、设备管理、并发与同步控制等关键概念，以及Linux等主流操作系统的内部机制。",
+          studyingCount: 6666,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img282164da731af0.jpg",
+          circleUrl: "https://img.js.design/assets/smartFill/img282164da731af0.jpg",
+          name: "计算机网络",
+          teacher: "李来钱",
+          description: "计算机网络课程涵盖网络体系结构、物理层、数据链路层、网络层、传输层、应用层的原理和技术，以及网络安全、网络管理等相关主题。",
+          studyingCount: 5555,
+        }
+      ],
+      hotCourses: [
+        {
+          imageSrc: "https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b",
+          circleUrl: "https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b",
+          name: "数据结构",
+          teacher: "王富贵",
+          description: "高等数学以微积分为主要内容。微积分是研究运动和变化的数学……",
+          studyingCount: 8888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/img/65f54aaa07d33fd122319f4b.jpg#60a54b641fad1dbff4b29aea4d558583",
+          circleUrl: "https://img.js.design/assets/img/65f54aaa07d33fd122319f4b.jpg#60a54b641fad1dbff4b29aea4d558583",
+          name: "数据结构",
+          teacher: "王富贵",
+          description: "高等数学以微积分为主要内容。微积分是研究运动和变化的数学规律，是解决自然科学、工程技术等领域实际问题的重要工具。",
+          studyingCount: 8888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img430164da758808.jpeg",
+          circleUrl: "https://img.js.design/assets/smartFill/img430164da758808.jpeg",
+          name: "计算机组成原理",
+          teacher: "张有财",
+          description: "计算机组成原理课程深入探讨计算机硬件系统的构成原理，包括处理器设计、存储系统、输入输出设备及其接口技术等核心内容。",
+          studyingCount: 888,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img418164da758808.jpg",
+          circleUrl: "https://img.js.design/assets/smartFill/img418164da758808.jpg",
+          name: "操作系统",
+          teacher: "赵智慧",
+          description: "操作系统课程系统讲解进程管理、内存管理、文件系统、设备管理、并发与同步控制等关键概念，以及Linux等主流操作系统的内部机制。",
+          studyingCount: 6666,
+        },
+        {
+          imageSrc: "https://img.js.design/assets/smartFill/img282164da731af0.jpg",
+          circleUrl: "https://img.js.design/assets/smartFill/img282164da731af0.jpg",
+          name: "计算机网络",
+          teacher: "李来钱",
+          description: "计算机网络课程涵盖网络体系结构、物理层、数据链路层、网络层、传输层、应用层的原理和技术，以及网络安全、网络管理等相关主题。",
+          studyingCount: 5555,
+        }
+      ],
       inquireKey: '',
       sendMsg: '',
+      messages: [
+        // 初始化一条消息（可省略，仅用于演示）
+        {text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
+      ],
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       selectedCategory: 0,
-      categoryNames: ['计算机', '外国语', '数学', '文学', '教育学', '心理学']
+      categoryNames: ['全部', '计算机', '数学', '文学', '教育学', '心理学']
     }
   },
   methods: {
@@ -164,7 +199,13 @@ export default {
       this.$router.push('/introduction')
     },
     sendMessage() {
-      console.log('发送消息给ai')
+      if (this.sendMsg.trim()) {
+        this.messages.push({
+          text: this.sendMsg,
+          isSender: true,
+        });
+        this.sendMsg = '';
+      }
     },
     handleCategoryClick(index) {
       this.selectedCategory = index;
@@ -189,28 +230,42 @@ export default {
     margin-left: 20px;
     border-radius: 10px;
     display: flex;
-    flex-direction: column; /* 将 chat_frame 改为垂直布局 */
-    justify-content: space-between; /* 使子元素在垂直方向两端对齐 */
-    overflow-y: auto; /* 添加滚动条 */
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
 
-    .chat_demo {
+    .chat_bubble-enter-active,
+    .chat_bubble-leave-active {
+      transition: all 0.9s ease;
+    }
+
+    .chat_bubble-enter,
+    .chat_bubble-leave-to {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+
+    .chat_content_left {
+      opacity: 1;
+      border-radius: 4px;
+      background: rgba(245, 247, 254, 1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      font-size: 14px;
+      margin-left: 10px;
+      margin-bottom: 14px;
+      padding: 8px 4px;
+    }
+
+    .chat_content_right {
+      background: #409EFE; /* 自定义发送者消息背景色 */
+      color: #fff;
+      margin-bottom: 14px;
+      padding: 8px 4px;
+      border-radius: 4px;
       display: flex;
-
-      img {
-        width: 30px;
-        height: 30px;
-      }
-
-      .chat_content_left {
-        width: 220.88px;
-        height: 63px;
-        opacity: 1;
-        border-radius: 4.44px;
-        background: rgba(245, 247, 254, 1);
-        box-shadow: 0 px2px4pxrgba(0, 0, 0, 0.25);
-        font-size: 14px;
-        margin-left: 10px;
-      }
+      flex-direction: column;
+      align-items: flex-end;
+      margin-left: auto;
     }
 
     .send_msg {
@@ -225,8 +280,8 @@ export default {
         align-items: center;
       }
     }
-
   }
+
 }
 
 .other_school_course {
@@ -281,19 +336,20 @@ export default {
 
         img {
           width: 100%;
+          height: 54%;
           border-radius: 8px 8px 0 0;
         }
 
         .about_course {
           display: flex;
-          margin: 10px 10px 0 10px;
+          margin: 10px;
 
           .course_name_teacher {
             margin-left: 10px;
 
             .course_name {
               font-size: 16px;
-              font-family: HanSansBold;
+              font-family: HanSansBold, serif;
             }
 
             .course_teacher {
@@ -305,13 +361,16 @@ export default {
         }
 
         .course_description {
-          margin: 0 10px 0 10px;
+          margin: 0 10px;
           font-size: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .studying_count {
-          margin: 0 10px 0 10px;
-          align-self: flex-end; /* 在交叉轴（水平方向）上底部对齐 */
+          margin: 0 10px;
+          //align-self: flex-end; /* 在交叉轴（水平方向）上底部对齐 */
         }
       }
 
@@ -323,10 +382,10 @@ export default {
     background-color: @primaryBackgroundColor;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    padding: 0 10px 0 20px;
+    padding: 0 10px;
 
     .hot_class_title {
-      font-family: HanSansBold;
+      font-family: HanSansBold, serif;
       font-size: 16px;
       height: 46px;
       align-items: center;
@@ -351,17 +410,23 @@ export default {
         width: 80px;
         height: 96px;
         border-radius: 4px;
+        object-fit: cover;
       }
 
       .hot_class_container {
-        margin-left: 10px;
+        margin: 0 10px;
+        max-width: calc(100% - 80px - 20px);
 
         .hot_class_name {
-          font-family: HanSansBold;
+          font-family: HanSansBold, serif;
         }
 
         .hot_class_description {
           margin-top: 6px;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
