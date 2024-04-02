@@ -75,6 +75,14 @@ const routes = [
                         meta: {
                             requireAuth: true
                         }
+                    },
+                    {
+                        path: 'recourses',
+                        name: 'recourses',
+                        component: () => import("@/views/course/Recourse.vue"),
+                        meta: {
+                            requireAuth: true
+                        }
                     }]
             },
             {

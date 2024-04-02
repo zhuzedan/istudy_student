@@ -7,7 +7,8 @@
         <div class="course_about">
           <div class="course_name">生物学</div>
           <div class="course_teacher">沈长庆、张长弓、李四</div>
-          <div class="course_description">生物学（biology）是探索 生命现象 和 生命活动规律 的科学，是 自然科学 中的一门 基础学科 。 其研究对象是生物（包括 植物 、 动物 和 微生物
+          <div class="course_description">生物学（biology）是探索 生命现象 和 生命活动规律 的科学，是 自然科学 中的一门
+            基础学科 。 其研究对象是生物（包括 植物 、 动物 和 微生物
             ）的结构功能、发生和发展规律。 其目的在于阐明和控制 生命活动
             ，改造自然，为农业、工业和医学等实践服务。本课程不仅为同学们展示了动物发育过程的动态美，植物生命活动的绿色美，微生物世界的微观美，还探讨了生命的分子及细胞基础，生命的起源及演化。
           </div>
@@ -111,89 +112,91 @@ export default {
       commitRating: 5,
       treeData: [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": "chapter1-id",
+          "name": "第一章 课程总览",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
+              "id": "section1-1-id",
+              "name": "1.1 小节一：基础概念",
+              "parentId": "chapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": [
                 {
-                  id: 9,
-                  label: '视频',
+                  "id": "video1-1-1-id",
+                  "name": "1.1.1 视频：入门介绍",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "video",
+                  "children": null
                 },
                 {
-                  id: 10,
-                  label: '习题',
+                  "id": "homework1-1-1-id",
+                  "name": "1.1.2 作业：概念练习",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "homework",
+                  "children": null
                 },
                 {
-                  id: 11,
-                  label: '资料',
+                  "id": "resource1-1-1-id",
+                  "name": "1.1.3 资源：阅读材料",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "resource",
+                  "children": null
                 },
                 {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
+                  "id": "quiz1-1-1-id",
+                  "name": "1.1.4 测验：知识点检测",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "quiz",
+                  "children": null
+                }
+              ]
             },
-            {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题重做',
-                },
-              ],
-            }
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
-            {
-              id: 64,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 69,
-                  label: '视频',
-                },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题重做',
-                },
-              ],
-            },
-            // 更多第二级节点...
-          ],
-        },
+          "id": "chapter2-id",
+          "name": "第二章 数据结构基础",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 1,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            // 类似的小节和资源结构
+          ]
+        }
       ],
       defaultProps: {
         children: 'children',
-        label: 'label',
+        label: 'name',
       },
     };
   },
@@ -206,6 +209,7 @@ export default {
       })
           .then(() => {
             this.$message.success('添加成功')
+            this.$router.push('/')
           })
           .catch(() => {
             this.$message.info('取消添加')

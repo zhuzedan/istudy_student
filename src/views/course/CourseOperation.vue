@@ -168,7 +168,8 @@
       <!--错题本开始-->
       <div class="recently_wrong_title_book" v-if="currentMenuIndex==='6'">
         <div class="recent_wrong_title">最新错题</div>
-        <div class="wrong_title_name">设0 < X1 <3 , Xn+1=Xn(3-Xn)^1/2 (n=1、2...) 证明数列{Xn} 的极限存在，并求此极限.</div>
+        <div class="wrong_title_name">设0 < X1 <3 , Xn+1=Xn(3-Xn)^1/2 (n=1、2...) 证明数列{Xn} 的极限存在，并求此极限.
+        </div>
         <div class="answer">解析</div>
         <div class="answer_detail">
           为了借助社交产品的流量，让用户主动分享APP中的内容到社交平台来达到拉新和促活的目的，市场上绝大多数APP都有第三方分享的功能，它是内容分发的最有效途径，并且大大降低了企业的营销成本。
@@ -205,89 +206,179 @@ export default {
       value: '',
       treeData: [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": "chapter1-id",
+          "name": "第一章 课程导论与概述",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
+              "id": "section1-1-id",
+              "name": "1.1 章节背景与目标",
+              "parentId": "chapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": [
                 {
-                  id: 9,
-                  label: '视频',
+                  "id": "video1-1-1-id",
+                  "name": "1.1.1 视频：课程简介",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "video",
+                  "children": null
                 },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题',
-                },
-              ],
+                // 其他资源...
+              ]
             },
-            {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题',
-                },
-              ],
-            }
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
+          "id": "chapter2-id",
+          "name": "第二章 数据结构基础",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 64,
-              label: '二级 1-1',
-              children: [
+              "id": "section2-1-id",
+              "name": "2.1 数组与链表",
+              "parentId": "chapter2-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": [
+                // 相关资源...
                 {
-                  id: 69,
-                  label: '视频',
+                  "id": "video1-1-1-id",
+                  "name": "2.1.1 视频：课程简介",
+                  "parentId": "section1-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "video",
+                  "children": null
                 },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题',
-                },
-              ],
+                // {
+                //   "id": "video1-1-1-id",
+                //   "name": "2.1.2 资源",
+                //   "parentId": "section1-1-id",
+                //   "showStatus": 0,
+                //   "lockStatus": 0,
+                //   "hasChildren": false,
+                //   "tenantId": 0,
+                //   "type": "recourses",
+                //   "children": null
+                // }
+              ]
             },
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
+        {
+          "id": "chapter3-id",
+          "name": "第三章 树与图",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            // 第三章下的小节和资源...
+          ]
+        },
+        {
+          "id": "chapter4-id",
+          "name": "第四章 堆栈与队列",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            // 第四章下的小节和资源...
+          ]
+        },
+        {
+          "id": "chapter5-id",
+          "name": "第五章 排序与搜索算法",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            {
+              "id": "section5-1-id",
+              "name": "5.1 快速排序与归并排序",
+              "parentId": "chapter5-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": true,
+              "tenantId": 0,
+              "type": "section",
+              "children": [
+                {
+                  "id": "video5-1-1-id",
+                  "name": "5.1.1 快速排序原理与实现视频",
+                  "parentId": "section5-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "video",
+                  "children": null
+                },
+                {
+                  "id": "homework5-1-1-id",
+                  "name": "5.1.2 快速排序相关习题",
+                  "parentId": "section5-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "homework",
+                  "children": null
+                },
+                {
+                  "id": "wrong-1-1-id",
+                  "name": "5.1.2 快速排序相关错题",
+                  "parentId": "section5-1-id",
+                  "showStatus": 0,
+                  "lockStatus": 0,
+                  "hasChildren": false,
+                  "tenantId": 0,
+                  "type": "wrongTitle",
+                  "children": null
+                },
+                // 其他资源...
+              ]
+            },
+            // 更多小节...
+          ]
+        }
       ],
       defaultProps: {
         children: 'children',
-        label: 'label',
+        label: 'name',
       },
     }
   },
@@ -303,15 +394,18 @@ export default {
       this.currentMenuIndex = index;
     },
     handleNodeClick(data) {
-      console.log(data.label);
-      if (data.label === '视频') {
+      console.log(data);
+      if (data.type === 'video') {
         this.$router.push('/courseDetail/videoCourse')
       }
-      if (data.label === '习题') {
+      if (data.type === 'homework') {
         this.$router.push('/courseDetail/homework')
       }
-      if (data.label === '错题') {
+      if (data.type === 'wrongTitle') {
         this.$router.push('/courseDetail/wrongTitle')
+      }
+      if (data.type === 'recourses') {
+          this.$router.push('/courseDetail/recourses')
       }
     },
     renderTreeNode(h, {node, data, store}) {
@@ -319,12 +413,8 @@ export default {
 
       return (
           <span>
-          {node.level === 2 && (
-              <i class="el-icon-folder-opened"></i>
-          )}
-            {node.level === 3 && (
-                <i class="el-icon-document"></i>
-            )}
+          {node.level === 2 && (<i class="el-icon-folder-opened"></i>)}
+            {node.level === 3 && (<i class="el-icon-document"></i>)}
             {node.label}
         </span>
       );
