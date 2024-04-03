@@ -1,10 +1,10 @@
 <template>
   <div class="video_course">
+    <!--视频播放-->
     <div class="left_layout">
-      <div class="chapter">第一章：程序设计与C语言 > 1.1关于编程语言和计算机</div>
+      <div class="chapter">第一章 线性代数基础 > 1.1 向量与向量空间</div>
       <div class="teacher_and_date">
-        <div class="teacher">本视频讲师：张长弓、李四</div>
-        <div class="upload_date">发布日期：2023 年 11 月 27日</div>
+        <div class="teacher">发布日期：2024 年 03 月 27日</div>
       </div>
 
       <div class="input_video">
@@ -25,6 +25,7 @@
         </div>
       </div>
     </div>
+    <!--目录笔记提问小测-->
     <div class="right_layout">
       <div class="discipline_category">
         <div
@@ -36,6 +37,7 @@
           {{ name }}
         </div>
       </div>
+      <!--目录-->
       <div class="course_category" v-if="selectedCategory === 0">
         <el-tree
             :data="treeData"
@@ -45,18 +47,29 @@
             :render-content="renderTreeNode"
         />
       </div>
-
+      <!--笔记-->
       <div class="course_note_ai" v-if="selectedCategory === 1">
 
-        <div>1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称排列.
+        <div>{{ displayedNotes }}
         </div>
-        <div>2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆序数.
+
+        <!-- 新增输入框和发送按钮 -->
+        <div class="note_input_container">
+          <el-input
+              placeholder="请输入笔记内容"
+              v-model="manualNoteContent"
+              size="small"
+              clearable
+              @keydown.enter.native="sendManualNote"
+          ></el-input>
+          <el-button type="primary" size="small" @click="sendManualNote">发送</el-button>
         </div>
       </div>
+      <!--提问-->
       <div class="chat_frame" v-if="selectedCategory === 2">
         <chat-example></chat-example>
       </div>
-
+      <!--小测-->
       <div class="course_test" v-if="selectedCategory === 3">
         <div class="title_num" v-for="(number, index) in 12" :key="index">{{ number }}</div>
         <div class="title_description"> A，B均为n阶矩阵，且(A-B)^2=A^2-2AB+B^2，则必有( )</div>
@@ -120,8 +133,8 @@ export default {
       },
       treeData: [
         {
-          "id": "chapter1-id",
-          "name": "第一章 课程导论与概述",
+          "id": "linearAlgebraChapter1-id",
+          "name": "第一章 线性代数基础",
           "parentId": null,
           "showStatus": 0,
           "lockStatus": 0,
@@ -130,22 +143,33 @@ export default {
           "type": "chapter",
           "children": [
             {
-              "id": "section1-1-id",
-              "name": "1.1 章节背景与目标",
-              "parentId": "chapter1-id",
+              "id": "linearAlgebraSection1-1-id",
+              "name": "1.1 向量与向量空间",
+              "parentId": "linearAlgebraChapter1-id",
               "showStatus": 0,
               "lockStatus": 0,
-              "hasChildren": true,
+              "hasChildren": false,
               "tenantId": 0,
               "type": "section",
               "children": []
             },
+            {
+              "id": "linearAlgebraSection1-2-id",
+              "name": "1.2 矩阵与行列式",
+              "parentId": "linearAlgebraChapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            }
             // 更多小节...
           ]
         },
         {
-          "id": "chapter2-id",
-          "name": "第二章 数据结构基础",
+          "id": "linearAlgebraChapter2-id",
+          "name": "第二章 线性方程组",
           "parentId": null,
           "showStatus": 0,
           "lockStatus": 0,
@@ -154,48 +178,33 @@ export default {
           "type": "chapter",
           "children": [
             {
-              "id": "section2-1-id",
-              "name": "2.1 数组与链表",
-              "parentId": "chapter2-id",
+              "id": "linearAlgebraSection2-1-id",
+              "name": "2.1 高斯消元法与矩阵运算",
+              "parentId": "linearAlgebraChapter2-id",
               "showStatus": 0,
               "lockStatus": 0,
-              "hasChildren": true,
+              "hasChildren": false,
               "tenantId": 0,
               "type": "section",
               "children": []
             },
+            {
+              "id": "linearAlgebraSection2-2-id",
+              "name": "2.2 矩阵的秩与线性方程组解的存在性",
+              "parentId": "linearAlgebraChapter2-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            }
             // 更多小节...
           ]
         },
         {
-          "id": "chapter3-id",
-          "name": "第三章 树与图",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            // 第三章下的小节和资源...
-          ]
-        },
-        {
-          "id": "chapter4-id",
-          "name": "第四章 堆栈与队列",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            // 第四章下的小节和资源...
-          ]
-        },
-        {
-          "id": "chapter5-id",
-          "name": "第五章 排序与搜索算法",
+          "id": "linearAlgebraChapter3-id",
+          "name": "第三章 特征值与特征向量",
           "parentId": null,
           "showStatus": 0,
           "lockStatus": 0,
@@ -204,24 +213,38 @@ export default {
           "type": "chapter",
           "children": [
             {
-              "id": "section5-1-id",
-              "name": "5.1 快速排序与归并排序",
-              "parentId": "chapter5-id",
+              "id": "linearAlgebraSection3-1-id",
+              "name": "3.1 特征值与特征向量的概念",
+              "parentId": "linearAlgebraChapter3-id",
               "showStatus": 0,
               "lockStatus": 0,
-              "hasChildren": true,
+              "hasChildren": false,
               "tenantId": 0,
               "type": "section",
               "children": []
             },
+            {
+              "id": "linearAlgebraSection3-2-id",
+              "name": "3.2 对角化与相似变换",
+              "parentId": "linearAlgebraChapter3-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            }
             // 更多小节...
           ]
         }
+        // 更多章节...
       ],
       defaultProps: {
         children: 'children',
         label: 'name',
       },
+      manualNoteContent: '', // 存储手动输入的笔记内容:
+      displayedNotes: '1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称排列.2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆序数.'
     };
   },
   methods: {
@@ -233,6 +256,18 @@ export default {
     // 关闭弹窗
     hideCompletionOverlay() {
       this.isVideoEnded = false;
+    },
+    // 发送手写笔记
+    sendManualNote() {
+      const newNote = this.manualNoteContent.trim(); // 获取并去除前后空格
+
+      if (newNote) { // 如果有内容
+        // 在此处编写保存笔记到数据库或其他相应逻辑的代码
+        console.log('发送手动笔记:', newNote);
+        this.displayedNotes += `${newNote}\n\n`;
+        // 清空输入框内容
+        this.manualNoteContent = '';
+      }
     },
     handleCategoryClick(index) {
       this.selectedCategory = index;
@@ -348,7 +383,7 @@ export default {
       justify-content: center;
       align-items: center;
       width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
 
       .category_name {
         padding: 0 14px 0 14px;
@@ -368,7 +403,15 @@ export default {
     }
 
     .course_note_ai {
-      padding: 0 20px;
+      height: 560px;
+      display: flex;
+      flex-direction: column;
+
+      .note_input_container {
+        display: flex;
+        margin-top: auto;
+      }
+
     }
 
     .chat_frame {

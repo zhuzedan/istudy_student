@@ -41,6 +41,12 @@ export default {
         return;
       }
       this.list1.push({person: (this.sel1 === 0) ? 'A' : 'B', say: this.sendMsg});
+      if (this.sendMsg.includes('为什么')) {
+        this.list1.push({person: 'A', say: '可以试着将这两个向量放进坐标系哦，或许您会对平行四边形法则产生不同的理解。'})
+      }
+      if (this.sendMsg.includes('不明白')) {
+        this.list1.push({person: 'A', say: '您试试对向量坐标进行加减，再将得到的结果画在坐标系上呢？'})
+      }
       this.sendMsg = '';
     },
   }

@@ -98,6 +98,27 @@
               </div>
             </div>
           </div>
+          <div class="answer_area">
+            <div class="analysis_name">相关习题</div>
+            <div>
+              <div class="analysis">已知向量a1，a2，a3线性无关，b1=a1+a2，b2=a2+a3，b3=a3+a1，证明b1，b2，b3线性无关。</div>
+              <div class="input_answer">
+                <el-input type="textarea" :rows="4" placeholder="作答区域"></el-input>
+              </div>
+              <div class="submit_one_about_question">
+                <el-button type="primary">提交</el-button>
+              </div>
+            </div>
+            <div>
+              <div class="analysis">一批零件共100个，次品率为0.1，接连两次从这批零件中任取一个零件，第一次取出的零件不再放回，求第二次才取得正品的概率。</div>
+              <div class="input_answer">
+                <el-input type="textarea" :rows="4" placeholder="作答区域"></el-input>
+              </div>
+              <div class="submit_one_about_question">
+                <el-button type="primary">提交</el-button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -244,6 +265,21 @@ export default {
           font-size: 16px;
         }
 
+        .analysis {
+          margin-top: 10px;
+        }
+
+        .input_answer {
+          margin-top: 10px;
+        }
+
+        .submit_one_about_question {
+          .el-button {
+            display: flex;
+            margin-left: auto;
+          }
+        }
+
         ::v-deep .el-textarea__inner {
           background-color: @primaryBackgroundColor;
         }
@@ -293,11 +329,10 @@ export default {
             margin-top: 20px;
             width: 100%;
 
-            .el-input {
-              width: calc(100% - 100px); /* 确保输入框宽度减去按钮宽度 */
-              flex-grow: 1;
-              margin-right: 10px; /* 添加间距 */
-            }
+            //.el-input {
+            //  width: calc(100% - 100px); /* 确保输入框宽度减去按钮宽度 */
+            //  flex-grow: 1;
+            //}
 
 
             .input-with-rating-container {
