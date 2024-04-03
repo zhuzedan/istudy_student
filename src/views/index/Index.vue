@@ -1,33 +1,10 @@
 <template>
   <div class="index_container">
     <div class="basic_container">
+      <!--海报图-->
       <img src="@/assets/index/index_ai .png" alt="">
-      <div class="chat_frame">
-
-        <transition-group name="chat-bubble" tag="div">
-          <div
-              v-for="(message, index) in messages"
-              :key="message.id"
-              class="chat_content_left"
-              :class="{ 'chat_content_right': message.isSender }"
-          >
-            {{ message.text }}
-          </div>
-        </transition-group>
-
-        <div class="send_msg" @click="sendMessage">
-          <el-input
-              placeholder="请输入内容"
-              v-model="sendMsg"
-          >
-            <img
-                slot="append"
-                src="@/assets/index/send.png"
-                alt=""
-            />
-          </el-input>
-        </div>
-      </div>
+      <!--ai聊天-->
+      <chat-example></chat-example>
     </div>
     <div class="other_school_course">
       <div class="recommend_class">
@@ -95,8 +72,13 @@
 </template>
 
 <script>
+import ChatExample from "@/components/chat/ChatExample.vue";
+
 export default {
   name: "Index",
+  components: {
+    ChatExample
+  },
   data() {
     return {
       courses: [
@@ -184,11 +166,6 @@ export default {
         }
       ],
       inquireKey: '',
-      sendMsg: '',
-      messages: [
-        // 初始化一条消息（可省略，仅用于演示）
-        {id: '1',text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
-      ],
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       selectedCategory: 0,
       categoryNames: ['全部', '计算机', '数学', '文学', '教育学', '心理学']
@@ -197,15 +174,6 @@ export default {
   methods: {
     gotoCourseIntroduction() {
       this.$router.push('/introduction')
-    },
-    sendMessage() {
-      if (this.sendMsg.trim()) {
-        this.messages.push({
-          text: this.sendMsg,
-          isSender: true,
-        });
-        this.sendMsg = '';
-      }
     },
     handleCategoryClick(index) {
       this.selectedCategory = index;
@@ -221,65 +189,8 @@ export default {
   justify-content: center;
   margin-top: 30px;
 
-  .chat_frame {
-    width: 300px;
-    height: 411px;
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    margin-left: 20px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow-y: auto;
-
-    .chat_bubble-enter-active,
-    .chat_bubble-leave-active {
-      transition: all 0.9s ease;
-    }
-
-    .chat_bubble-enter,
-    .chat_bubble-leave-to {
-      transform: translateY(-50px);
-      opacity: 0;
-    }
-
-    .chat_content_left {
-      opacity: 1;
-      border-radius: 4px;
-      background: rgba(245, 247, 254, 1);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-      font-size: 14px;
-      margin-left: 10px;
-      margin-bottom: 14px;
-      padding: 8px 4px;
-    }
-
-    .chat_content_right {
-      background: #409EFE; /* 自定义发送者消息背景色 */
-      color: #fff;
-      margin-bottom: 14px;
-      padding: 8px 4px;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-left: auto;
-    }
-
-    .send_msg {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-
-      img {
-        width: 20px;
-        height: 20px;
-        align-items: center;
-      }
-    }
+  img {
+    margin-right: 20px;
   }
 
 }

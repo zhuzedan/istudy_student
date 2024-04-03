@@ -44,32 +44,8 @@
         <div>2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆序数.
         </div>
       </div>
-
       <div class="chat_frame" v-if="selectedCategory === 2">
-
-        <transition-group name="chat-bubble" tag="div">
-          <div
-              v-for="(message, index) in messages"
-              :key="message.id"
-              class="chat_content_left"
-              :class="{ 'chat_content_right': message.isSender }"
-          >
-            {{ message.text }}
-          </div>
-        </transition-group>
-
-        <div class="send_msg" @click="sendMessage">
-          <el-input
-              placeholder="请输入内容"
-              v-model="sendMsg"
-          >
-            <img
-                slot="append"
-                src="@/assets/index/send.png"
-                alt=""
-            />
-          </el-input>
-        </div>
+        <chat-example></chat-example>
       </div>
 
       <div class="course_test" v-if="selectedCategory === 3">
@@ -93,15 +69,15 @@
 </template>
 
 <script>
+import ChatExample from "@/components/chat/ChatExample.vue";
+
 export default {
   name: "VideoCourse",
+  components: {
+    ChatExample
+  },
   data() {
     return {
-      sendMsg: '',
-      messages: [
-        // 初始化一条消息（可省略，仅用于演示）
-        {id: '1', text: '如果您不知道如何选择适合自己的课程的话，可以尝试与我对话，听听我的建议哦！', isSender: false},
-      ],
       radio: '1',
       selectedCategory: 0,
       categoryNames: ['目录', '笔记', '提问', '小测'],
@@ -238,15 +214,6 @@ export default {
     };
   },
   methods: {
-    sendMessage() {
-      if (this.sendMsg.trim()) {
-        this.messages.push({
-          text: this.sendMsg,
-          isSender: true,
-        });
-        this.sendMsg = '';
-      }
-    },
     handleCategoryClick(index) {
       this.selectedCategory = index;
     },
@@ -286,8 +253,6 @@ export default {
     .chapter {
       font-size: 16px;
       font-family: HanSansBold;
-
-
     }
 
     .teacher_and_date {
@@ -348,56 +313,9 @@ export default {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
       border-radius: 4px;
       display: flex;
-      flex-direction: column; /* 将 chat_frame 改为垂直布局 */
+      flex-direction: column;
       justify-content: space-between; /* 使子元素在垂直方向两端对齐 */
       overflow-y: auto; /* 添加滚动条 */
-
-      .chat_bubble-enter-active,
-      .chat_bubble-leave-active {
-        transition: all 0.9s ease;
-      }
-
-      .chat_bubble-enter,
-      .chat_bubble-leave-to {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-
-      .chat_content_left {
-        opacity: 1;
-        border-radius: 4px;
-        background: rgba(245, 247, 254, 1);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        font-size: 14px;
-        margin-left: 10px;
-        margin-bottom: 14px;
-        padding: 8px 4px;
-      }
-
-      .chat_content_right {
-        background: #409EFE; /* 自定义发送者消息背景色 */
-        color: #fff;
-        margin-bottom: 14px;
-        padding: 8px 4px;
-        border-radius: 4px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        margin-left: auto;
-      }
-
-      .send_msg {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-
-        img {
-          width: 20px;
-          height: 20px;
-          align-items: center;
-        }
-      }
 
     }
 
