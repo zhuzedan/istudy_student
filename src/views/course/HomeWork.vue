@@ -18,23 +18,25 @@
     <div v-if="selectedType === '选择题'">
       <!--可伸缩题号栏-->
       <div class="title_num_box">
-        <div v-if="unfoldStatus" class="title_num" v-for="(number, index) in 12" :key="index">{{ number }}</div>
+        <div v-if="unfoldStatus" class="title_num" v-for="(number, index) in homeworkChoice.length" :key="index">
+          {{ number }}
+        </div>
         <div @click="unOrUpload">
           <i :class="iconClass"></i>
         </div>
       </div>
       <!--题目-->
       <div class="homework_list">
-        <div class="homework_box" v-for="(number, index) in 5" :key="index">
-          <div class="title_name">1.在单链表指针为p的结点之后插入指针为s的结点，正确的操作是：（ ）。</div>
-          <el-radio-group v-model="selectedOption">
+        <div class="homework_box" v-for="(item, index) in homeworkChoice" :key="index">
+          <div class="title_name">1.{{ item.title }}</div>
+          <el-radio-group v-model="item.selectedOption">
             <div class="radio_box">
-              <el-radio v-for="option in options" :key="option.value" :label="option.value">
+              <el-radio v-for="option in item.radioOption" :key="option.value" :label="option.value">
                 {{ option.label }}
               </el-radio>
             </div>
           </el-radio-group>
-          <i class="el-icon-star-off star-off"></i>
+          <i :class="{ 'el-icon-star-off': !item.favourite, 'el-icon-star-on': item.favourite }" @click="toggleStar(item)"></i>
         </div>
       </div>
       <!--提交按钮-->
@@ -43,7 +45,7 @@
     <div v-if="selectedType === '简答题'">
       <!--可伸缩题号栏-->
       <div class="title_num_box">
-        <div v-if="unfoldStatus" class="title_num" v-for="(number, index) in 12" :key="index">{{ number }}</div>
+        <div v-if="unfoldStatus" class="title_num" v-for="(number, index) in 2" :key="index">{{ number }}</div>
         <div @click="unOrUpload">
           <i :class="iconClass"></i>
         </div>
@@ -78,19 +80,53 @@ export default {
   name: "Homework",
   data() {
     return {
+      isStarActive: false,
+      homeworkChoice: [
+        {
+          title: '设线性无关的向量组a1,a2,a3,a4可由向量组b1,b2……bs线性突出，则必有（）',
+          radioOption: [
+            {label: 'A.b1,b2……bs线性相关', value: 'option1'},
+            {label: 'B.b1,b2……bs线性无关', value: 'option2'},
+            {label: 'C.s>=4', value: 'option3'},
+            {label: 'D.s<4', value: 'option4'},
+          ],
+          selectedOption: '',
+          favourite: false
+        },
+        {
+          title: '设a1,a2……as均为n维列向量，A是m*n矩阵，下列正确的是（）',
+          radioOption: [
+            {label: 'A.若a1,a2……as线性相关，则Aa1,Aa2……Aas线性相关', value: 'option1'},
+            {label: 'B.若a1,a2……as线性相关，则Aa1,Aa2……Aas线性无关', value: 'option2'},
+            {label: 'C.若a1,a2……as线性无关，则Aa1,Aa2……Aas线性相关', value: 'option3'},
+            {label: 'D.若a1,a2……as线性无关，则Aa1,Aa2……Aas线性无关', value: 'option4'},
+          ],
+          selectedOption: '',
+          favourite: false
+        }, {
+          title: '设线性无关的向量组a1,a2,a3,a4可由向量组b1,b2……bs线性突出，则必有（）',
+          radioOption: [
+            {label: 'A.b1,b2……bs线性相关', value: 'option1'},
+            {label: 'B.b1,b2……bs线性无关', value: 'option2'},
+            {label: 'C.s>=4', value: 'option3'},
+            {label: 'D.s<4', value: 'option4'},
+          ],
+          selectedOption: '',
+          favourite: false
+        }
+
+      ],
       textarea: '',
-      selectedType: '简答题',
+      selectedType: '选择题',
       unfoldStatus: true,
       iconClass: 'el-icon-arrow-up',
       selectedOption: '', // 初始选择为空或预设值
-      options: [
-        {label: '选项一', value: 'option1'},
-        {label: '选项二', value: 'option2'},
-        {label: '选项三', value: 'option3'},
-      ],
     }
   },
   methods: {
+    toggleStar(item) {
+      item.favourite = !item.favourite;
+    },
     selectType(type) {
       this.selectedType = type;
     },
@@ -108,7 +144,6 @@ export default {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  margin-top: 20px;
   width: 1200px;
   display: flex;
   flex-direction: column;
@@ -186,10 +221,12 @@ export default {
         }
       }
 
-      .star-off {
+      i {
+        font-size: 18px;
         display: flex;
         margin-left: auto;
         margin-bottom: 10px;
+        color: #F7BA2A;
       }
     }
 
@@ -244,7 +281,14 @@ export default {
       }
     }
   }
-
+  .el-button {
+    display: flex;
+    background-color: @primaryColor;
+    border-color: @primaryColor;
+    margin-left: auto;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 
 }
 </style>

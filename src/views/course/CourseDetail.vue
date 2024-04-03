@@ -2,7 +2,7 @@
   <div class="detail_container">
     <div class="course_correlation">
       <div class="course_box">
-        <i class="el-icon-arrow-left"></i>
+        <i class="el-icon-arrow-left" @click="goBack"></i>
         <img class="course_pic"
              src="https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b"  alt="">
         <div class="course_about">
@@ -19,7 +19,12 @@
 
 <script>
 export default {
-  name: "CourseDetail"
+  name: "CourseDetail",
+  methods: {
+    goBack() {
+      this.$router.back();
+    }
+  }
 }
 </script>
 
