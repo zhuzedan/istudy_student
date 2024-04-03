@@ -13,7 +13,16 @@
             ref="videoPlayer"
             :playsinline="true"
             :options="playerOptions"
+            @ended="onVideoEnded"
         ></video-player>
+
+        <!-- 新增蒙版和评分组件 -->
+        <div v-if="isVideoEnded" class="completion-overlay">
+          <div class="close_video"><i class="el-icon-circle-close" @click="hideCompletionOverlay"></i></div>
+          <el-rate v-model="rating" :max="3" :colors="['#F7BA2A', '#F7BA2A', '#F7BA2A']"></el-rate>
+          <p class="completion-text">本节课知识掌握很好</p>
+          <div class="next_video"><i class="el-icon-right"></i></div>
+        </div>
       </div>
     </div>
     <div class="right_layout">
@@ -78,6 +87,8 @@ export default {
   },
   data() {
     return {
+      isVideoEnded: false,
+      rating: 3,
       radio: '1',
       selectedCategory: 0,
       categoryNames: ['目录', '笔记', '提问', '小测'],
@@ -214,6 +225,15 @@ export default {
     };
   },
   methods: {
+    // 视频播放完成弹窗
+    onVideoEnded() {
+      this.isVideoEnded = true;
+      console.log('播放完成')
+    },
+    // 关闭弹窗
+    hideCompletionOverlay() {
+      this.isVideoEnded = false;
+    },
     handleCategoryClick(index) {
       this.selectedCategory = index;
     },
@@ -268,8 +288,53 @@ export default {
     }
 
     .input_video {
+      position: relative;
       width: 860px;
+      height: 484px;
       //margin: 0 auto;
+    }
+
+    .completion-overlay {
+      width: 860px;
+      height: 484px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7); /* 黑色半透明蒙版 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1; /* 确保蒙版在视频之上 */
+
+      .close_video {
+        i {
+          position: absolute; /* 添加绝对定位 */
+          top: 10px; /* 调整为合适的距离，可根据实际需求更改 */
+          right: 10px; /* 调整为合适的距离，可根据实际需求更改 */
+          cursor: pointer; /* 更改为手形光标，表明可点击 */
+          font-size: 18px; /* 调整图标大小，可根据实际需求更改 */
+          color: #fff; /* 设置白色文字颜色 */
+        }
+      }
+
+
+      .completion-text {
+        color: #fff;
+        margin-top: 10px;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .next_video {
+        i {
+          font-size: 20px;
+          color: #fff;
+        }
+      }
+
     }
   }
 
