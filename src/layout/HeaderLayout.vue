@@ -6,7 +6,8 @@
         <div class="logo_text">iStudy</div>
       </router-link>
       <div class="header_tab_bar">
-        <router-link :to="{ name: 'index' }" class="header_tab_name" active-class="header_tab_name_active" exact>首页</router-link>
+        <router-link :to="{ name: 'index' }" class="header_tab_name" active-class="header_tab_name_active" exact>首页
+        </router-link>
         <router-link to="/myCourses" class="header_tab_name" active-class="header_tab_name_active">我的课程</router-link>
         <router-link to="/notebooks" class="header_tab_name" active-class="header_tab_name_active">笔记全集</router-link>
         <router-link to="/mistakes" class="header_tab_name" active-class="header_tab_name_active">错题小本</router-link>
@@ -17,10 +18,10 @@
             prefix-icon="el-icon-search"
             v-model="inquireKey">
         </el-input>
-        <div class="avatar" @click="gotoLogin" v-if="this.$root.loginFlag === false">
+        <div class="avatar" @click="gotoLogin" v-if="!this.$root.loginFlag">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
         </div>
-        <el-dropdown v-if="this.$root.loginFlag === true">
+        <el-dropdown v-if="this.$root.loginFlag">
           <div class="avatar">
             <el-avatar :size="50" :src="loginAvatarUrl"></el-avatar>
           </div>
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+
 export default {
   name: "HeaderLayout",
   data() {
@@ -44,24 +46,42 @@ export default {
       loginAvatarUrl: 'https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b'
     }
   },
+  created() {
+  },
+  mounted() {
+    const userInfo = this.getUserInfoFromLocalStorage();
+    if (userInfo) {
+      this.loginAvatarUrl = userInfo.avatar;
+    }
+  },
   methods: {
+    getUserInfoFromLocalStorage() {
+      const storedUserInfo = localStorage.getItem('userInfo');
+      return storedUserInfo ? JSON.parse(storedUserInfo) : null;
+    },
     gotoLogin() {
       this.$router.push('/login')
     },
     logout() {
-      this.$confirm('确定要退出吗', '退出提示', {
+      this.$confirm('确定要退出吗', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-          .then(() => {
-            this.$message.success('成功退出')
-          })
-          .catch(() => {
-            this.$message.info('取消退出登录')
-          })
-      this.$root.loginFlag = false
-      console.log(this.$root.loginFlag)
+      }).then(() => {
+        window.localStorage.removeItem('accessToken')
+        window.localStorage.removeItem('userInfo')
+        this.$message({
+          type: 'success',
+          message: '成功退出!'
+        });
+        this.$route.loginFlag = false
+        this.$router.push('/')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消退出登录'
+        });
+      });
     },
     gotoPersonal() {
       this.$router.push('/mine')

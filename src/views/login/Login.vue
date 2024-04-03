@@ -28,7 +28,7 @@
                 学校账号登录</h3>
             </div>
             <div v-if="loginWaySelect === '1'">
-              <el-input v-model="formData.username" prefix-icon="el-icon-user"></el-input>
+              <el-input v-model="formData.connectTel" prefix-icon="el-icon-user"></el-input>
               <el-input type="password" prefix-icon="el-icon-lock" v-model="formData.password"></el-input>
               <el-button @click="onSubmit" :loading="isLoading">登 录</el-button>
               <div class="login_bottom">
@@ -53,13 +53,15 @@
   </div>
 </template>
 <script>
+import {loginTel} from '@/api/user'
+
 export default {
   data() {
     return {
       loginWaySelect: '1',
       // 表单数据
       formData: {
-        username: 'admin',
+        connectTel: '18858411412',
         password: 'admin'
       },
       myRoles: {
@@ -87,8 +89,34 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$root.loginFlag = true
-      this.$router.push('/')
+      this.isLoading = true
+      this.$refs.loginForm
+          .validate()
+          .then(() => {
+            return loginTel(this.formData)
+          })
+          .then((res) => {
+            console.log(res);
+            const {data} = res
+            if (res.success) {
+              this.$message.success('登录成功')
+              // token存入缓存中
+              window.localStorage.setItem('accessToken', data.token);
+              // 用户信息存入缓存
+              window.localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
+              // 登录状态存在全局变量
+              this.$root.loginFlag = true
+              this.$router.push('/')
+            } else {
+              this.$message.error(res.errMsg)
+            }
+          })
+          .catch(() => {
+            this.$message.error('验证失败')
+          })
+          .finally(() => {
+            this.isLoading = false
+          })
     }
   }
 }
