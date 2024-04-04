@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layout/BasicLayout.vue'
+import NProgress from "@/utils/nprogess.js";//引入进度条插件
 
 Vue.use(VueRouter)
 
@@ -142,6 +143,22 @@ const router = new VueRouter({
         // 滚动到顶部
         return {x: 0, y: 0}
     }
+})
+
+
+//全局前置路由守卫
+router.beforeEach((to, from, next) => {
+    //页面跳转之前，开启进度条
+    NProgress.start()
+    next()
+});
+
+
+// 全局后置路由守卫
+router.afterEach((to, from) => {
+    //页面跳转之后，关闭启进度条
+    NProgress.done();
+    window.scrollTo(0, 0);
 })
 
 //重复点击相同路由报错解决
