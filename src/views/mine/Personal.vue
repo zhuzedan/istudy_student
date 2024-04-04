@@ -292,87 +292,113 @@ export default {
         label: '2022-2023第二学期'
       }],
       value: '',
-      treeData: [
+      treeData:  [
         {
-          id: 1,
-          label: '第一章：生命之美',
-          children: [
+          "id": "linearAlgebraChapter1-id",
+          "name": "第一章 线性代数基础",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 74,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题',
-                },
-              ],
+              "id": "linearAlgebraSection1-1-id",
+              "name": "1.1 向量与向量空间",
+              "parentId": "linearAlgebraChapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
             },
             {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '视频',
-                },
-                {
-                  id: 10,
-                  label: '习题',
-                },
-                {
-                  id: 11,
-                  label: '资料',
-                },
-                {
-                  id: 12,
-                  label: '错题',
-                },
-              ],
+              "id": "linearAlgebraSection1-2-id",
+              "name": "1.2 矩阵与行列式",
+              "parentId": "linearAlgebraChapter1-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
             }
-            // 更多第二级节点...
-          ],
+            // 更多小节...
+          ]
         },
         {
-          id: 61,
-          label: '第一章：生命之美',
-          children: [
+          "id": "linearAlgebraChapter2-id",
+          "name": "第二章 线性方程组",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
             {
-              id: 64,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 69,
-                  label: '视频',
-                },
-                {
-                  id: 610,
-                  label: '习题',
-                },
-                {
-                  id: 611,
-                  label: '资料',
-                },
-                {
-                  id: 612,
-                  label: '错题',
-                },
-              ],
+              "id": "linearAlgebraSection2-1-id",
+              "name": "2.1 高斯消元法与矩阵运算",
+              "parentId": "linearAlgebraChapter2-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
             },
-            // 更多第二级节点...
-          ],
+            {
+              "id": "linearAlgebraSection2-2-id",
+              "name": "2.2 矩阵的秩与线性方程组解的存在性",
+              "parentId": "linearAlgebraChapter2-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            }
+            // 更多小节...
+          ]
         },
+        {
+          "id": "linearAlgebraChapter3-id",
+          "name": "第三章 特征值与特征向量",
+          "parentId": null,
+          "showStatus": 0,
+          "lockStatus": 0,
+          "hasChildren": true,
+          "tenantId": 0,
+          "type": "chapter",
+          "children": [
+            {
+              "id": "linearAlgebraSection3-1-id",
+              "name": "3.1 特征值与特征向量的概念",
+              "parentId": "linearAlgebraChapter3-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            },
+            {
+              "id": "linearAlgebraSection3-2-id",
+              "name": "3.2 对角化与相似变换",
+              "parentId": "linearAlgebraChapter3-id",
+              "showStatus": 0,
+              "lockStatus": 0,
+              "hasChildren": false,
+              "tenantId": 0,
+              "type": "section",
+              "children": []
+            }
+            // 更多小节...
+          ]
+        }
+        // 更多章节...
       ],
       defaultProps: {
         children: 'children',
