@@ -14,7 +14,7 @@
               :key="index"
               class="category_name"
               :class="{ 'selected': selectedCategory === index }"
-              @click="handleCategoryClick(index)">
+              @click="handleCategoryClick(index, name.courseCategoryId)">
             {{ name.categoryName }}
           </div>
         </div>
@@ -23,7 +23,7 @@
               class="discipline_class"
               v-for="(course, index) in courseList"
               :key="index"
-              @click="gotoCourseIntroduction()"
+              @click="gotoCourseIntroduction(course.scheduleId)"
           >
             <!-- 课程图片 -->
             <img :src="course.courseImg" alt="">
@@ -85,7 +85,7 @@ export default {
       courseList: [],
       categoryList: [
         {
-          courseCategoryId: 9999,
+          courseCategoryId: '',
           categoryName: "全部"
         }
       ],
@@ -122,11 +122,20 @@ export default {
         this.hotCourseList = data
       })
     },
-    gotoCourseIntroduction() {
-      this.$router.push('/introduction')
+    // 跳转到课程详情
+    gotoCourseIntroduction(scheduleId) {
+      this.$router.push({
+        path: '/introduction', // 替换为您的目标路由路径
+        query: { scheduleId }
+      });
     },
-    handleCategoryClick(index) {
+    // 课程分类切换
+    handleCategoryClick(index, courseCategoryId) {
       this.selectedCategory = index;
+      queryOpenCourseList(courseCategoryId).then((res) => {
+        const {data} = res
+        this.courseList = data
+      })
     },
   }
 }

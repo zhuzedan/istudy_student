@@ -1,10 +1,46 @@
 import request from '@/utils/request'
 
 // 首页课程
-export const queryOpenCourseList = () => {
+export const queryOpenCourseList = (courseCategoryId) => {
     return request({
         method: 'GET',
-        url: '/index/queryOpenCourseList'
+        url: '/index/queryOpenCourseList',
+        params: {
+            courseCategoryId
+        }
+    })
+}
+
+// 课程详情
+export const queryOpenCourseComment = (scheduleId) => {
+    return request({
+        method: 'GET',
+        url: '/index/queryOpenCourseComment',
+        params: {
+            scheduleId
+        }
+    })
+}
+
+// 课程大纲
+export const queryPassageList = (scheduleId) => {
+    return request(({
+        method: 'GET',
+        url: '/index/queryPassageList',
+        params: {
+            scheduleId
+        }
+    }))
+}
+
+// 课程评论
+export const queryOpenCourseDetail = (scheduleId) => {
+    return request({
+        method: 'GET',
+        url: '/index/queryOpenCourseDetail',
+        params: {
+            scheduleId
+        }
     })
 }
 
