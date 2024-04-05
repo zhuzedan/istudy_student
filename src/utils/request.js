@@ -60,6 +60,11 @@ request.interceptors.response.use(
         }
     },
     (error) => {
+        // 结束全局加载动画，除非在白名单内
+        if (aLoadingWhiteList.indexOf(error.config.url) === -1) {
+            stopLoading();
+        }
+
         // 对响应错误进行处理，如：提示友好错误信息、重试等
         Message.error(error.toString());
         return Promise.resolve(error);

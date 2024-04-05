@@ -6,7 +6,8 @@
         <div class="logo_text">iStudy</div>
       </router-link>
       <div class="header_tab_bar">
-        <router-link :to="{ name: 'index' }" class="header_tab_name" active-class="header_tab_name_active" exact>首页</router-link>
+        <router-link :to="{ name: 'index' }" class="header_tab_name" active-class="header_tab_name_active" exact>首页
+        </router-link>
         <router-link to="/myCourses" class="header_tab_name" active-class="header_tab_name_active">我的课程</router-link>
         <router-link to="/notebooks" class="header_tab_name" active-class="header_tab_name_active">笔记全集</router-link>
         <router-link to="/mistakes" class="header_tab_name" active-class="header_tab_name_active">错题小本</router-link>
@@ -17,10 +18,12 @@
             prefix-icon="el-icon-search"
             v-model="inquireKey">
         </el-input>
-        <div class="avatar" @click="gotoLogin" v-if="this.$root.loginFlag === false">
+        <!--未登录状态头像为默认-->
+        <div class="avatar" @click="gotoLogin" v-if="!accessTokenExists()">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
         </div>
-        <el-dropdown v-if="this.$root.loginFlag === true">
+        <!--登录后显示当前用户的头像-->
+        <el-dropdown v-else>
           <div class="avatar">
             <el-avatar :size="50" :src="loginAvatarUrl"></el-avatar>
           </div>
@@ -35,16 +38,36 @@
 </template>
 
 <script>
+import {queryUserInfo} from "@/api/user";
+
 export default {
   name: "HeaderLayout",
   data() {
     return {
       inquireKey: '',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      loginAvatarUrl: 'https://img.js.design/assets/img/65af2d2237097e231dfa80dc.webp#cbb5198478492695b7a2299d015d1d3b'
+      loginAvatarUrl: ''
     }
   },
+  computed: {
+
+  },
+  mounted() {
+    this.inquireUserInfo();
+  },
   methods: {
+    // 获取当前用户信息（头像）
+    inquireUserInfo() {
+      if (window.localStorage.getItem('accessToken')) {
+        queryUserInfo().then((res) => {
+          this.loginAvatarUrl = res.data.userInfo.avatar
+        })
+      }
+    },
+    // 判断登录状态
+    accessTokenExists() {
+      return !!window.localStorage.getItem("accessToken");
+    },
     gotoLogin() {
       this.$router.push('/login')
     },
@@ -55,13 +78,14 @@ export default {
         type: 'warning'
       })
           .then(() => {
-            this.$message.success('成功退出')
+            // 移除本地存储中的 accessToken
+            window.localStorage.removeItem('accessToken');
+            this.$forceUpdate(); // 强制更新视图
+            this.$message.success('成功退出');
           })
           .catch(() => {
-            this.$message.info('取消退出登录')
-          })
-      this.$root.loginFlag = false
-      console.log(this.$root.loginFlag)
+            this.$message.info('取消退出登录');
+          });
     },
     gotoPersonal() {
       this.$router.push('/mine')

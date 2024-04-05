@@ -24,7 +24,6 @@ new Vue({
     store,
     data: function () {
         return {
-            loginFlag: false,
         }
     },
     render: h => h(App)

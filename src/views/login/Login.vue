@@ -100,11 +100,7 @@ export default {
             if (res.success) {
               this.$message.success('登录成功')
               // token存入缓存中
-              // window.localStorage.setItem('accessToken', data.token);
-              // 用户信息存入缓存
-              // window.localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
-              // 登录状态存在全局变量
-              this.$root.loginFlag = true
+              window.localStorage.setItem('accessToken', data.token);
               this.$router.push('/')
             }
           })
