@@ -92,13 +92,12 @@ export default {
       this.isLoading = true
       this.$refs.loginForm
           .validate()
-          // .then(() => {
-          //   return loginTel(this.formData)
-          // })
+          .then(() => {
+            return loginTel(this.formData)
+          })
           .then((res) => {
-            // console.log(res);
-            // const {data} = res
-            // if (res.success) {
+            const {data} = res
+            if (res.success) {
               this.$message.success('登录成功')
               // token存入缓存中
               // window.localStorage.setItem('accessToken', data.token);
@@ -107,12 +106,7 @@ export default {
               // 登录状态存在全局变量
               this.$root.loginFlag = true
               this.$router.push('/')
-            // } else {
-            //   this.$message.error(res.errMsg)
-            // }
-          })
-          .catch(() => {
-            this.$message.error('验证失败')
+            }
           })
           .finally(() => {
             this.isLoading = false
