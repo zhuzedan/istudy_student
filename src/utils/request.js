@@ -11,7 +11,7 @@ const aLoadingWhiteList = [
 ];
 
 const request = axios.create({
-    baseURL: process.env.VUE_APP_API_URL + process.env.VUE_APP_BASE_API, // 组合API基础URL
+    baseURL: process.env.VUE_APP_BASE_API, // 组合API基础URL
     // 其他 Axios 配置（如 timeout、headers 等）
     // timeout: 10000
 });

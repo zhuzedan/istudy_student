@@ -12,7 +12,14 @@ module.exports = defineConfig({
         },
     },
     devServer: {
-        port: 8024
+        open: true,
+        port: 8024,
+        proxy: {
+            "/api": {
+                target: process.env.VUE_APP_API_URL, // 本地
+                changeOrigin: true
+            }
+        }
     },
     transpileDependencies: true
 })
