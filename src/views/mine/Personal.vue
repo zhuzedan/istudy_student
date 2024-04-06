@@ -22,14 +22,7 @@
         <div class="study_situation" v-if="currentMenuIndex==='1'">
           <div class="study_situation_top">
             <div class="situation_top_left">
-              <el-select v-model="value" placeholder="请选择学学期">
-                <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
+              <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
               <div class="course" v-for="(item, index) in courseList" :key="index">{{ item.courseName }}</div>
             </div>
             <div class="situation_top_right">
@@ -67,7 +60,7 @@
             </div>
             <div class="course_process">
               <div class="course_title">课程评价</div>
-              <v-chart :option="commitOption"></v-chart>
+              <v-chart :option="evaluateOption"></v-chart>
             </div>
           </div>
         </div>
@@ -169,10 +162,17 @@
 </template>
 
 <script>
+import {queryCourseBySemester, queryCourseEvaluate, queryCourseProgress} from "@/api/user";
+import SemesterSelector from "@/components/selector/SemesterSelector";
+
 export default {
   name: "Personal",
+  components: {
+    SemesterSelector
+  },
   data() {
     return {
+      semesterId: '',
       inputPhone: '13315397985',
       inputName: '张王李',
       inputSex: '女',
@@ -187,30 +187,8 @@ export default {
           label: '男'
         },
       ],
-      courseList: [
-        {
-          id: 1,
-          courseName: '操作系统'
-        },
-        {
-          id: 1,
-          courseName: '软件工程'
-        },
-        {
-          id: 1,
-          courseName: '人工智能导论'
-        },
-        {
-          id: 1,
-          courseName: '马克思主义基本原理'
-        },
-
-        {
-          id: 1,
-          courseName: '数据结构与算法'
-        },
-      ],
-      commitOption: {
+      courseList: [],
+      evaluateOption: {
         title: [],
         polar: {
           radius: [30, '80%']
@@ -221,12 +199,12 @@ export default {
         },
         radiusAxis: {
           type: 'category',
-          data: ['a', 'b', 'c', 'd']
+          data: []
         },
         tooltip: {},
         series: {
           type: 'bar',
-          data: [2, 1.2, 2.4, 3.6],
+          data: [],
           coordinateSystem: 'polar',
           label: {
             show: true,
@@ -237,13 +215,16 @@ export default {
       },
       processOption: {
         xAxis: {
-          data: ['数据结构', '毛概', '母猪的产后护理', '如何摸鱼', '上班三要素']
+          type: 'category',
+          data: [] // 接口返回
         },
-        yAxis: {},
+        yAxis: {
+          type: 'value'
+        },
         series: [
           {
-            type: 'bar',
-            data: [23, 24, 183, 24, 18]
+            data: [], //接口返回
+            type: 'bar'
           }
         ]
       },
@@ -278,21 +259,7 @@ export default {
       srcList: [
         'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       ],
-      options: [{
-        value: '选项1',
-        label: '2023-2024第一学期'
-      }, {
-        value: '选项2',
-        label: '2023-2024第二学期'
-      }, {
-        value: '选项3',
-        label: '2022-2023第一学期'
-      }, {
-        value: '选项4',
-        label: '2022-2023第二学期'
-      }],
-      value: '',
-      treeData:  [
+      treeData: [
         {
           "id": "linearAlgebraChapter1-id",
           "name": "第一章 线性代数基础",
@@ -411,7 +378,49 @@ export default {
       return 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
     }
   },
+  created() {
+    this.inquireCourseBySemester(this.semesterId)
+    this.inquireCourseProgress()
+    this.inquireCourseEvaluate()
+  },
   methods: {
+    onSemesterChangeFromComponent(newSemesterId) {
+      this.semesterId = newSemesterId;
+      this.inquireCourseBySemester(this.semesterId)
+    },
+    // 所上课程列表
+    inquireCourseBySemester(semesterId) {
+      queryCourseBySemester(semesterId).then((res) => {
+        this.courseList = res.data
+      })
+    },
+    // 课程总体进度
+    inquireCourseProgress() {
+      queryCourseProgress().then((res) => {
+        const progressesName = [];
+        const progressPercent = [];
+        res.data.forEach(item => {
+          progressesName.push(item.courseName);
+          progressPercent.push(item.currentProgress);
+        });
+        this.processOption.xAxis.data = progressesName
+        this.processOption.series[0].data = progressPercent
+      })
+    },
+    // 课程综合评价
+    inquireCourseEvaluate() {
+      queryCourseEvaluate().then((res) => {
+        console.log('evaluate', res.data)
+        const evaluateName = [];
+        const evaluateLevel = [];
+        res.data.forEach(item => {
+          evaluateName.push(item.courseName);
+          evaluateLevel.push(item.avgStarLevel)
+        })
+        this.evaluateOption.radiusAxis.data = evaluateName
+        this.evaluateOption.series.data = evaluateLevel
+      })
+    },
     editOneAccount() {
       this.editTheAccount = true
     },
@@ -493,7 +502,7 @@ export default {
 
           .situation_top_left {
             padding: 10px;
-            width: 210px;
+            width: 30%;
             background-color: @primaryBackgroundColor;
             overflow-y: auto;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);

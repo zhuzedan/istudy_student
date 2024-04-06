@@ -3,19 +3,10 @@
     <div class="course_container">
       <!--选择框-->
       <el-row :gutter="20">
-        <el-col :span="6">
-          <div class="grid-content"></div>
-        </el-col>
-        <el-col :span="6" :offset="12">
+        <el-col :span="6" :offset="18">
           <div class="grid-content">
-            <el-select v-model="semesterId" @change="onSemesterChange" placeholder="请选择">
-              <el-option
-                  v-for="item in semesterList"
-                  :key="item.semesterId"
-                  :label="item.openSemester"
-                  :value="item.semesterId">
-              </el-option>
-            </el-select>
+            <!-- 替换为 SemesterSelector 组件 -->
+            <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent" />
           </div>
         </el-col>
       </el-row>
@@ -44,43 +35,27 @@
 </template>
 
 <script>
-import {querySemester} from "@/api/common";
 import {queryMyCourseList} from "@/api/course";
-
+import SemesterSelector from "@/components/selector/SemesterSelector";
 export default {
   name: "MyCourse",
+  components: {
+    SemesterSelector
+  },
   data() {
     return {
       courseList: [],
-      semesterList: [
-        {
-          semesterId: '',
-          currentSemester: '',
-          openSemester: '全部'
-        }
-      ],
       semesterId: '',
     }
   },
   created() {
-    this.inquireSemester()
     this.inquireCourseList(this.semesterId)
   },
   methods: {
-    // 学期选择器触发
-    onSemesterChange(e) {
-      this.semesterId = e
-      this.inquireCourseList(this.semesterId)
-    },
-    // 学年学期列表
-    inquireSemester() {
-      querySemester().then((res) => {
-        const {data} = res
-        this.semesterList = this.semesterList.concat(data)
-        // 获取当前学期semesterId
-        const currentSemesterItem = this.semesterList.find(item => item.currentSemester === 1);
-        this.semesterId = currentSemesterItem ? currentSemesterItem.semesterId : null;
-      })
+    // 新增处理 SemesterSelector 组件传出的 semester-change 事件的方法
+    onSemesterChangeFromComponent(newSemesterId) {
+      this.semesterId = newSemesterId;
+      this.inquireCourseList(this.semesterId);
     },
     // 课程列表
     inquireCourseList(semesterId) {

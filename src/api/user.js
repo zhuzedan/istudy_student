@@ -16,3 +16,30 @@ export const queryUserInfo = () => {
         url: '/user/queryUserInfo'
     })
 }
+
+// 个人中心课程列表
+export  const queryCourseBySemester = (semesterId) => {
+    return request({
+        method: 'GET',
+        url: '/user/queryCourseBySemester',
+        params: {
+            semesterId
+        }
+    })
+}
+
+// 课程总体进度
+export const queryCourseProgress = () => {
+    return request({
+        method: 'GET',
+        url: '/user/queryCourseProgress'
+    })
+}
+
+// 课程综合评价
+export const queryCourseEvaluate = () => {
+    return request({
+        method: 'GET',
+        url: '/user/queryCourseEvaluate'
+    })
+}
