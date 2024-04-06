@@ -59,3 +59,23 @@ export const queryOpenCourseListTop10 = () => {
         url: '/index/queryOpenCourseListTop10'
     })
 }
+
+// 新增评论
+export const insertComment = (data) => {
+    return request({
+        method: 'POST',
+        url: '/index/insertComment',
+        data
+    })
+}
+
+// 添加课程
+export const insertSelectionForOpenCourse = (scheduleId) => {
+    return request({
+        method: 'POST',
+        url: '/index/insertSelectionForOpenCourse',
+        data: {
+            scheduleId
+        }
+    })
+}

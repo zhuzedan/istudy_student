@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {Loading, Message} from "element-ui";
-
+import {Loading, Message, MessageBox} from "element-ui";
+import router from "@/router";
 // 请求动画
 let oLoadingAnimation;
 // 请求数量
@@ -44,7 +44,6 @@ request.interceptors.response.use(
     (response) => {
         // 对响应数据进行处理，如：统一提取 data 字段
         const {data, config} = response;
-
         // 结束全局加载动画，除非在白名单内
         if (aLoadingWhiteList.indexOf(config.url) === -1) {
             stopLoading();
@@ -64,9 +63,25 @@ request.interceptors.response.use(
         if (aLoadingWhiteList.indexOf(error.config.url) === -1) {
             stopLoading();
         }
+        // console.log('Error details:', error.response.data); // 打印服务器返回的错误详情（如您提供的出参示例）
+        // console.log('HTTP Status:', error.response.status); // 打印HTTP状态码
+        // console.log('Request Config:', error.config); // 打印请求配置，有助于排查问题
 
-        // 对响应错误进行处理，如：提示友好错误信息、重试等
-        Message.error(error.toString());
+        if (error.response.data.errCode === 401) {
+            window.localStorage.removeItem('accessToken')
+            MessageBox.alert(error.response.data.errMsg, "提示", {
+                confirmButtonText: '确定',
+                callback: action => {
+                    router.replace({
+                        path: '/login',
+                        query: {redirect: router.currentRoute.fullPath}
+                    });
+                }
+            });
+        } else {
+            // 对响应错误进行处理，如：提示友好错误信息、重试等
+            Message.error(error.response.data.errMsg);
+        }
         return Promise.resolve(error);
     }
 );

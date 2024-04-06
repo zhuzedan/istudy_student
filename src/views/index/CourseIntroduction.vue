@@ -60,19 +60,19 @@
               ref="textareaInput"
               type="textarea"
               placeholder="请输入评论"
-              v-model="textarea"
+              v-model="commentData.commentContent"
               autosize
               minRows="2"
               maxRows="6">
           </el-input>
           <el-rate
-              v-model="commitRating"
+              v-model="commentData.starLevel"
               show-score
               text-color="#ff9900"
               score-template="{value}">
           </el-rate>
 
-          <el-button type="primary" @click="handleCommit()">发送</el-button>
+          <el-button type="primary" @click="handleCommit(commentData)">发送</el-button>
         </div>
       </div>
     </div>
@@ -80,19 +80,29 @@
 </template>
 
 <script>
-import {queryOpenCourseComment, queryOpenCourseDetail, queryPassageList} from "@/api"
+import {
+  insertComment,
+  insertSelectionForOpenCourse,
+  queryOpenCourseComment,
+  queryOpenCourseDetail,
+  queryPassageList
+} from "@/api"
 import {formatTimestamp} from '@/utils/time'
 
 export default {
   name: "CourseIntroduction",
   data() {
     return {
+      scheduleId: '',
       courseContent: {},
       passageList: [],
       courseCommitList: [],
-      textarea: '',
+      commentData: {
+        scheduleId: '',
+        commentContent: '',
+        starLevel: 5
+      },
       activeTab: 'dialog',
-      commitRating: 5,
       defaultProps: {
         children: 'subPassageList',
         label: 'passageTitle',
@@ -101,6 +111,7 @@ export default {
   },
   created() {
     const scheduleId = this.$route.query.scheduleId;
+    this.scheduleId = scheduleId
     this.inquireCourseDetail(scheduleId)
     this.inquirePassageList(scheduleId)
     this.inquireCourseCommit(scheduleId)
@@ -116,7 +127,6 @@ export default {
     inquirePassageList(scheduleId) {
       queryPassageList(scheduleId).then((res) => {
         this.passageList = res.data
-        console.log('课程大纲', this.passageList)
       })
     },
     // 课程评论
@@ -125,14 +135,31 @@ export default {
         this.courseCommitList = res.data.commentInfoList
       })
     },
+    // 新增评论
+    insertCourseComment(commentData) {
+      insertComment(commentData)
+    },
+    // 发送评论
+    handleCommit(commentData) {
+      commentData.scheduleId = this.scheduleId;
+      this.insertCourseComment(commentData)
+      this.inquireCourseCommit(this.scheduleId)
+      this.$forceUpdate();
+      this.commentData.commentContent = ''
+    },
+    // 添加课程
+    insertCourse(scheduleId) {
+      insertSelectionForOpenCourse(scheduleId)
+    },
     addCourse() {
-      this.$confirm('是否添加本课程', '退出提示', {
+      this.$confirm('是否添加本课程', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       })
           .then(() => {
+            this.insertCourse(this.scheduleId)
             this.$message.success('添加成功')
-            this.$router.push('/')
+            this.$router.push('/myCourse')
           })
           .catch(() => {
             this.$message.info('取消添加')
@@ -154,9 +181,6 @@ export default {
             {node.label}
         </span>
       );
-    },
-    handleCommit() {
-      console.log('发送一条评论')
     },
     formatCommitDate(timestamp) {
       return formatTimestamp(timestamp);

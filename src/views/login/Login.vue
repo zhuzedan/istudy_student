@@ -54,7 +54,7 @@
 </template>
 <script>
 import {loginTel} from '@/api/user'
-
+import router from "@/router";
 export default {
   data() {
     return {
@@ -101,7 +101,14 @@ export default {
               this.$message.success('登录成功')
               // token存入缓存中
               window.localStorage.setItem('accessToken', data.token);
-              this.$router.push('/')
+              const redirect = router.currentRoute.query.redirect;
+              if (redirect) {
+                // 存在redirect参数，跳转回之前请求的页面
+                router.replace(redirect);
+              } else {
+                // 不存在redirect参数，跳转至默认首页
+                router.replace('/');
+              }
             }
           })
           .finally(() => {
