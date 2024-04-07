@@ -43,12 +43,17 @@ export default {
         this.semesterList = this.semesterList.concat(data);
 
         // 如果传入的 initialSemesterId 无效，尝试获取当前学期semesterId
-        // if (!this.selectedSemesterId) {
-        //   const currentSemesterItem = this.semesterList.find(
-        //       (item) => item.currentSemester === 1
-        //   );
-        //   this.selectedSemesterId = currentSemesterItem?.semesterId || '';
-        // }
+        if (!this.selectedSemesterId) {
+          const currentSemesterItem = this.semesterList.find(
+              (item) => item.currentSemester === 1
+          );
+          this.selectedSemesterId = currentSemesterItem?.semesterId || '';
+        }
+
+        // 查询完学期列表后立即触发 semester-change 事件
+        this.$nextTick(() => {
+          this.$emit('semester-change', this.selectedSemesterId);
+        });
       });
     },
     // 学期选择器触发

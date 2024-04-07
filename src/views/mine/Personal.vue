@@ -27,9 +27,76 @@
             </div>
             <div class="situation_top_right">
               <div class="star_level">课程星级</div>
-              <div class="star_level_chart">
-                <v-chart :option="option"/>
+              <div class="star_level_box">
+                <!--图表-->
+                <div class="star_level_chart">
+                  <v-chart :option="starOption"/>
+                </div>
+                <!--星星介绍-->
+                <div class="star_level_introduction">
+                  <div class="star_container">
+                    <div class="star_line"></div>
+                    <div>
+                      <div class="star_star">
+                        <el-rate
+                            disabled
+                            :max="3"
+                            :value="3"
+                            show-score
+                            text-color="#ff9900">
+                        </el-rate>
+                      </div>
+                      <div class="star_percent">百分比%</div>
+                    </div>
+                  </div>
+                  <div class="star_container">
+                    <div class="star_line" style="background-color: #6BD8BA"></div>
+                    <div>
+                      <div class="star_star">
+                        <el-rate
+                            disabled
+                            :max="2"
+                            :value="2"
+                            show-score
+                            text-color="#ff9900">
+                        </el-rate>
+                      </div>
+                      <div class="star_percent">百分比%</div>
+                    </div>
+                  </div>
+                  <div class="star_container">
+                    <div class="star_line" style="background-color: #F2BB25"></div>
+                    <div>
+                      <div class="star_star">
+                        <el-rate
+                            disabled
+                            :max="1"
+                            :value="1"
+                            show-score
+                            text-color="#ff9900">
+                        </el-rate>
+                      </div>
+                      <div class="star_percent">百分比%</div>
+                    </div>
+                  </div>
+                  <div class="star_container">
+                    <div class="star_line" style="background-color: #A8A8FF"></div>
+                    <div>
+                      <div class="star_star">
+                        <el-rate
+                            disabled
+                            :max="0"
+                            :value="0"
+                            show-score
+                            text-color="#ff9900">
+                        </el-rate>
+                      </div>
+                      <div class="star_percent">百分比%</div>
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div class="start_commit">
                 <div class="start_commit_left">
                   <div class="commit_left_content">您好像对第一章：行列式 中的计算行列式的常见题型与方法一节很不熟悉呢。您这一节的平均星级为1.56，少于您其他课程平均星级。</div>
@@ -162,7 +229,7 @@
 </template>
 
 <script>
-import {queryCourseBySemester, queryCourseEvaluate, queryCourseProgress} from "@/api/user";
+import {queryCourseBySemester, queryCourseEvaluate, queryCourseProgress, queryCourseStar} from "@/api/user";
 import SemesterSelector from "@/components/selector/SemesterSelector";
 
 export default {
@@ -228,29 +295,34 @@ export default {
           }
         ]
       },
-      option: {
+      starOption: {
         title: {
           left: 'center',
           top: 'center'
         },
+        color: ['#A8A8FF', '#6BD8BA', '#F2BB25', '#3A5BF0'],
         series: [
           {
             type: 'pie',
             data: [
               {
-                value: 335,
+                value: '', // 接口返回
+                name: '0星'
+              },
+              {
+                value: '', // 接口返回
                 name: '1星'
               },
               {
-                value: 234,
+                value: '', // 接口返回
                 name: '2星'
               },
               {
-                value: 1548,
+                value: '', // 接口返回
                 name: '3星'
               }
             ],
-            radius: ['50%', '87%']
+            radius: ['70%', '90%']
           }
         ]
       },
@@ -379,7 +451,6 @@ export default {
     }
   },
   created() {
-    this.inquireCourseBySemester(this.semesterId)
     this.inquireCourseProgress()
     this.inquireCourseEvaluate()
   },
@@ -387,11 +458,21 @@ export default {
     onSemesterChangeFromComponent(newSemesterId) {
       this.semesterId = newSemesterId;
       this.inquireCourseBySemester(this.semesterId)
+      this.inquireCourseStar(this.semesterId)
     },
     // 所上课程列表
     inquireCourseBySemester(semesterId) {
       queryCourseBySemester(semesterId).then((res) => {
         this.courseList = res.data
+      })
+    },
+    // 课程星级分析
+    inquireCourseStar(semesterId) {
+      queryCourseStar(semesterId).then((res) => {
+        this.starOption.series[0].data[0].value = res.data.zeroStarCount
+        this.starOption.series[0].data[1].value = res.data.oneStarCount
+        this.starOption.series[0].data[2].value = res.data.twoStarCount
+        this.starOption.series[0].data[3].value = res.data.threeStarCount
       })
     },
     // 课程总体进度
@@ -410,7 +491,6 @@ export default {
     // 课程综合评价
     inquireCourseEvaluate() {
       queryCourseEvaluate().then((res) => {
-        console.log('evaluate', res.data)
         const evaluateName = [];
         const evaluateLevel = [];
         res.data.forEach(item => {
@@ -498,7 +578,7 @@ export default {
       .study_situation {
         .study_situation_top {
           display: flex;
-          height: 550px;
+          //height: 550px;
 
           .situation_top_left {
             padding: 10px;
@@ -530,12 +610,45 @@ export default {
 
             .star_level {
               font-size: 16px;
+              font-family: HanSansBold;
             }
 
-            .star_level_chart {
-              height: 200px;
-              //background-color: #3165F6;
-              width: auto;
+            .star_level_box {
+              display: flex;
+
+              .star_level_chart {
+                width: 50%;
+                height: 200px;
+              }
+
+              .star_level_introduction {
+                width: 50%;
+                height: 200px;
+                display: flex;
+                flex-wrap: wrap;
+
+                .star_container {
+                  display: flex;
+                  width: 50%;
+                  height: 50%;
+                  position: relative;
+                  align-items: center;
+
+                  .star_line {
+                    width: 5px;
+                    height: 60px;
+                    opacity: 1;
+                    border-radius: 133.33px;
+                    background: rgba(22, 93, 255, 1);
+                    display: flex;
+                    margin-right: 10px;
+                    margin-left: 20%;
+                  }
+
+                  .star_percent {
+                  }
+                }
+              }
             }
 
             .start_commit {

@@ -18,7 +18,7 @@ export const queryUserInfo = () => {
 }
 
 // 个人中心课程列表
-export  const queryCourseBySemester = (semesterId) => {
+export const queryCourseBySemester = (semesterId) => {
     return request({
         method: 'GET',
         url: '/user/queryCourseBySemester',
@@ -41,5 +41,16 @@ export const queryCourseEvaluate = () => {
     return request({
         method: 'GET',
         url: '/user/queryCourseEvaluate'
+    })
+}
+
+// 课程星级分析
+export const queryCourseStar = (selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/user/queryCourseStar',
+        params: {
+            selectionId
+        }
     })
 }
