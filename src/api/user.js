@@ -9,11 +9,39 @@ export const loginTel = (formData) => {
     })
 }
 
+// 学号登录
+export const loginSchool = (data) => {
+    return request({
+        method: 'POST',
+        url: '/user/login',
+        data
+    })
+}
+
+
 // 个人信息
 export const queryUserInfo = () => {
     return request({
         method: 'GET',
         url: '/user/queryUserInfo'
+    })
+}
+
+// 修改个人信息
+export const updateUserInfo = (data) => {
+    return request({
+        method: 'PUT',
+        url: '/user/updateUserInfo',
+        data: data
+    })
+}
+
+// 修改密码
+export const updatePassword = (data) => {
+    return request({
+        method: 'PUT',
+        url: '/user/updatePwd',
+        data
     })
 }
 

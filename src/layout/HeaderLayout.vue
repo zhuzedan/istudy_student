@@ -82,6 +82,7 @@ export default {
             window.localStorage.removeItem('accessToken');
             this.$forceUpdate(); // 强制更新视图
             this.$message.success('成功退出');
+            this.$router.push('/')
           })
           .catch(() => {
             this.$message.info('取消退出登录');

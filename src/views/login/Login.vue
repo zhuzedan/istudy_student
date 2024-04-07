@@ -29,17 +29,17 @@
             </div>
             <div v-if="loginWaySelect === '1'">
               <el-input v-model="formData.connectTel" prefix-icon="el-icon-user"></el-input>
-              <el-input type="password" prefix-icon="el-icon-lock" v-model="formData.password"></el-input>
+              <el-input show-password prefix-icon="el-icon-lock" v-model="formData.password"></el-input>
               <el-button @click="onSubmit" :loading="isLoading">登 录</el-button>
               <div class="login_bottom">
                 <div class="login_forget">忘记密码</div>
               </div>
             </div>
             <div v-if="loginWaySelect === '2'">
-              <el-input prefix-icon="el-icon-school" placeholder="请输入学校"></el-input>
-              <el-input prefix-icon="el-icon-user" placeholder="请输入学号"></el-input>
-              <el-input type="password" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
-              <el-button @click="onSubmit" :loading="isLoading">登 录</el-button>
+              <el-input prefix-icon="el-icon-school" v-model="schoolData.schoolName" placeholder="请输入学校"></el-input>
+              <el-input prefix-icon="el-icon-user" v-model="schoolData.username" placeholder="请输入学号"></el-input>
+              <el-input show-password prefix-icon="el-icon-lock" v-model="schoolData.password" placeholder="请输入密码"></el-input>
+              <el-button @click="loginBySchool" :loading="isLoading">登 录</el-button>
               <div class="login_bottom" style="margin-top: 20px">
                 <div class="login_forget">忘记密码</div>
               </div>
@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-import {loginTel} from '@/api/user'
+import {loginTel,loginSchool} from '@/api/user'
 import router from "@/router";
 export default {
   data() {
@@ -62,6 +62,12 @@ export default {
       // 表单数据
       formData: {
         connectTel: '18858411412',
+        password: 'admin'
+      },
+      // 学校账号
+      schoolData: {
+        schoolName: '宁波财经学院',
+        username: 'admin',
         password: 'admin'
       },
       myRoles: {
@@ -94,6 +100,33 @@ export default {
           .validate()
           .then(() => {
             return loginTel(this.formData)
+          })
+          .then((res) => {
+            const {data} = res
+            if (res.success) {
+              this.$message.success('登录成功')
+              // token存入缓存中
+              window.localStorage.setItem('accessToken', data.token);
+              const redirect = router.currentRoute.query.redirect;
+              if (redirect) {
+                // 存在redirect参数，跳转回之前请求的页面
+                router.replace(redirect);
+              } else {
+                // 不存在redirect参数，跳转至默认首页
+                router.replace('/');
+              }
+            }
+          })
+          .finally(() => {
+            this.isLoading = false
+          })
+    },
+    loginBySchool() {
+      this.isLoading = true
+      this.$refs.loginForm
+          .validate()
+          .then(() => {
+            return loginSchool(this.schoolData)
           })
           .then((res) => {
             const {data} = res

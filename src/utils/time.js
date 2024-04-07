@@ -15,3 +15,18 @@ export function formatTimestamp(timestamp) {
 
     return `${year}年${month}月${day}日${hours}:${minutes}:${seconds}`;
 }
+
+/**
+ * 将时间窗转成生日
+ *
+ * @param {number} timestamp - 时间戳（秒）
+ * @returns {string} - 格式化后的日期时间字符串
+ */
+export function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = `0${date.getMonth() + 1}`.slice(-2); // 月份加1并补零
+    const day = `0${date.getDate()}`.slice(-2); // 日份补零
+
+    return `${year}年${month}月${day}日`;
+}

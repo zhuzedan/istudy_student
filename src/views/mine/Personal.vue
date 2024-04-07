@@ -135,49 +135,56 @@
         <!--个人信息开始-->
         <div class="person_information" v-if="currentMenuIndex==='2'">
           <div style="display: flex">
-            <el-button type="primary" @click.native="editOneAccount">编辑</el-button>
-            <el-button @click.native="saveOneAccount" v-if="editTheAccount">保存</el-button>
+            <el-button type="primary" @click.native="editOneAccount" v-if="!editTheAccount">编辑</el-button>
+            <el-button @click.native="cancelOneAccount" v-if="editTheAccount">取消</el-button>
+            <el-button @click.native="saveOneAccount(userInfo)" v-if="editTheAccount">保存</el-button>
           </div>
           <div style="display: flex">
             <div class="avatar_box">
               <el-tooltip effect="dark" content="点击更换头像" placement="top">
-                <el-upload
-                    class="avatar-uploader"
-                    :show-file-list="false"
+                <!--<el-upload-->
+                class="avatar-uploader"
+                :show-file-list="false"
                 >
-                  <img v-if="avatar" :src="avatar" class="avatar" alt=""/>
-                  <i v-else class="el-icon-plus avatar-uploader-icon"/>
-                </el-upload>
+                <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" alt=""/>
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+                <!--</el-upload>-->
               </el-tooltip>
             </div>
             <div class="information_list">
               <div class="information">
-                <div class="account_id">账号</div>
-                <div class="account_name" v-if="!editTheAccount">13315397985</div>
+                <div class="account_id">手机号</div>
+                <div class="account_name" v-if="!editTheAccount">{{ userInfo.connectTel }}</div>
                 <div class="account_name" v-if="editTheAccount">
-                  <el-input v-model="inputPhone" placeholder="请输入内容"></el-input>
+                  <el-input v-model="userInfo.connectTel" placeholder="请输入内容"></el-input>
                 </div>
               </div>
               <div class="information">
                 <div class="account_id">姓名</div>
-                <div class="account_name" v-if="!editTheAccount">{{ inputName }}</div>
+                <div class="account_name" v-if="!editTheAccount">{{ userInfo.realName }}</div>
                 <div class="account_name" v-if="editTheAccount">
-                  <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+                  <el-input v-model="userInfo.realName" placeholder="请输入内容"></el-input>
                 </div>
-
               </div>
               <div class="information">
                 <div class="account_id">昵称</div>
-                <div class="account_name" v-if="!editTheAccount">{{ inputName }}</div>
+                <div class="account_name" v-if="!editTheAccount">{{ userInfo.nickName }}</div>
                 <div class="account_name" v-if="editTheAccount">
-                  <el-input v-model="inputName" placeholder="请输入内容"></el-input>
+                  <el-input v-model="userInfo.nickName" placeholder="请输入内容"></el-input>
+                </div>
+              </div>
+              <div class="information">
+                <div class="account_id">介绍</div>
+                <div class="account_name" v-if="!editTheAccount">{{ userInfo.introduction }}</div>
+                <div class="account_name" v-if="editTheAccount">
+                  <el-input v-model="userInfo.introduction" type="textarea" placeholder="请输入内容"></el-input>
                 </div>
               </div>
               <div class="information">
                 <div class="account_id">性别</div>
-                <div class="account_name" v-if="!editTheAccount">女</div>
+                <div class="account_name" v-if="!editTheAccount">{{ userInfo.gender === 1 ? '男' : '女' }}</div>
                 <div class="account_name" v-if="editTheAccount">
-                  <el-select v-model="inputSex" placeholder="请选择">
+                  <el-select v-model="userInfo.gender" placeholder="请选择">
                     <el-option
                         v-for="item in sexList"
                         :key="item.value"
@@ -189,7 +196,7 @@
               </div>
               <div class="information">
                 <div class="account_id">出生年份</div>
-                <div class="account_name">2001</div>
+                <div class="account_name">{{ formatCommitDate(userInfo.birthday) }}</div>
               </div>
             </div>
           </div>
@@ -202,10 +209,10 @@
               <i class="el-icon-lock"></i>
               <div class="change_pwd">修改密码</div>
             </div>
-            <el-input placeholder="请输入原密码"></el-input>
-            <el-input placeholder="请输入新密码"></el-input>
-            <el-input placeholder="请确认新密码"></el-input>
-            <el-button type="primary">确认修改</el-button>
+            <el-input placeholder="请输入原密码" v-model="updatePwd.oldPwd" show-password></el-input>
+            <el-input placeholder="请输入新密码" v-model="updatePwd.newPwd" show-password></el-input>
+            <el-input placeholder="请确认新密码" v-model="updatePwd.againNewPwd" show-password></el-input>
+            <el-button type="primary" @click.native="confirmUpdatePwd(updatePwd)">确认修改</el-button>
           </div>
 
           <div class="update_password_box">
@@ -229,8 +236,17 @@
 </template>
 
 <script>
-import {queryCourseBySemester, queryCourseEvaluate, queryCourseProgress, queryCourseStar} from "@/api/user";
+import {
+  queryCourseBySemester,
+  queryCourseEvaluate,
+  queryCourseProgress,
+  queryCourseStar,
+  queryUserInfo,
+  updatePassword,
+  updateUserInfo
+} from "@/api/user";
 import SemesterSelector from "@/components/selector/SemesterSelector";
+import {formatDate} from '@/utils/time'
 
 export default {
   name: "Personal",
@@ -239,19 +255,22 @@ export default {
   },
   data() {
     return {
+      userInfo: {},
+      updatePwd: {
+        oldPwd: '',
+        newPwd: '',
+        againNewPwd: ''
+      },
       semesterId: '',
-      inputPhone: '13315397985',
-      inputName: '张王李',
-      inputSex: '女',
       editTheAccount: false,
       sexList: [
         {
-          value: '女',
-          label: '女'
+          value: 1,
+          label: '男'
         },
         {
-          value: '男',
-          label: '男'
+          value: 2,
+          label: '女'
         },
       ],
       courseList: [],
@@ -327,7 +346,6 @@ export default {
         ]
       },
       currentMenuIndex: '1',
-      url: 'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       srcList: [
         'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
       ],
@@ -439,22 +457,18 @@ export default {
         }
         // 更多章节...
       ],
-      defaultProps: {
-        children: 'children',
-        label: 'label',
-      },
-    }
-  },
-  computed: {
-    avatar() {
-      return 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
     }
   },
   created() {
     this.inquireCourseProgress()
     this.inquireCourseEvaluate()
+    this.inquireMyUserInfo()
   },
   methods: {
+    // 生日格式转换
+    formatCommitDate(timestamp) {
+      return formatDate(timestamp);
+    },
     onSemesterChangeFromComponent(newSemesterId) {
       this.semesterId = newSemesterId;
       this.inquireCourseBySemester(this.semesterId)
@@ -501,16 +515,47 @@ export default {
         this.evaluateOption.series.data = evaluateLevel
       })
     },
+    // 查询个人信息
+    inquireMyUserInfo() {
+      queryUserInfo().then((res) => {
+        this.userInfo = res.data.userInfo
+      })
+    },
+    // 更新个人信息
+    updateMyUserInfo(userInfo) {
+      updateUserInfo(userInfo);
+    },
+    // 更新密码
+    confirmUpdatePwd(updatePwd) {
+      this.$confirm('确定更新密码吗', '退出提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+          .then(() => {
+            updatePassword(updatePwd);
+            this.$message.success('成功保存')
+            this.editTheAccount = false
+          })
+          .catch(() => {
+            this.$message.info('取消保存')
+          })
+    },
     editOneAccount() {
       this.editTheAccount = true
     },
-    saveOneAccount() {
+    cancelOneAccount() {
+      this.editTheAccount = false
+    },
+    saveOneAccount(userInfo) {
       this.$confirm('确定保存当前信息吗', '退出提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
           .then(() => {
+            this.updateMyUserInfo(userInfo);
+            this.inquireMyUserInfo();
             this.$message.success('成功保存')
             this.editTheAccount = false
           })
@@ -521,33 +566,9 @@ export default {
     handleSelect(index) {
       // 这里你可以保存或处理 index 值
       this.currentMenuIndex = index;
-    },
-    handleNodeClick(data) {
-      console.log(data.label);
-      if (data.label === '视频') {
-        this.$router.push('/courseDetail/videoCourse')
+      if (this.currentMenuIndex === '2') {
+        this.inquireMyUserInfo()
       }
-      if (data.label === '习题') {
-        this.$router.push('/courseDetail/homework')
-      }
-      if (data.label === '错题') {
-        this.$router.push('/courseDetail/wrongTitle')
-      }
-    },
-    renderTreeNode(h, {node, data, store}) {
-      const hasChildren = node.childNodes && node.childNodes.length;
-
-      return (
-          <span>
-          {node.level === 2 && (
-              <i class="el-icon-folder-opened"></i>
-          )}
-            {node.level === 3 && (
-                <i class="el-icon-document"></i>
-            )}
-            {node.label}
-        </span>
-      );
     },
   }
 }
@@ -800,7 +821,7 @@ export default {
         }
 
         /deep/ .el-input__inner {
-          height: 30px;
+          height: 40px;
           // 设置字号
           font-size: 14px;
           // 设置输入字体的颜色
