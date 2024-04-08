@@ -82,7 +82,7 @@ request.interceptors.response.use(
             // 对响应错误进行处理，如：提示友好错误信息、重试等
             Message.error(error.response.data.errMsg);
         }
-        return Promise.resolve(error);
+        return Promise.reject(error.response.data);
     }
 );
 

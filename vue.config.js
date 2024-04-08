@@ -12,6 +12,7 @@ module.exports = defineConfig({
         },
     },
     devServer: {
+        client: {overlay: false},
         open: true,
         port: 8024,
         proxy: {
