@@ -5,83 +5,58 @@
       <el-row :gutter="20">
         <el-col :span="6" :offset="18">
           <div class="grid-content">
-            <el-select v-model="value" placeholder="请选择学学期">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+            <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
           </div>
         </el-col>
       </el-row>
+      <el-empty v-if="noteList && noteList.length === 0" description="暂无数据"></el-empty>
       <!--全部笔记列表-->
-      <div class="discipline_list">
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <!-- 新增的文字描述div -->
-          <div class="discipline_title">操作系统</div>
+      <div class="discipline_list" v-if="noteList">
+        <div class="discipline_class" v-for="item in noteList" @click="gotoNoteDetail(item.selectionId)">
+          <img src="@/assets/notes/book_ground.png" alt="">
+          <!-- 文字描述div -->
+          <div class="discipline_title">{{ item.courseName }}</div>
         </div>
-
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">数据结构与算法</div>
-        </div>
-
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">数据库原理和应用</div>
-        </div>
-
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">计算机组成原理</div>
-        </div>
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">软件工程</div>
-        </div>
-        <div class="discipline_class" @click="gotoNoteDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">Android课程设计</div>
-        </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {queryCollectNotes} from "@/api/note";
+import SemesterSelector from "@/components/selector/SemesterSelector";
+
 export default {
   name: "MyNotes",
+  components: {
+    SemesterSelector
+  },
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '2023-2024第一学期'
-      }, {
-        value: '选项2',
-        label: '2023-2024第二学期'
-      }, {
-        value: '选项3',
-        label: '2022-2023第一学期'
-      }, {
-        value: '选项4',
-        label: '2022-2023第二学期'
-      }],
-      value: ''
+      semesterId: '',
+      noteList: []
     }
   },
+  created() {
+    this.inquireCollectNotes(this.semesterId)
+  },
   methods: {
-    gotoNoteDetail() {
-      this.$router.push('/noteDetail')
+    // 新增处理 SemesterSelector 组件传出的 semester-change 事件的方法
+    onSemesterChangeFromComponent(newSemesterId) {
+      this.semesterId = newSemesterId;
+      this.inquireCollectNotes(this.semesterId)
+    },
+    // 查询笔记本列表
+    inquireCollectNotes(semesterId) {
+      queryCollectNotes(semesterId).then((res) => {
+        this.noteList = res.data
+      })
+    },
+    gotoNoteDetail(selectionId) {
+      this.$router.push({
+        path: '/noteDetail',
+        query: {selectionId}
+      })
     }
   }
 }

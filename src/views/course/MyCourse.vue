@@ -10,8 +10,9 @@
           </div>
         </el-col>
       </el-row>
+      <el-empty v-if="courseList && courseList.length === 0" description="暂无数据"></el-empty>
       <!--全部课程列表-->
-      <div class="discipline_list">
+      <div class="discipline_list" v-if="courseList">
         <div class="discipline_class" v-for="(item,index) in courseList" @click="gotoCourseDetail(item.selectionId)">
           <img :src="item.courseImg" alt="">
           <div class="about_course">
@@ -28,7 +29,6 @@
           </div>
           <div class="class_name">{{ item.className }}</div>
         </div>
-
       </div>
     </div>
   </div>
@@ -82,7 +82,6 @@ export default {
 
   .course_container {
     width: 1240px;
-    height: 1000px;
     background-color: #fff;
     border-radius: 8px;
     margin-top: 20px;
@@ -127,7 +126,7 @@ export default {
 
             .course_name {
               font-size: 16px;
-              font-family: HanSansBold;
+              font-family: HanSansBold,serif;
             }
 
             .course_teacher {

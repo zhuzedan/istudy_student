@@ -22,3 +22,26 @@ export const queryMyCourseDetail = (selectionId) => {
         }
     })
 }
+
+//课程公告
+export const queryRemindList = (fromUid, selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/mycourse/queryRemindList',
+        params: {
+            fromUid,
+            selectionId
+        }
+    })
+}
+
+//课件
+export const queryCourseProgress = (selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/mycourse/queryMyCourseProgress',
+        params: {
+            selectionId
+        }
+    })
+}
