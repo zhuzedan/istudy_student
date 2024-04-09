@@ -33,3 +33,12 @@ export const queryAllNoteList = (passageId, selectionId) => {
         }
     })
 }
+
+// 添加笔记
+export const insertNote = (data) => {
+    return request({
+        method: 'POST',
+        url: '/note/insertNote',
+        data
+    })
+}

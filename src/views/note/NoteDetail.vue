@@ -15,11 +15,11 @@
       </div>
       <!--右边栏笔记-->
       <div class="right_note">
-        <el-button size="small" type="primary" @click="dialogFormVisible = true">新增本节笔记</el-button>
+        <el-button size="small" type="primary" @click="addChapterNote()">新增本节笔记</el-button>
         <div class="one_note_operation" v-for="item in noteListByPassage">
           <div class="note_title">{{ item.noteName }}</div>
           <div class="note_content">
-            {{item.noteContent}}
+            {{ item.noteContent }}
           </div>
           <div class="one_note_bottom">
             <div class="release_time">{{ formatCommitDate(item.createTime) }}</div>
@@ -60,14 +60,18 @@
       <!--新增笔记弹窗-->
       <el-dialog title="新增当前小节笔记" :visible.sync="dialogFormVisible">
         <el-input
+            placeholder="请输入笔记名称"
+            v-model="insertNoteData.noteName">
+        </el-input>
+        <el-input
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="textarea">
+            v-model="insertNoteData.noteContent">
         </el-input>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="confirmAddNote()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -75,8 +79,9 @@
   </div>
 </template>
 <script>
-import {queryAllNoteList, queryNoteDirectory} from "@/api/note";
+import {queryAllNoteList, queryNoteDirectory,insertNote} from "@/api/note";
 import {formatTimestamp} from '@/utils/time'
+
 export default {
   name: "NoteDetail",
   data() {
@@ -89,6 +94,13 @@ export default {
       },
       noteListByPassage: [],
       currentPassageId: '',  // 当前选中的小节
+      currentPassageTitle: '', //当前选中的小节名称
+      insertNoteData: {
+        noteContent: '',
+        noteName: '',
+        passageId: '',
+        selectionId: ''
+      },
       dialogTableVisible: false,
       dialogFormVisible: false,
       textarea: '',
@@ -112,6 +124,7 @@ export default {
         queryNoteDirectory(this.selectionId).then((res) => {
           this.noteDirectory = res.data;
           this.currentPassageId = res.data[0].subPassageList[0].passageId;
+          this.currentPassageTitle = res.data[0].subPassageList[0].passageTitle;
           resolve();
         }).catch(reject);
       });
@@ -121,6 +134,32 @@ export default {
       queryAllNoteList(this.currentPassageId, this.selectionId).then((res) => {
         this.noteListByPassage = res.data
       })
+    },
+    // 新增笔记
+    addChapterNote() {
+      this.dialogFormVisible = true
+    },
+    // 新增笔记提交按钮
+    confirmAddNote() {
+      this.$confirm('确定提交笔记吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(() => {
+        this.insertNoteData.passageId = this.currentPassageId
+        this.insertNoteData.selectionId = this.selectionId
+        insertNote(this.insertNoteData)
+        this.$message({
+          type: 'success',
+          message: '提交成功!'
+        });
+        this.inquireNoteListByPassage()
+        this.dialogFormVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消提交'
+        });
+      });
     },
     shareNote() {
       this.$confirm('此操作将会把笔记分享给其他用户，是否继续?', '提示', {
@@ -140,8 +179,8 @@ export default {
     },
     // 目录树的点击事件
     onNodeClick(node) {
-        this.currentPassageId = node.passageId;
-        this.inquireNoteListByPassage()
+      this.currentPassageId = node.passageId;
+      this.inquireNoteListByPassage()
     },
     // 自定义目录树的样式
     renderTreeNode(h, {node}) {
