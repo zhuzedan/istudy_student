@@ -81,6 +81,7 @@
               :default-expand-all=true
               :props="courseProps"
               node-key="id"
+              :render-content="renderCourseTreeNode"
           ></el-tree>
         </div>
         <!--课程结束-->
@@ -373,8 +374,50 @@ export default {
     // 课程目录全（包含资源、视频、作业、错题、考试）
     inquireCourseProgress() {
       queryCourseProgress(this.selectionId).then((res) => {
-        this.courseProgress = res.data
+        const courseProgressData = res.data
+        // 格式化出参，保证树结构
+        courseProgressData.forEach((passage) => {
+          if (passage.subPassageList) {
+            passage.subPassageList = passage.subPassageList.map(subPassage => {
+              if (subPassage.resourceInfoList) {
+                subPassage.subPassageList = subPassage.resourceInfoList.map(resource => ({
+                  ...resource,
+                  passageTitle: resource.name,
+                }));
+                delete subPassage.resourceInfoList;
+              }
+              return subPassage;
+            });
+          }
+        });
+        this.courseProgress = courseProgressData
       })
+    },
+    // 课程树的显示
+    renderCourseTreeNode(h, {node, data, store}) {
+      const iconNameMap = {
+        exam: 'school',
+        video: 'video-play',
+        information: 'document',
+        homework: 'edit',
+        wrong: 'warning',
+      };
+
+      const iconName = iconNameMap[data.type];
+      const iconClass = `el-icon-${iconName}`;
+      return (
+          <span style={{display: 'flex', alignItems: 'center'}}>
+            {node.level === 1 && (
+                <i class="el-icon-folder-opened"></i>
+            )}
+            <i class={iconClass}/>
+            {data.passageTitle}
+            {/* 如果节点级别为3，插入评分组件 */}
+            {node.level === 3 && (
+                <el-rate disabled max={3} value={data.star || 0} style={{marginLeft: '8px'}}/>
+            )}
+          </span>
+      );
     },
     goBack() {
       this.$router.back();
