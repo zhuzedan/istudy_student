@@ -126,8 +126,51 @@ export default {
     // 课程大纲
     inquirePassageList(scheduleId) {
       queryPassageList(scheduleId).then((res) => {
-        this.passageList = res.data
+        // 格式化出参，方便el-tree解析
+        const passageListData = res.data
+        passageListData.forEach((passage) => {
+          if (passage.subPassageList) {
+            passage.subPassageList = passage.subPassageList.map(subPassage => {
+              if (subPassage.resourceInfo) {
+                subPassage.subPassageList = subPassage.resourceInfo.map(resource => ({
+                  ...resource,
+                  passageTitle: resource.correspondName,
+                }));
+                delete subPassage.resourceInfo;
+              }
+              return subPassage;
+            });
+          }
+        });
+        this.passageList = passageListData
+        console.log('passageListData', passageListData)
       })
+    },
+    renderTreeNode(h, {node, data, store}) {
+      const iconNameMap = {
+        exam: 'school',
+        video: 'video-play',
+        information: 'document',
+        homework: 'edit',
+        wrong: 'warning',
+      };
+      const iconName = iconNameMap[data.type];
+      const iconClass = `el-icon-${iconName}`;
+
+      const iconTitleMap = {
+        exam: '测验',
+        video: '视频',
+        information: '资料',
+        homework: '作业',
+        wrong: '错题',
+      }
+      const iconTitle = iconTitleMap[data.type]
+      return (
+          <span>
+            <i class={iconClass}/>
+            {iconTitle}&nbsp;&nbsp;{data.passageTitle}
+          </span>
+      );
     },
     // 课程评论
     inquireCourseCommit(scheduleId) {
@@ -167,20 +210,6 @@ export default {
     },
     toggleActive(tabName) {
       this.activeTab = tabName;
-    },
-    renderTreeNode(h, {node, data, store}) {
-
-      return (
-          <span>
-          {node.level === 2 && (
-              <i class="el-icon-folder-opened"></i>
-          )}
-            {node.level === 3 && (
-                <i class="el-icon-document"></i>
-            )}
-            {node.label}
-        </span>
-      );
     },
     formatCommitDate(timestamp) {
       return formatTimestamp(timestamp);

@@ -46,7 +46,7 @@
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">百分比%</div>
+                      <div class="star_percent">{{ starData.threeStarCount }}</div>
                     </div>
                   </div>
                   <div class="star_container">
@@ -61,7 +61,7 @@
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">百分比%</div>
+                      <div class="star_percent">{{ starData.twoStarCount }}</div>
                     </div>
                   </div>
                   <div class="star_container">
@@ -76,7 +76,7 @@
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">百分比%</div>
+                      <div class="star_percent">{{ starData.oneStarCount }}</div>
                     </div>
                   </div>
                   <div class="star_container">
@@ -91,7 +91,7 @@
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">百分比%</div>
+                      <div class="star_percent">{{ starData.zeroStarCount }}</div>
                     </div>
                   </div>
                 </div>
@@ -274,6 +274,8 @@ export default {
         },
       ],
       courseList: [],
+      currentSelectionId: '',
+      starData: {}, //课程星级数
       evaluateOption: {
         title: [],
         polar: {
@@ -346,117 +348,6 @@ export default {
         ]
       },
       currentMenuIndex: '1',
-      srcList: [
-        'https://img.js.design/assets/img/65fec789481fe963e222601a.png#7ca7746083cb3f239cd65645345e1591',
-      ],
-      treeData: [
-        {
-          "id": "linearAlgebraChapter1-id",
-          "name": "第一章 线性代数基础",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection1-1-id",
-              "name": "1.1 向量与向量空间",
-              "parentId": "linearAlgebraChapter1-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection1-2-id",
-              "name": "1.2 矩阵与行列式",
-              "parentId": "linearAlgebraChapter1-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        },
-        {
-          "id": "linearAlgebraChapter2-id",
-          "name": "第二章 线性方程组",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection2-1-id",
-              "name": "2.1 高斯消元法与矩阵运算",
-              "parentId": "linearAlgebraChapter2-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection2-2-id",
-              "name": "2.2 矩阵的秩与线性方程组解的存在性",
-              "parentId": "linearAlgebraChapter2-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        },
-        {
-          "id": "linearAlgebraChapter3-id",
-          "name": "第三章 特征值与特征向量",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection3-1-id",
-              "name": "3.1 特征值与特征向量的概念",
-              "parentId": "linearAlgebraChapter3-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection3-2-id",
-              "name": "3.2 对角化与相似变换",
-              "parentId": "linearAlgebraChapter3-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        }
-        // 更多章节...
-      ],
     }
   },
   created() {
@@ -471,23 +362,25 @@ export default {
     },
     onSemesterChangeFromComponent(newSemesterId) {
       this.semesterId = newSemesterId;
-      this.inquireCourseBySemester(this.semesterId)
-      this.inquireCourseStar(this.semesterId)
+      this.loadCourseAndStars(this.semesterId)
     },
-    // 所上课程列表
-    inquireCourseBySemester(semesterId) {
-      queryCourseBySemester(semesterId).then((res) => {
-        this.courseList = res.data
-      })
-    },
-    // 课程星级分析
-    inquireCourseStar(semesterId) {
-      queryCourseStar(semesterId).then((res) => {
-        this.starOption.series[0].data[0].value = res.data.zeroStarCount
-        this.starOption.series[0].data[1].value = res.data.oneStarCount
-        this.starOption.series[0].data[2].value = res.data.twoStarCount
-        this.starOption.series[0].data[3].value = res.data.threeStarCount
-      })
+    async loadCourseAndStars(semesterId) {
+      try {
+        // 等待查询所上课程列表完成
+        const courseRes = await queryCourseBySemester(semesterId);
+        this.courseList = courseRes.data;
+        this.currentSelectionId = this.courseList[0].selectionId;
+
+        // 有了 selectionId，可以继续执行课程星级分析
+        const starRes = await queryCourseStar(this.currentSelectionId);
+        this.starData = starRes.data
+        this.starOption.series[0].data[0].value = starRes.data.zeroStarCount;
+        this.starOption.series[0].data[1].value = starRes.data.oneStarCount;
+        this.starOption.series[0].data[2].value = starRes.data.twoStarCount;
+        this.starOption.series[0].data[3].value = starRes.data.threeStarCount;
+      } catch (error) {
+        console.error('loadCourseAndStars方法异常', error);
+      }
     },
     // 课程总体进度
     inquireCourseProgress() {

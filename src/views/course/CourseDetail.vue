@@ -222,13 +222,23 @@ export default {
 
       const iconName = iconNameMap[data.type];
       const iconClass = `el-icon-${iconName}`;
+
+      const iconTitleMap = {
+        exam: '测验',
+        video: '视频',
+        information: '资料',
+        homework: '作业',
+        wrong: '错题',
+      }
+      const iconTitle = iconTitleMap[data.type]
+
       return (
           <span style={{display: 'flex', alignItems: 'center'}}>
             {node.level === 1 && (
-                <i class="el-icon-folder-opened"></i>
+                <i class="el-icon-folder-opened" />
             )}
             <i class={iconClass}/>
-            {data.passageTitle}
+            {iconTitle}&nbsp;&nbsp;{data.passageTitle}
             {/* 如果节点级别为3，插入评分组件 */}
             {node.level === 3 && (
                 <el-rate disabled max={3} value={data.star || 0} style={{marginLeft: '8px'}}/>
