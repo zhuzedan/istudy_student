@@ -5,83 +5,52 @@
       <el-row :gutter="20">
         <el-col :span="6" :offset="18">
           <div class="grid-content">
-            <el-select v-model="value" placeholder="请选择学学期">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+            <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
           </div>
         </el-col>
       </el-row>
       <!--全部笔记列表-->
       <div class="discipline_list">
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <!-- 新增的文字描述div -->
-          <div class="discipline_title">操作系统</div>
+        <div class="discipline_class" @click="gotoMistakeDetail(item.selectionId)" v-for="item in wrongList">
+          <img src="@/assets/notes/book_ground.png" alt="">
+          <div class="discipline_title">{{ item.courseName }}</div>
         </div>
-
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">数据结构与算法</div>
-        </div>
-
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">数据库原理和应用</div>
-        </div>
-
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">计算机组成原理</div>
-        </div>
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">软件工程</div>
-        </div>
-        <div class="discipline_class" @click="gotoMistakeDetail">
-          <img src="@/assets/notes/book_ground.png"
-               alt="">
-          <div class="discipline_title">Android课程设计</div>
-        </div>
-
       </div>
     </div>
   </div>
 </template>
 <script>
+import SemesterSelector from "@/components/selector/SemesterSelector";
+import {queryCollectWrongs} from "@/api/mistake";
+
 export default {
   name: "MistakeNotes",
+  components: {
+    SemesterSelector
+  },
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '2023-2024第一学期'
-      }, {
-        value: '选项2',
-        label: '2023-2024第二学期'
-      }, {
-        value: '选项3',
-        label: '2022-2023第一学期'
-      }, {
-        value: '选项4',
-        label: '2022-2023第二学期'
-      }],
-      value:
-          ''
+      semesterId: '',
+      wrongList: []
     }
   },
   methods: {
-    gotoMistakeDetail() {
-      this.$router.push('/mistakeDetail')
+    onSemesterChangeFromComponent(newSemesterId) {
+      this.semesterId = newSemesterId;
+      this.inquireCollectWrongs()
+    },
+    // 查询错题本列表
+    inquireCollectWrongs() {
+      queryCollectWrongs(this.semesterId).then((res) => {
+        this.wrongList = res.data
+        console.log(this.wrongList)
+      })
+    },
+    gotoMistakeDetail(selectionId) {
+      this.$router.push({
+        path:'/mistakeDetail',
+        query: {selectionId}
+      })
     }
   }
 }

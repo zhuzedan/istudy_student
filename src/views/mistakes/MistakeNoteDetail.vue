@@ -5,11 +5,12 @@
       <div class="left_category">
         <div class="category_name">目录</div>
         <el-tree
-            :data="treeData"
-            :default-expand-all=true
-            :props="defaultProps"
-            node-key="id"
+            :data="noteDirectory"
+            :default-expand-all="true"
+            :props="directoryTreeProps"
+            node-key="passageId"
             :render-content="renderTreeNode"
+            @node-click="onNodeClick"
         />
       </div>
       <!--右边栏笔记-->
@@ -22,6 +23,8 @@
 </template>
 <script>
 import WrongTitle from "@/views/course/WrongTitle.vue";
+import {queryNoteDirectory} from "@/api/note";
+import {queryAllWrongList} from "@/api/mistake";
 
 export default {
   name: "MistakeNoteDetail",
@@ -30,97 +33,58 @@ export default {
   },
   data() {
     return {
-      dialogTableVisible: false,
-      dialogFormVisible: false,
-      textarea: '',
-      formLabelWidth: '120px',
-      drawer: false,
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      treeData: [
-        {
-          "id": 1,
-          "label": "第一章：线性方程组与矩阵",
-          "children": [
-            {
-              "id": 11,
-              "label": "1.1 线性方程组的基本概念与解法",
-              "children": []
-            },
-            {
-              "id": 12,
-              "label": "1.2 矩阵的概念与运算",
-              "children": [
-                {
-                  "id": 121,
-                  "label": "1.2.1 矩阵的加法与数乘",
-                  "children": []
-                },
-                {
-                  "id": 122,
-                  "label": "1.2.2 矩阵的乘法与转置",
-                  "children": []
-                }
-              ]
-            },
-            // 更多第一级小节...
-          ]
-        },
-        {
-          "id": 2,
-          "label": "第二章：行列式",
-          "children": [
-            {
-              "id": 21,
-              "label": "2.1 二阶与三阶行列式的定义与计算",
-              "children": []
-            },
-            {
-              "id": 22,
-              "label": "2.2 n阶行列式的定义与性质",
-              "children": [
-                {
-                  "id": 221,
-                  "label": "2.2.1 行列式的展开定理",
-                  "children": []
-                },
-                {
-                  "id": 222,
-                  "label": "2.2.2 行列式的性质与计算技巧",
-                  "children": []
-                }
-              ]
-            },
-            // 更多第二级小节...
-          ]
-        },
-        // 更多章节...
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'label',
+      noteDirectory: [],
+      selectionId:'',
+      currentPassageId: '',  // 当前选中的小节
+      currentPassageTitle: '', //当前选中的小节名称
+      wrongListByPassage: [],
+      directoryTreeProps: {
+        children: 'subPassageList',
+        label: 'passageTitle'
       },
+      drawer: false,
     }
   },
+  created() {
+    this.selectionId = this.$route.query.selectionId
+    this.inquireNoteDirectory().then(() => this.inquireWrongListByPassage());
+  },
   methods: {
-    renderTreeNode(h, {node, data, store}) {
-      const hasChildren = node.childNodes && node.childNodes.length;
-
+    // 目录
+    inquireNoteDirectory() {
+      return new Promise((resolve, reject) => {
+        queryNoteDirectory(this.selectionId).then((res) => {
+          this.noteDirectory = res.data;
+          this.currentPassageId = res.data[0].subPassageList[0].passageId;
+          this.currentPassageTitle = res.data[0].subPassageList[0].passageTitle;
+          resolve();
+        }).catch(reject);
+      });
+    },
+    // 查看章节错题
+    inquireWrongListByPassage() {
+      queryAllWrongList(this.currentPassageId, this.selectionId).then((res) => {
+        this.wrongListByPassage = res.data
+      })
+    },
+    // 点击左侧章小节
+    onNodeClick(node) {
+      this.currentPassageId = node.passageId;
+      this.inquireWrongListByPassage()
+    },
+    // 目录树渲染
+    renderTreeNode(h, {node}) {
       return (
-          <span>
-          {node.level === 2 && (
-              <i class="el-icon-folder-opened"></i>
-          )}
-            {node.level === 3 && (
-                <i class="el-icon-document"></i>
-            )}
-            {node.label}
+        <span>
+          {node.level === 1 && (<i class="el-icon-folder-opened"/>)}
+          {node.level === 2 && (<i class="el-icon-document"/>)}
+          {node.label}
         </span>
       );
     }
   }
 }
 </script>
-
 
 <style scoped lang="less">
 .note_detail_container {
@@ -141,7 +105,8 @@ export default {
 
       .category_name {
         font-size: 16px;
-        margin-bottom: 10px;
+        margin: 10px;
+        font-family: HanSansBold, serif;
       }
     }
 
