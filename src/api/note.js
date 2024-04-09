@@ -42,3 +42,39 @@ export const insertNote = (data) => {
         data
     })
 }
+
+// 精彩笔记
+export const queryWonderfulNote = (passageId, selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/note/queryWonderfulNote',
+        params: {
+            passageId,
+            selectionId
+        }
+    })
+}
+
+// 点赞笔记
+export const likeNote = (noteId, selectionId) => {
+    return request({
+        method: 'POST',
+        url: '/note/likeNote',
+        data: {
+            noteId,
+            selectionId
+        }
+    })
+}
+
+// 公开分享笔记
+export const updateOpenNote = (noteId, selectionId) => {
+    return request({
+        method: 'PUT',
+        url: '/note/updateOpenNote',
+        data: {
+            noteId,
+            selectionId
+        }
+    })
+}

@@ -15,7 +15,8 @@
       </div>
       <!--右边栏笔记-->
       <div class="right_note">
-        <el-button size="small" type="primary" @click="addChapterNote()">新增本节笔记</el-button>
+        <el-button type="primary" @click="addChapterNote()">新增本节笔记</el-button>
+        <el-button style="margin-left: 20px; height: 40px" @click="wonderfulNote()">精彩笔记</el-button>
         <div class="one_note_operation" v-for="item in noteListByPassage">
           <div class="note_title">{{ item.noteName }}</div>
           <div class="note_content">
@@ -24,11 +25,8 @@
           <div class="one_note_bottom">
             <div class="release_time">{{ formatCommitDate(item.createTime) }}</div>
             <div class="icon_button">
-              <el-tooltip class="item" effect="dark" content="精彩笔记" placement="top-start">
-                <i @click="drawer = true" class="el-icon-s-opportunity"/>
-              </el-tooltip>
               <el-tooltip class="item" effect="dark" content="分享笔记" placement="top-start">
-                <i @click="shareNote" class="el-icon-share"></i>
+                <i @click="shareNote(item.id)" class="el-icon-share"></i>
               </el-tooltip>
             </div>
           </div>
@@ -39,33 +37,40 @@
           size="50%"
           :visible.sync="drawer"
           :with-header="false">
-        <div class="drawer_title">数据结构1-1精彩笔记</div>
-        <div class="note-container">
+        <div class="drawer_title"></div>
+        <div class="note-container" v-for="item in wonderfulNoteList">
           <div class="avatar-note-row">
+            <!--姓名头像-->
             <div class="note_avatar">
-              <el-avatar :size="50" :src="circleUrl"></el-avatar>
+              <el-avatar :size="50" :src="item.avatar"></el-avatar>
+              <div class="note_by_name">{{ item.nickName }}</div>
             </div>
-            <div class="good_note">
-              下面我们会从不同维度来分产品的内部体系来实现快速的用户增长，所以户是否有分享的意愿，提...
-              下面我们会从不同维度来分产品的内部体系来实现快速的用户增长，所以户是否有分享的意愿，提...
-              下面我们会从不同维度来分产品的内部体系来实现快速的用户增长，所以户是否有分享的意愿，提...
-              下面我们会从不同维度来分产品的内部体系来实现快速的用户增长，所以户是否有分享的意愿，提...
+            <!--笔记内容-->
+            <div class="good_note_container">
+              <div class="good_note">
+                {{ item.noteListResp.noteName }}
+              </div>
+              <div class="good_note">
+                {{ item.noteListResp.noteContent }}
+              </div>
             </div>
           </div>
-          <div class="action-button">
-            <i class="el-icon-cold-drink"></i>
+          <!--点赞按钮-->
+          <div class="action-button" @click="likeNoteBtn(item.noteListResp.id)">
+            <img src="@/assets/iconfont/unlike.png" alt="">
           </div>
         </div>
       </el-drawer>
       <!--新增笔记弹窗-->
       <el-dialog title="新增当前小节笔记" :visible.sync="dialogFormVisible">
         <el-input
+            style="margin-bottom: 20px"
             placeholder="请输入笔记名称"
             v-model="insertNoteData.noteName">
         </el-input>
         <el-input
             type="textarea"
-            :rows="2"
+            :rows="6"
             placeholder="请输入内容"
             v-model="insertNoteData.noteContent">
         </el-input>
@@ -79,7 +84,14 @@
   </div>
 </template>
 <script>
-import {queryAllNoteList, queryNoteDirectory,insertNote} from "@/api/note";
+import {
+  insertNote,
+  likeNote,
+  queryAllNoteList,
+  queryNoteDirectory,
+  queryWonderfulNote,
+  updateOpenNote
+} from "@/api/note";
 import {formatTimestamp} from '@/utils/time'
 
 export default {
@@ -101,6 +113,7 @@ export default {
         passageId: '',
         selectionId: ''
       },
+      wonderfulNoteList: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
       textarea: '',
@@ -153,6 +166,8 @@ export default {
           message: '提交成功!'
         });
         this.inquireNoteListByPassage()
+        this.insertNoteData.noteName = ''
+        this.insertNoteData.noteContent = ''
         this.dialogFormVisible = false
       }).catch(() => {
         this.$message({
@@ -161,11 +176,28 @@ export default {
         });
       });
     },
-    shareNote() {
+    // 精彩笔记按钮
+    wonderfulNote() {
+      this.drawer = true
+      queryWonderfulNote(this.currentPassageId, this.selectionId).then((res) => {
+        this.wonderfulNoteList = res.data
+        console.log(this.wonderfulNoteList)
+      })
+    },
+    // 点赞按钮
+    likeNoteBtn(noteId) {
+      likeNote(noteId, this.selectionId)
+    },
+    // 分享笔记接口方法
+    updateNoteToOpen(noteId) {
+      updateOpenNote(noteId, this.selectionId);
+    },
+    shareNote(noteId) {
       this.$confirm('此操作将会把笔记分享给其他用户，是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(() => {
+        this.updateNoteToOpen(noteId)
         this.$message({
           type: 'success',
           message: '分享成功!'
@@ -217,11 +249,22 @@ export default {
     .left_category {
       width: 280px;
       background-color: #fff;
-      padding: 20px;
 
       .category_name {
         font-size: 16px;
-        margin-bottom: 10px;
+        margin: 10px;
+        font-family: HanSansBold, serif;
+      }
+
+      //点击时的样式
+      .el-tree ::v-deep.el-tree-node:focus > .el-tree-node__content {
+        background-color: @primaryBackgroundColor !important;
+        border-radius: 8px;
+      }
+
+      // tree 的高度和宽度重新定义
+      ::v-deep.el-tree .el-tree-node > .el-tree-node__content {
+        height: 34px;
       }
     }
 
@@ -283,17 +326,30 @@ export default {
 
       .avatar-note-row {
         display: flex;
-        align-items: center;
 
         .note_avatar {
           width: 100px;
           margin-right: 10px;
+          text-align: center;
+          align-items: center;
+          display: flex;
+
+          .note_by_name {
+            margin-left: 10px;
+          }
         }
       }
 
       .action-button {
         display: flex;
         margin-left: auto;
+        cursor: pointer;
+
+        img {
+          width: 16px;
+          height: 16px;
+          margin-top: -10px;
+        }
       }
     }
   }

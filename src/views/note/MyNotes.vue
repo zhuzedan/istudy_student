@@ -38,7 +38,7 @@ export default {
     }
   },
   created() {
-    this.inquireCollectNotes(this.semesterId)
+    // this.inquireCollectNotes(this.semesterId)
   },
   methods: {
     // 新增处理 SemesterSelector 组件传出的 semester-change 事件的方法
