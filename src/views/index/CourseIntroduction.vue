@@ -37,7 +37,7 @@
       <!--课程评价-->
       <div class="course_commit_list" v-if="activeTab === 'commit'">
         <!--评论列表-->
-        <div class="commit_detail" v-for="(item, index) in courseCommitList">
+        <div class="commit_detail" v-for="item in queryCommitPageResp.list">
           <img :src="item.avatar" alt="">
           <div class="commit_detail_box">
             <div style="display: flex">
@@ -74,6 +74,15 @@
 
           <el-button type="primary" @click="handleCommit(commentData)">发送</el-button>
         </div>
+        <!--分页-->
+        <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="queryCommitPageReq.current"
+            :page-size="queryCommitPageReq.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="queryCommitPageResp.totalRecords"
+        >
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -96,17 +105,24 @@ export default {
       scheduleId: '',
       courseContent: {},
       passageList: [],
-      courseCommitList: [],
-      commentData: {
-        scheduleId: '',
-        commentContent: '',
-        starLevel: 5
-      },
       activeTab: 'dialog',
       defaultProps: {
         children: 'subPassageList',
         label: 'passageTitle',
       },
+      // 课程评论入参
+      queryCommitPageReq: {
+        current: 1,
+        pageSize: 10,
+      },
+      // 课程评论出参
+      queryCommitPageResp: {},
+      // 发送评论入参
+      commentData: {
+        scheduleId: '',
+        commentContent: '',
+        starLevel: 5
+      }
     };
   },
   created() {
@@ -114,7 +130,6 @@ export default {
     this.scheduleId = scheduleId
     this.inquireCourseDetail(scheduleId)
     this.inquirePassageList(scheduleId)
-    this.inquireCourseCommit(scheduleId)
   },
   methods: {
     // 课程详情
@@ -143,10 +158,9 @@ export default {
           }
         });
         this.passageList = passageListData
-        console.log('passageListData', passageListData)
       })
     },
-    renderTreeNode(h, {node, data, store}) {
+    renderTreeNode(h, {data}) {
       const iconNameMap = {
         exam: 'school',
         video: 'video-play',
@@ -173,22 +187,34 @@ export default {
       );
     },
     // 课程评论
-    inquireCourseCommit(scheduleId) {
-      queryOpenCourseComment(scheduleId).then((res) => {
-        this.courseCommitList = res.data.commentInfoList
+    inquireCourseCommit() {
+      queryOpenCourseComment(this.scheduleId, this.queryCommitPageReq.current, this.queryCommitPageReq.pageSize).then((res) => {
+        const {current, pageSize, totalRecords, list} = res.data
+        Object.assign(this.queryCommitPageReq, {current, pageSize})
+        this.queryCommitPageResp = {totalRecords, list}
       })
     },
-    // 新增评论
-    insertCourseComment(commentData) {
-      insertComment(commentData)
+    // 翻页
+    handleCurrentChange(val) {
+      this.queryCommitPageReq.current = val
+      this.inquireCourseCommit()
     },
     // 发送评论
     handleCommit(commentData) {
-      commentData.scheduleId = this.scheduleId;
-      this.insertCourseComment(commentData)
-      this.inquireCourseCommit(this.scheduleId)
-      this.$forceUpdate();
-      this.commentData.commentContent = ''
+      this.$confirm('是否发送评论', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+          .then(() => {
+            commentData.scheduleId = this.scheduleId;
+            insertComment(commentData)
+            this.$message.success('发送成功')
+            this.commentData.commentContent = ''
+          })
+          .then(this.inquireCourseCommit)
+          .catch(() => {
+            this.$message.info('取消发送')
+          })
     },
     // 添加课程
     insertCourse(scheduleId) {
@@ -208,8 +234,15 @@ export default {
             this.$message.info('取消添加')
           })
     },
+    // 课程大纲/课程评价标签切换
     toggleActive(tabName) {
       this.activeTab = tabName;
+      if (this.activeTab === 'dialog') {
+        this.inquirePassageList(this.scheduleId)
+      }
+      if (this.activeTab === 'commit') {
+        this.inquireCourseCommit()
+      }
     },
     formatCommitDate(timestamp) {
       return formatTimestamp(timestamp);
@@ -254,7 +287,7 @@ export default {
         .course_name {
           font-size: 24px;
           margin-bottom: 16px;
-          font-family: HanSansBold;
+          font-family: HanSansBold, serif;
         }
 
         .course_teacher {
@@ -300,7 +333,7 @@ export default {
         cursor: pointer;
 
         &.active {
-          font-family: HanSansBold;
+          font-family: HanSansBold, serif;
           color: #000;
         }
       }
@@ -311,7 +344,7 @@ export default {
         cursor: pointer;
 
         &.active {
-          font-family: HanSansBold;
+          font-family: HanSansBold, serif;
           color: #000;
         }
       }
@@ -391,6 +424,10 @@ export default {
           display: inline-block;
           width: 80%;
         }
+      }
+
+      .el-pagination {
+        margin-top: 20px;
       }
     }
   }

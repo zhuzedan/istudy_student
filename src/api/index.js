@@ -12,12 +12,14 @@ export const queryOpenCourseList = (courseCategoryId) => {
 }
 
 // 课程详情
-export const queryOpenCourseComment = (scheduleId) => {
+export const queryOpenCourseComment = (scheduleId, current, pageSize) => {
     return request({
         method: 'GET',
         url: '/index/queryOpenCourseComment',
         params: {
-            scheduleId
+            scheduleId,
+            current,
+            pageSize
         }
     })
 }

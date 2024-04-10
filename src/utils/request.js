@@ -40,6 +40,8 @@ request.interceptors.request.use(
 );
 
 // 响应拦截器：处理错误码、统一数据格式等
+let show401AlertScheduled = false; // 添加一个标志位来判断是否已计划显示401警告
+
 request.interceptors.response.use(
     (response) => {
         // 对响应数据进行处理，如：统一提取 data 字段
@@ -67,17 +69,21 @@ request.interceptors.response.use(
         // console.log('HTTP Status:', error.response.status); // 打印HTTP状态码
         // console.log('Request Config:', error.config); // 打印请求配置，有助于排查问题
 
-        if (error.response.data.errCode === 401) {
-            window.localStorage.removeItem('accessToken')
-            MessageBox.alert(error.response.data.errMsg, "提示", {
-                confirmButtonText: '确定',
-                callback: action => {
-                    router.replace({
-                        path: '/login',
-                        query: {redirect: router.currentRoute.fullPath}
-                    });
-                }
-            });
+        if (error.response.data.errCode === 401 && !show401AlertScheduled) {
+            show401AlertScheduled = true; // 设置标志位为真，表示已计划显示警告
+            setTimeout(() => {
+                show401AlertScheduled = false; // 一段时间后恢复为假，允许下次触发
+                window.localStorage.removeItem('accessToken')
+                MessageBox.alert(error.response.data.errMsg, "提示", {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        router.replace({
+                            path: '/login',
+                            query: {redirect: router.currentRoute.fullPath}
+                        });
+                    }
+                });
+            }, 5000); // 这里设置一个延迟时间，例如500毫秒，可以根据实际情况调整
         } else {
             // 对响应错误进行处理，如：提示友好错误信息、重试等
             Message.error(error.response.data.errMsg);
