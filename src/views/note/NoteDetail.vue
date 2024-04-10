@@ -15,7 +15,7 @@
       </div>
       <!--右边栏笔记-->
       <div class="right_note">
-        <el-button type="primary" @click="addChapterNote()">新增本节笔记</el-button>
+        <el-button type="primary" @click="dialogFormVisible = true">新增本节笔记</el-button>
         <el-button style="margin-left: 20px; height: 40px" @click="wonderfulNote()">精彩笔记</el-button>
         <div class="one_note_operation" v-for="item in noteListByPassage">
           <div class="note_title">{{ item.noteName }}</div>
@@ -24,6 +24,8 @@
           </div>
           <div class="one_note_bottom">
             <div class="release_time">{{ formatCommitDate(item.createTime) }}</div>
+            <el-button type="text" @click="updateOneNote(item)">编辑</el-button>
+            <el-button type="text">删除</el-button>
             <div class="icon_button">
               <el-tooltip class="item" effect="dark" content="分享笔记" placement="top-start">
                 <i @click="shareNote(item.id)" class="el-icon-share"></i>
@@ -64,7 +66,7 @@
         </div>
       </el-drawer>
       <!--新增笔记弹窗-->
-      <el-dialog title="新增当前小节笔记" :visible.sync="dialogFormVisible">
+      <el-dialog title="新增当前笔记" :visible.sync="dialogFormVisible">
         <el-input
             style="margin-bottom: 20px"
             placeholder="请输入笔记名称"
@@ -81,6 +83,24 @@
           <el-button type="primary" @click="confirmAddNote()">确 定</el-button>
         </div>
       </el-dialog>
+      <!--编辑笔记弹窗-->
+      <el-dialog title="编辑当前笔记" :visible.sync="dialogUpdateNoteVisible">
+        <el-input
+            style="margin-bottom: 20px"
+            placeholder="请输入笔记名称"
+            v-model="updateNoteData.noteName">
+        </el-input>
+        <el-input
+            type="textarea"
+            :rows="6"
+            placeholder="请输入内容"
+            v-model="updateNoteData.noteContent">
+        </el-input>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogUpdateNoteVisible = false">取 消</el-button>
+          <el-button type="primary" @click="confirmUpdateNote()">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
 
   </div>
@@ -92,6 +112,7 @@ import {
   queryAllNoteList,
   queryNoteDirectory,
   queryWonderfulNote,
+  updateNote,
   updateOpenNote
 } from "@/api/note";
 import {formatTimestamp} from '@/utils/time'
@@ -115,9 +136,11 @@ export default {
         passageId: '',
         selectionId: ''
       },
+      updateNoteData: {},
       wonderfulNoteList: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
+      dialogUpdateNoteVisible: false,
       textarea: '',
       formLabelWidth: '120px',
       drawer: false,
@@ -150,10 +173,6 @@ export default {
         this.noteListByPassage = res.data
       })
     },
-    // 新增笔记
-    addChapterNote() {
-      this.dialogFormVisible = true
-    },
     // 新增笔记提交按钮
     confirmAddNote() {
       this.$confirm('确定提交笔记吗', '提示', {
@@ -178,6 +197,35 @@ export default {
         });
       });
     },
+    //编辑笔记按钮
+    updateOneNote(item) {
+      this.dialogUpdateNoteVisible = true
+      this.updateNoteData = {
+        noteContent: item.noteContent,
+        noteId: item.id,
+        noteName: item.noteName,
+      }
+    },
+    //提交编辑的笔记
+    confirmUpdateNote() {
+      this.$confirm('确定修改当前笔记吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(() => {
+        updateNote(this.updateNoteData)
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+        this.inquireNoteListByPassage()
+        this.dialogUpdateNoteVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
     // 精彩笔记按钮
     wonderfulNote() {
       this.drawer = true
@@ -188,7 +236,7 @@ export default {
     },
     // 点赞按钮
     likeNoteBtn(noteId, hasLikeStatus) {
-        likeNote(noteId, this.selectionId, hasLikeStatus)
+      likeNote(noteId, this.selectionId, hasLikeStatus)
       this.wonderfulNote()
     },
     // 分享笔记接口方法
@@ -300,6 +348,12 @@ export default {
 
           .release_time {
             color: @primaryNoSelected;
+            margin-right: 10px;
+          }
+
+          .el-button {
+            margin: 0 10px 0 0;
+            padding: 0;
           }
 
           .icon_button {

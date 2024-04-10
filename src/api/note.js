@@ -43,6 +43,15 @@ export const insertNote = (data) => {
     })
 }
 
+//编辑笔记
+export const updateNote = (data) => {
+    return request({
+        method: 'PUT',
+        url: '/note/updateNote',
+        data
+    })
+}
+
 // 精彩笔记
 export const queryWonderfulNote = (passageId, selectionId) => {
     return request({
