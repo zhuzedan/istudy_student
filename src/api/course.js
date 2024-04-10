@@ -67,3 +67,25 @@ export const queryNewWrongList = (selectionId) => {
         }
     })
 }
+
+//视频目录
+export const queryVideoDirectory = (selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/resource/queryVideoDirectory',
+        params: {
+            selectionId
+        }
+    })
+}
+
+//视频详情
+export const queryVideoDetail = (videoId) => {
+    return request({
+        method: 'GET',
+        url: '/resource/queryVideoDetail',
+        params: {
+            videoId
+        }
+    })
+}

@@ -40,11 +40,11 @@
       <!--目录-->
       <div class="course_category" v-if="selectedCategory === 0">
         <el-tree
-            :data="treeData"
+            :data="videoDirectory"
             :default-expand-all=true
-            :props="defaultProps"
+            :props="videoProps"
             node-key="id"
-            :render-content="renderTreeNode"
+            :render-content="videoCourseTreeNode"
         />
       </div>
       <!--笔记-->
@@ -92,6 +92,7 @@
 
 <script>
 import ChatExample from "@/components/chat/ChatExample.vue";
+import {queryVideoDetail, queryVideoDirectory} from "@/api/course";
 
 export default {
   name: "VideoCourse",
@@ -100,6 +101,13 @@ export default {
   },
   data() {
     return {
+      selectionId: '',
+      uniqueId: '',
+      videoDirectory: [], //视频目录
+      videoProps: {
+        children: 'subPassageList',
+        label: 'passageTitle',
+      },
       isVideoEnded: false,
       rating: 3,
       radio: '1',
@@ -131,123 +139,56 @@ export default {
           fullscreenToggle: true, //全屏按钮
         },
       },
-      treeData: [
-        {
-          "id": "linearAlgebraChapter1-id",
-          "name": "第一章 线性代数基础",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection1-1-id",
-              "name": "1.1 向量与向量空间",
-              "parentId": "linearAlgebraChapter1-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection1-2-id",
-              "name": "1.2 矩阵与行列式",
-              "parentId": "linearAlgebraChapter1-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        },
-        {
-          "id": "linearAlgebraChapter2-id",
-          "name": "第二章 线性方程组",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection2-1-id",
-              "name": "2.1 高斯消元法与矩阵运算",
-              "parentId": "linearAlgebraChapter2-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection2-2-id",
-              "name": "2.2 矩阵的秩与线性方程组解的存在性",
-              "parentId": "linearAlgebraChapter2-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        },
-        {
-          "id": "linearAlgebraChapter3-id",
-          "name": "第三章 特征值与特征向量",
-          "parentId": null,
-          "showStatus": 0,
-          "lockStatus": 0,
-          "hasChildren": true,
-          "tenantId": 0,
-          "type": "chapter",
-          "children": [
-            {
-              "id": "linearAlgebraSection3-1-id",
-              "name": "3.1 特征值与特征向量的概念",
-              "parentId": "linearAlgebraChapter3-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            },
-            {
-              "id": "linearAlgebraSection3-2-id",
-              "name": "3.2 对角化与相似变换",
-              "parentId": "linearAlgebraChapter3-id",
-              "showStatus": 0,
-              "lockStatus": 0,
-              "hasChildren": false,
-              "tenantId": 0,
-              "type": "section",
-              "children": []
-            }
-            // 更多小节...
-          ]
-        }
-        // 更多章节...
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'name',
-      },
       manualNoteContent: '', // 存储手动输入的笔记内容:
       displayedNotes: '1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称排列.2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆序数.'
     };
   },
+  created() {
+    this.selectionId = this.$route.query.selectionId
+    this.uniqueId = this.$route.query.uniqueId
+    this.inquireVideoDirectory()
+  },
   methods: {
+    //获取视频目录
+    inquireVideoDirectory() {
+      queryVideoDirectory(this.selectionId).then((res) => {
+        //  解析成符合el-tree的树结构
+        const formattedData = res.data
+        formattedData.forEach((passage) => {
+          if (passage.subPassageList) {
+            passage.subPassageList = passage.subPassageList.map(subPassage => {
+              if (subPassage.videoInfoList) {
+                subPassage.subPassageList = subPassage.videoInfoList.map(resource => ({
+                  ...resource,
+                  passageTitle: resource.videoName,
+                }));
+                delete subPassage.videoInfoList;
+              }
+              return subPassage;
+            });
+          }
+        });
+
+        this.videoDirectory = formattedData
+      })
+    },
+    // 视频树的显示
+    videoCourseTreeNode(h, {node}) {
+      return (
+          <span>
+            {node.level === 1 && (<i class="el-icon-folder-opened"/>)}
+            {node.level === 2 && (<i class="el-icon-document"/>)}
+            {node.level === 3 && (<i class="el-icon-video-play"/>)}
+            {node.label}
+         </span>
+      );
+    },
+    //获取视频详情
+    inquireVideoDetail() {
+      queryVideoDetail(this.uniqueId).then((res) => {
+        console.log(res.data)
+      })
+    },
     // 视频播放完成弹窗
     onVideoEnded() {
       this.isVideoEnded = true;
@@ -272,21 +213,6 @@ export default {
     handleCategoryClick(index) {
       this.selectedCategory = index;
     },
-    renderTreeNode(h, {node, data, store}) {
-      const hasChildren = node.childNodes && node.childNodes.length;
-
-      return (
-          <span>
-          {node.level === 2 && (
-              <i class="el-icon-folder-opened"></i>
-          )}
-            {node.level === 3 && (
-                <i class="el-icon-document"></i>
-            )}
-            {node.label}
-        </span>
-      );
-    },
   }
 }
 </script>
@@ -307,7 +233,7 @@ export default {
 
     .chapter {
       font-size: 16px;
-      font-family: HanSansBold;
+      font-family: HanSansBold, serif;
     }
 
     .teacher_and_date {

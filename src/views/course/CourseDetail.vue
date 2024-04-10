@@ -14,7 +14,8 @@
         <img class="course_teacher_ai" src="@/assets/course/course_teacher_ai.png" alt="">
       </div>
     </div>
-    <div class="menu_click_operation">
+    <!--菜单及其对应功能-->
+    <div class="menu_click_operation" v-if="isCourseDetail">
       <div class="menu_tab">
         <el-menu :default-active="currentMenuIndex" @select="handleSelect">
           <el-menu-item index="1">
@@ -82,6 +83,7 @@
               :props="courseProps"
               node-key="id"
               :render-content="renderCourseTreeNode"
+              @node-click="handleNodeClick"
           ></el-tree>
         </div>
         <!--课程结束-->
@@ -114,13 +116,14 @@
           </div>
           <div class="answer">解析</div>
           <div class="answer_detail">
-            {{newWrong.questionAnalysis}}
+            {{ newWrong.questionAnalysis }}
           </div>
           <el-button type="primary" @click.native="moreMistakes(selectionId)">更多错题</el-button>
         </div>
         <!--错题本结束-->
       </div>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -132,10 +135,21 @@ import {
   queryNewWrongList,
   queryRemindList
 } from "@/api/course";
+import VideoCourse from "@/views/course/VideoCourse";
 import {formatTimestamp} from '@/utils/time'
 
 export default {
   name: "CourseDetail",
+  components: {
+    VideoCourse
+  },
+  computed: {
+    isCourseDetail() {
+      // 获取当前激活的路由对象
+      const currentRoute = this.$route;
+      return currentRoute.name === 'courseDetail';
+    }
+  },
   data() {
     return {
       selectionId: '',
@@ -260,13 +274,13 @@ export default {
     },
     moreMistakes(selectionId) {
       this.$router.push({
-        path:'/mistakeDetail',
+        path: '/mistakeDetail',
         query: {selectionId}
       })
     },
     gotoNoteDetail(selectionId) {
       this.$router.push({
-        path:'/noteDetail',
+        path: '/noteDetail',
         query: {selectionId}
       })
     },
@@ -285,7 +299,14 @@ export default {
     },
     handleNodeClick(data) {
       if (data.type === 'video') {
-        this.$router.push('/courseDetail/videoCourse')
+        const params = {
+          selectionId: this.selectionId,
+          uniqueId: data.uniqueId,
+        };
+        this.$router.push({
+          name: 'videoCourse',
+          query: params
+        })
       }
       if (data.type === 'homework') {
         this.$router.push('/courseDetail/homework')
