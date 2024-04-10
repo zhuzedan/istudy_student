@@ -56,8 +56,10 @@
             </div>
           </div>
           <!--点赞按钮-->
-          <div class="action-button" @click="likeNoteBtn(item.noteListResp.id)">
-            <img src="@/assets/iconfont/unlike.png" alt="">
+          <div class="action-button" @click="likeNoteBtn(item.noteListResp.id,item.noteListResp.hasLike)">
+            <img src="@/assets/iconfont/like.png" alt="" v-if="item.noteListResp.hasLike === 1">
+            <img src="@/assets/iconfont/unlike.png" alt="" v-if="item.noteListResp.hasLike === 0">
+            <div>{{ item.likeCount }}</div>
           </div>
         </div>
       </el-drawer>
@@ -185,8 +187,9 @@ export default {
       })
     },
     // 点赞按钮
-    likeNoteBtn(noteId) {
-      likeNote(noteId, this.selectionId)
+    likeNoteBtn(noteId, hasLikeStatus) {
+        likeNote(noteId, this.selectionId, hasLikeStatus)
+      this.wonderfulNote()
     },
     // 分享笔记接口方法
     updateNoteToOpen(noteId) {
@@ -219,10 +222,10 @@ export default {
       return (
           <span>
           {node.level === 1 && (
-              <i class="el-icon-folder-opened"></i>
+              <i class="el-icon-folder-opened"/>
           )}
             {node.level === 2 && (
-                <i class="el-icon-document"></i>
+                <i class="el-icon-document"/>
             )}
             {node.label}
         </span>
@@ -323,6 +326,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       padding: 10px;
+      border-bottom: 1px solid @primaryBackgroundColor;
 
       .avatar-note-row {
         display: flex;
@@ -344,11 +348,11 @@ export default {
         display: flex;
         margin-left: auto;
         cursor: pointer;
+        margin-top: -10px;
 
         img {
           width: 16px;
           height: 16px;
-          margin-top: -10px;
         }
       }
     }

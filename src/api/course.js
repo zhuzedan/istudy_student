@@ -45,3 +45,25 @@ export const queryCourseProgress = (selectionId) => {
         }
     })
 }
+
+//最新笔记
+export const queryNewNoteList = (selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/note/queryNewNoteList',
+        params: {
+            selectionId
+        }
+    })
+}
+
+//最新错题
+export const queryNewWrongList = (selectionId) => {
+    return request({
+        method: 'GET',
+        url: '/wrong/queryNewWrongList',
+        params: {
+            selectionId
+        }
+    })
+}

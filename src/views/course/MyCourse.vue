@@ -13,7 +13,7 @@
       <el-empty v-if="courseList && courseList.length === 0" description="暂无数据"></el-empty>
       <!--全部课程列表-->
       <div class="discipline_list" v-if="courseList">
-        <div class="discipline_class" v-for="(item,index) in courseList" @click="gotoCourseDetail(item.selectionId)">
+        <div class="discipline_class" v-for="(item) in courseList" @click="gotoCourseDetail(item.selectionId)">
           <img :src="item.courseImg" alt="">
           <div class="about_course">
             <div class="avatar">
@@ -49,7 +49,6 @@ export default {
     }
   },
   created() {
-    this.inquireCourseList(this.semesterId)
   },
   methods: {
     // 新增处理 SemesterSelector 组件传出的 semester-change 事件的方法

@@ -9,6 +9,8 @@
           </div>
         </el-col>
       </el-row>
+      <!--空状态-->
+      <el-empty v-if="wrongList && wrongList.length === 0" description="暂无数据"></el-empty>
       <!--全部笔记列表-->
       <div class="discipline_list">
         <div class="discipline_class" @click="gotoMistakeDetail(item.selectionId)" v-for="item in wrongList">

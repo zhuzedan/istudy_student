@@ -56,13 +56,14 @@ export const queryWonderfulNote = (passageId, selectionId) => {
 }
 
 // 点赞笔记
-export const likeNote = (noteId, selectionId) => {
+export const likeNote = (noteId, selectionId, hasLikeStatus) => {
     return request({
         method: 'POST',
         url: '/note/likeNote',
         data: {
             noteId,
-            selectionId
+            selectionId,
+            hasLikeStatus
         }
     })
 }

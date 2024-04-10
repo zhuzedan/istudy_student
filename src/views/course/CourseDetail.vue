@@ -98,36 +98,25 @@
         <div class="recently_notebook" v-if="currentMenuIndex==='5'">
           <div class="recent">最近笔记</div>
           <div class="chapter_box">
-            <div class="chapter">排列和逆序数</div>
+            <div class="chapter">{{ newNote.passageTitle }}</div>
+            <div class="chapter">{{ newNote.noteName }}</div>
             <div class="chapter_notes">
-              1、排列：将n个不同元素按一定顺序排成一列，叫做这n个元素的全排列，简称
-              排列.比如354216就是这6个元素的一个排列
+              {{ newNote.noteContent }}
             </div>
-            <div class="chapter_notes">
-              2、逆序数的计算方法：数出每个数的逆序个数,所有数的逆序个数求和就是排列逆
-              序数.
-            </div>
-            <div class="chapter_notes">
-              3、奇排列和偶排列：逆序数为偶数的排列称为偶排列，逆序数为奇数的排列为奇排列
-            </div>
-
           </div>
-          <el-button @click.native="gotoNoteDetail" type="primary">更多笔记</el-button>
+          <el-button @click.native="gotoNoteDetail(selectionId)" type="primary">更多笔记</el-button>
         </div>
         <!--笔记本结束-->
         <!--错题本开始-->
         <div class="recently_wrong_title_book" v-if="currentMenuIndex==='6'">
           <div class="recent_wrong_title">最新错题</div>
-          <div class="wrong_title_name">设0 < X1 <3 , Xn+1=Xn(3-Xn)^1/2 (n=1、2...) 证明数列{Xn} 的极限存在，并求此极限.
+          <div class="wrong_title_name">{{ newWrong.questionContent }}
           </div>
           <div class="answer">解析</div>
           <div class="answer_detail">
-            为了借助社交产品的流量，让用户主动分享APP中的内容到社交平台来达到拉新和促活的目的，市场上绝大多数APP都有第三方分享的功能，它是内容分发的最有效途径，并且大大降低了企业的营销成本。
-            用户分享内容到社交媒体或好友，不应该是一种粗暴的强制行为，我们应该在保证产品本身内容有吸引力的核心前提下，仔细揣摩用户心理，结合产品本身的特色，在不同情境下提供给用户最合适的分享平台及方式，让用户分享成为一种水到渠成的自然行为，甚至在某些时候还能给用户带来一些小的惊喜就更棒了。
-            分享时机，在不同的时机分析用户是否有分享的意愿，提供给他们合适的分享内容，能让分享的效果更好。
-            所以监听用户的截图操作，提示用户进行分享，既缩短了以前分享截图的操作路径，避免了在之前长路径中的行为流失（比如截...
+            {{newWrong.questionAnalysis}}
           </div>
-          <el-button type="primary" @click.native="moreMistakes">更多错题</el-button>
+          <el-button type="primary" @click.native="moreMistakes(selectionId)">更多错题</el-button>
         </div>
         <!--错题本结束-->
       </div>
@@ -136,7 +125,13 @@
 </template>
 
 <script>
-import {queryCourseProgress, queryMyCourseDetail, queryRemindList} from "@/api/course";
+import {
+  queryCourseProgress,
+  queryMyCourseDetail,
+  queryNewNoteList,
+  queryNewWrongList,
+  queryRemindList
+} from "@/api/course";
 import {formatTimestamp} from '@/utils/time'
 
 export default {
@@ -164,6 +159,8 @@ export default {
         label: '待提高'
       }],
       value: '',
+      newNote: {},  //最新笔记
+      newWrong: {}  //最新错题
     }
   },
   created() {
@@ -211,7 +208,7 @@ export default {
       })
     },
     // 课程树的显示
-    renderCourseTreeNode(h, {node, data, store}) {
+    renderCourseTreeNode(h, {node, data}) {
       const iconNameMap = {
         exam: 'school',
         video: 'video-play',
@@ -235,7 +232,7 @@ export default {
       return (
           <span style={{display: 'flex', alignItems: 'center'}}>
             {node.level === 1 && (
-                <i class="el-icon-folder-opened" />
+                <i class="el-icon-folder-opened"/>
             )}
             <i class={iconClass}/>
             {iconTitle}&nbsp;&nbsp;{data.passageTitle}
@@ -246,20 +243,44 @@ export default {
           </span>
       );
     },
+    //最新笔记
+    inquireNewNoteList() {
+      queryNewNoteList(this.selectionId).then((res) => {
+        this.newNote = res.data
+      })
+    },
+    //最新错题
+    inquireNewWrongList() {
+      queryNewWrongList(this.selectionId).then((res) => {
+        this.newWrong = res.data
+      })
+    },
     goBack() {
       this.$router.back();
     },
-    moreMistakes() {
-      this.$router.push('/mistakeDetail')
+    moreMistakes(selectionId) {
+      this.$router.push({
+        path:'/mistakeDetail',
+        query: {selectionId}
+      })
     },
-    gotoNoteDetail() {
-      this.$router.push('/noteDetail')
+    gotoNoteDetail(selectionId) {
+      this.$router.push({
+        path:'/noteDetail',
+        query: {selectionId}
+      })
     },
     handleSelect(index) {
       // 这里你可以保存或处理 index 值
       this.currentMenuIndex = index;
       if (index === '1') {
         this.inquireRemindList()
+      }
+      if (index === '5') {
+        this.inquireNewNoteList()
+      }
+      if (index === '6') {
+        this.inquireNewWrongList()
       }
     },
     handleNodeClick(data) {
