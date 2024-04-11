@@ -216,19 +216,19 @@ export default {
             this.$message.info('取消发送')
           })
     },
-    // 添加课程
-    insertCourse(scheduleId) {
-      insertSelectionForOpenCourse(scheduleId)
-    },
     addCourse() {
       this.$confirm('是否添加本课程', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       })
           .then(() => {
-            this.insertCourse(this.scheduleId)
-            this.$message.success('添加成功')
-            this.$router.push('/myCourse')
+            //添加课程接口
+            insertSelectionForOpenCourse(this.scheduleId).then((res) => {
+              if (res.success) {
+                this.$message.success('添加成功')
+                this.$router.push('/myCourses')
+              }
+            })
           })
           .catch(() => {
             this.$message.info('取消添加')
