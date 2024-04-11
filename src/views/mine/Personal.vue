@@ -23,7 +23,9 @@
           <div class="study_situation_top">
             <div class="situation_top_left">
               <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
-              <div class="course" v-for="(item, index) in courseList" :key="index">{{ item.courseName }}</div>
+              <div class="course" v-for="(item, index) in courseList"
+                   @click="inquireCourseStarByPassage(item.selectionId)" :key="index">{{ item.courseName }}
+              </div>
             </div>
             <div class="situation_top_right">
               <div class="star_level">课程星级</div>
@@ -99,9 +101,15 @@
 
               <div class="start_commit">
                 <div class="start_commit_left">
-                  <div class="commit_left_content">您好像对第一章：行列式 中的计算行列式的常见题型与方法一节很不熟悉呢。您这一节的平均星级为1.56，少于您其他课程平均星级。</div>
-                  <div class="commit_left_content">您好像对第一章：行列式 中的行列式按行（列）展开一节很不熟悉呢。您这一节的平均星级为1.89，少于您其他课程平均星级。</div>
-                  <div class="commit_left_content">您好像对第二章：矩阵 中的矩阵的概念一节很不熟悉呢。您这一节的平均星级为1.39，少于您其他课程平均星级。</div>
+                  <div class="commit_left_content">您好像对第一章：行列式
+                    中的计算行列式的常见题型与方法一节很不熟悉呢。您这一节的平均星级为1.56，少于您其他课程平均星级。
+                  </div>
+                  <div class="commit_left_content">您好像对第一章：行列式
+                    中的行列式按行（列）展开一节很不熟悉呢。您这一节的平均星级为1.89，少于您其他课程平均星级。
+                  </div>
+                  <div class="commit_left_content">您好像对第二章：矩阵
+                    中的矩阵的概念一节很不熟悉呢。您这一节的平均星级为1.39，少于您其他课程平均星级。
+                  </div>
                 </div>
                 <div class="start_commit_left">
                   <div class="improve_box">
@@ -135,20 +143,24 @@
         <!--个人信息开始-->
         <div class="person_information" v-if="currentMenuIndex==='2'">
           <div style="display: flex">
-            <el-button type="primary" @click.native="editOneAccount" v-if="!editTheAccount">编辑</el-button>
-            <el-button @click.native="cancelOneAccount" v-if="editTheAccount">取消</el-button>
+            <el-button type="primary" @click.native="editTheAccount = true" v-if="!editTheAccount">编辑</el-button>
+            <el-button @click.native="editTheAccount = false" v-if="editTheAccount">取消</el-button>
             <el-button @click.native="saveOneAccount(userInfo)" v-if="editTheAccount">保存</el-button>
           </div>
           <div style="display: flex">
             <div class="avatar_box">
               <el-tooltip effect="dark" content="点击更换头像" placement="top">
-                <!--<el-upload-->
-                class="avatar-uploader"
-                :show-file-list="false"
+                <el-upload
+                    action="#"
+                    :http-request="handleUpload"
+                    class="avatar-uploader"
+                    :show-file-list="false"
+                    :before-upload="beforeAvatarUpload"
+                    :on-success="updateAvatar"
                 >
-                <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" alt=""/>
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-                <!--</el-upload>-->
+                  <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" alt=""/>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"/>
+                </el-upload>
               </el-tooltip>
             </div>
             <div class="information_list">
@@ -242,6 +254,7 @@ import {
   queryCourseProgress,
   queryCourseStar,
   queryUserInfo,
+  updateAvatar,
   updatePassword,
   updateUserInfo
 } from "@/api/user";
@@ -351,8 +364,6 @@ export default {
     }
   },
   created() {
-    this.inquireCourseProgress()
-    this.inquireCourseEvaluate()
     this.inquireMyUserInfo()
   },
   methods: {
@@ -360,9 +371,15 @@ export default {
     formatCommitDate(timestamp) {
       return formatDate(timestamp);
     },
+    // 根据学期选择的课程查看星级
+    inquireCourseStarByPassage(selectionId) {
+      queryCourseStar(selectionId)
+    },
     onSemesterChangeFromComponent(newSemesterId) {
       this.semesterId = newSemesterId;
       this.loadCourseAndStars(this.semesterId)
+      this.inquireCourseProgress()
+      this.inquireCourseEvaluate()
     },
     async loadCourseAndStars(semesterId) {
       try {
@@ -384,7 +401,7 @@ export default {
     },
     // 课程总体进度
     inquireCourseProgress() {
-      queryCourseProgress().then((res) => {
+      queryCourseProgress(this.semesterId).then((res) => {
         const progressesName = [];
         const progressPercent = [];
         res.data.forEach(item => {
@@ -397,7 +414,7 @@ export default {
     },
     // 课程综合评价
     inquireCourseEvaluate() {
-      queryCourseEvaluate().then((res) => {
+      queryCourseEvaluate(this.semesterId).then((res) => {
         const evaluateName = [];
         const evaluateLevel = [];
         res.data.forEach(item => {
@@ -418,6 +435,26 @@ export default {
     updateMyUserInfo(userInfo) {
       updateUserInfo(userInfo);
     },
+    // 更新头像
+    async beforeAvatarUpload(file) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // 上传文件
+        updateAvatar(formData).then((res) => {
+          this.userInfo.avatar = res.data.filePath
+        })
+      } catch (error) {
+        console.log('头像上传失败', error)
+      }
+    },
+    handleUpload() {
+    },
+    updateAvatar(response) {
+      console.log('onsuccess', response)
+      this.inquireMyUserInfo()
+    },
     // 更新密码
     confirmUpdatePwd(updatePwd) {
       this.$confirm('确定更新密码吗', '退出提示', {
@@ -434,12 +471,7 @@ export default {
             this.$message.info('取消保存')
           })
     },
-    editOneAccount() {
-      this.editTheAccount = true
-    },
-    cancelOneAccount() {
-      this.editTheAccount = false
-    },
+    // 保存个人信息按钮
     saveOneAccount(userInfo) {
       this.$confirm('确定保存当前信息吗', '退出提示', {
         confirmButtonText: '确定',
@@ -512,6 +544,7 @@ export default {
               justify-content: center;
               margin-top: 10px;
               box-shadow: 0 2.67px 5.33px rgba(0, 0, 0, 0.25);
+              cursor: pointer;
             }
           }
 
@@ -524,7 +557,7 @@ export default {
 
             .star_level {
               font-size: 16px;
-              font-family: HanSansBold;
+              font-family: HanSansBold, serif;
             }
 
             .star_level_box {
@@ -608,7 +641,7 @@ export default {
 
             .course_title {
               font-size: 16px;
-              font-family: HanSansBold;
+              font-family: HanSansBold, serif;
             }
           }
         }
@@ -634,6 +667,11 @@ export default {
           position: relative;
           align-items: center;
           justify-content: center;
+
+          img {
+            width: 150px;
+            height: 150px;
+          }
 
           .avatar_setting {
             color: @primaryColor;

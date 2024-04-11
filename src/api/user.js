@@ -49,7 +49,7 @@ export const updatePassword = (data) => {
 export const queryCourseBySemester = (semesterId) => {
     return request({
         method: 'GET',
-        url: '/user/queryCourseBySemester',
+        url: '/mylearn/queryCourseBySemester',
         params: {
             semesterId
         }
@@ -57,18 +57,24 @@ export const queryCourseBySemester = (semesterId) => {
 }
 
 // 课程总体进度
-export const queryCourseProgress = () => {
+export const queryCourseProgress = (semesterId) => {
     return request({
         method: 'GET',
-        url: '/user/queryCourseProgress'
+        url: '/mylearn/queryCourseProgress',
+        params: {
+            semesterId
+        }
     })
 }
 
 // 课程综合评价
-export const queryCourseEvaluate = () => {
+export const queryCourseEvaluate = (semesterId) => {
     return request({
         method: 'GET',
-        url: '/user/queryCourseEvaluate'
+        url: '/mylearn/queryCourseEvaluate',
+        params: {
+            semesterId
+        }
     })
 }
 
@@ -76,9 +82,21 @@ export const queryCourseEvaluate = () => {
 export const queryCourseStar = (selectionId) => {
     return request({
         method: 'GET',
-        url: '/user/queryCourseStar',
+        url: '/mylearn/queryCourseStar',
         params: {
             selectionId
         }
+    })
+}
+
+// 上传用户头像
+export const updateAvatar = (data) => {
+    return request({
+        method: 'POST',
+        url: '/oss/upload/avatar',
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data
     })
 }
