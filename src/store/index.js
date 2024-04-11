@@ -7,13 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         userInfo: {
-            avatar: null,
+            avatar: window.localStorage.getItem('avatar') || null,
         },
     },
     getters: {},
     mutations: {
         SET_USER_AVATAR(state, avatar) {
             state.userInfo.avatar = avatar;
+            window.localStorage.setItem('avatar',avatar)
         },
     },
     actions: {},

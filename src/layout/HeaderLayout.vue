@@ -27,7 +27,7 @@
           <div class="avatar">
             <el-avatar :size="50" :src="loginAvatarUrl"></el-avatar>
           </div>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu>
             <el-dropdown-item @click.native="gotoPersonal">个人</el-dropdown-item>
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -72,6 +72,7 @@ export default {
           .then(() => {
             // 移除本地存储中的 accessToken
             window.localStorage.removeItem('accessToken');
+            this.$store.commit('SET_USER_AVATAR', null);
             this.$forceUpdate(); // 强制更新视图
             this.$message.success('成功退出');
             this.$router.push('/')

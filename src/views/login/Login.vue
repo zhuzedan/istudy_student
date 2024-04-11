@@ -136,6 +136,8 @@ export default {
               this.$message.success('登录成功')
               // token存入缓存中
               window.localStorage.setItem('accessToken', data.token);
+              // 头像存储到vuex
+              this.$store.commit('SET_USER_AVATAR', data.userInfo.avatar);
               const redirect = router.currentRoute.query.redirect;
               if (redirect) {
                 // 存在redirect参数，跳转回之前请求的页面
