@@ -107,6 +107,8 @@ export default {
               this.$message.success('登录成功')
               // token存入缓存中
               window.localStorage.setItem('accessToken', data.token);
+              //用户id存储到vuex
+              this.$store.commit('SET_USER_ID', data.userInfo.id)
               // 头像存储到vuex
               this.$store.commit('SET_USER_AVATAR', data.userInfo.avatar);
               const redirect = router.currentRoute.query.redirect;
@@ -136,6 +138,8 @@ export default {
               this.$message.success('登录成功')
               // token存入缓存中
               window.localStorage.setItem('accessToken', data.token);
+              //用户id存储到vuex
+              this.$store.commit('SET_USER_ID', data.userInfo.id)
               // 头像存储到vuex
               this.$store.commit('SET_USER_AVATAR', data.userInfo.avatar);
               const redirect = router.currentRoute.query.redirect;

@@ -72,6 +72,7 @@ export default {
           .then(() => {
             // 移除本地存储中的 accessToken
             window.localStorage.removeItem('accessToken');
+            this.$store.commit('SET_USER_ID', null);
             this.$store.commit('SET_USER_AVATAR', null);
             this.$forceUpdate(); // 强制更新视图
             this.$message.success('成功退出');

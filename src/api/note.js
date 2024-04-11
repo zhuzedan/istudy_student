@@ -88,3 +88,27 @@ export const updateOpenNote = (noteId, selectionId) => {
         }
     })
 }
+
+//删除笔记
+export const deleteNote = (noteId) => {
+    return request({
+        method: 'DELETE',
+        url: '/note/deleteNote',
+        params: {
+            noteId
+        }
+    })
+}
+
+//添加书签
+export const updateBookMarkNote = (noteId, bookmark, selectionId) => {
+    return request({
+        method: 'PUT',
+        url: '/note/updateBookMarkNote',
+        data: {
+            noteId,
+            bookmark,
+            selectionId
+        }
+    })
+}

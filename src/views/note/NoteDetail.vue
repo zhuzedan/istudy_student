@@ -25,8 +25,12 @@
           <div class="one_note_bottom">
             <div class="release_time">{{ formatCommitDate(item.createTime) }}</div>
             <el-button type="text" @click="updateOneNote(item)">编辑</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" v-if="item.userId === loginUserId" @click="deleteOneNote(item.id)">删除</el-button>
             <div class="icon_button">
+              <el-tooltip class="item" effect="dark" content="添加书签" placement="top-start">
+                <i @click="updateBookMark(item.id,item.bookmark)" :class="{ 'bookmarked-icon': item.bookmark === 1 }"
+                   class="el-icon-s-management"></i>
+              </el-tooltip>
               <el-tooltip class="item" effect="dark" content="分享笔记" placement="top-start">
                 <i @click="shareNote(item.id)" class="el-icon-share"></i>
               </el-tooltip>
@@ -106,12 +110,15 @@
   </div>
 </template>
 <script>
+import {mapState} from 'vuex';
 import {
+  deleteNote,
   insertNote,
   likeNote,
   queryAllNoteList,
   queryNoteDirectory,
   queryWonderfulNote,
+  updateBookMarkNote,
   updateNote,
   updateOpenNote
 } from "@/api/note";
@@ -146,6 +153,13 @@ export default {
       drawer: false,
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     }
+  },
+  computed: {
+    ...mapState(['userInfo']),
+    loginUserId() {
+      return parseInt(this.userInfo.userId);
+    },
+
   },
   created() {
     this.selectionId = this.$route.query.selectionId
@@ -186,6 +200,7 @@ export default {
           type: 'success',
           message: '提交成功!'
         });
+      }).then(() => {
         this.inquireNoteListByPassage()
         this.insertNoteData.noteName = ''
         this.insertNoteData.noteContent = ''
@@ -226,12 +241,41 @@ export default {
         });
       });
     },
+    //删除笔记
+    deleteOneNote(id) {
+      this.$confirm('确定删除当前笔记吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(() => {
+        deleteNote(id).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
+          }
+        }).then(() => {
+          this.inquireNoteListByPassage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
+    //添加书签
+    updateBookMark(noteId, hasLikeStatus) {
+      updateBookMarkNote(noteId, hasLikeStatus, this.selectionId)
+          .then(() => {
+            this.inquireNoteListByPassage()
+          })
+    },
     // 精彩笔记按钮
     wonderfulNote() {
       this.drawer = true
       queryWonderfulNote(this.currentPassageId, this.selectionId).then((res) => {
         this.wonderfulNoteList = res.data
-        console.log(this.wonderfulNoteList)
       })
     },
     // 点赞按钮
@@ -358,6 +402,10 @@ export default {
 
           .icon_button {
             margin-left: auto;
+
+            .bookmarked-icon {
+              color: #3165F6 !important;
+            }
 
             i {
               color: #666666;
