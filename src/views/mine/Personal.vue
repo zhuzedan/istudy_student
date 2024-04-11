@@ -40,60 +40,18 @@
                 </div>
                 <!--星星介绍-->
                 <div class="star_level_introduction">
-                  <div class="star_container">
-                    <div class="star_line"></div>
+                  <div class="star_container" v-for="(item,index) in starData">
+                    <div class="star_line" :style="{ backgroundColor: starOption.color[index]}"></div>
                     <div>
                       <div class="star_star">
                         <el-rate
                             disabled
-                            :max="3"
-                            :value="3"
+                            :max="item.starLevel"
+                            :value="item.starLevel"
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">{{ starData.threeStarCount }}</div>
-                    </div>
-                  </div>
-                  <div class="star_container">
-                    <div class="star_line" style="background-color: #6BD8BA"></div>
-                    <div>
-                      <div class="star_star">
-                        <el-rate
-                            disabled
-                            :max="2"
-                            :value="2"
-                            text-color="#ff9900">
-                        </el-rate>
-                      </div>
-                      <div class="star_percent">{{ starData.twoStarCount }}</div>
-                    </div>
-                  </div>
-                  <div class="star_container">
-                    <div class="star_line" style="background-color: #F2BB25"></div>
-                    <div>
-                      <div class="star_star">
-                        <el-rate
-                            disabled
-                            :max="1"
-                            :value="1"
-                            text-color="#ff9900">
-                        </el-rate>
-                      </div>
-                      <div class="star_percent">{{ starData.oneStarCount }}</div>
-                    </div>
-                  </div>
-                  <div class="star_container">
-                    <div class="star_line" style="background-color: #A8A8FF"></div>
-                    <div>
-                      <div class="star_star">
-                        <el-rate
-                            disabled
-                            :max="0"
-                            :value="0"
-                            text-color="#ff9900">
-                        </el-rate>
-                      </div>
-                      <div class="star_percent">{{ starData.zeroStarCount }}</div>
+                      <div class="star_percent">{{ item.count }} &nbsp; {{item.percentage * 100}}%</div>
                     </div>
                   </div>
                 </div>
@@ -297,7 +255,7 @@ export default {
       ],
       courseList: [],
       currentSelectionId: '',
-      starData: {}, //课程星级数
+      starData: [],
       evaluateOption: {
         title: [],
         polar: {
@@ -402,10 +360,9 @@ export default {
         // 有了 selectionId，可以继续执行课程星级分析
         const starRes = await queryCourseStar(this.currentSelectionId);
         this.starData = starRes.data
-        this.starOption.series[0].data[0].value = starRes.data.zeroStarCount;
-        this.starOption.series[0].data[1].value = starRes.data.oneStarCount;
-        this.starOption.series[0].data[2].value = starRes.data.twoStarCount;
-        this.starOption.series[0].data[3].value = starRes.data.threeStarCount;
+        this.starOption.series[0].data.forEach((item, index) => {
+          item.value = this.starData[index].count;
+        });
       } catch (error) {
         console.error('loadCourseAndStars方法异常', error);
       }
@@ -442,10 +399,6 @@ export default {
         this.userInfo = res.data.userInfo
       })
     },
-    // 更新个人信息
-    updateMyUserInfo(userInfo) {
-      updateUserInfo(userInfo);
-    },
     // 更新上传头像文件
     handleUpload(val) {
       const formData = new FormData()
@@ -468,7 +421,7 @@ export default {
       }
       // 可以限制图片的大小
       if (!isLt5M) {
-        this.$message.error('上传图片大小不能超过 1MB!');
+        this.$message.error('上传图片大小不能超过 5MB!');
       }
       return suffix || suffix2 || suffix3
     },

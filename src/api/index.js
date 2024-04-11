@@ -1,13 +1,11 @@
 import request from '@/utils/request'
 
 // 首页课程
-export const queryOpenCourseList = (courseCategoryId) => {
+export const queryOpenCourseList = (params) => {
     return request({
         method: 'GET',
         url: '/index/queryOpenCourseList',
-        params: {
-            courseCategoryId
-        }
+        params
     })
 }
 

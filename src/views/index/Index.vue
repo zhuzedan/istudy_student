@@ -21,7 +21,7 @@
         <div class="discipline_list">
           <div
               class="discipline_class"
-              v-for="(course, index) in courseList"
+              v-for="(course, index) in queryCoursePageResp.list"
               :key="index"
               @click="gotoCourseIntroduction(course.scheduleId)"
           >
@@ -50,6 +50,15 @@
             <div class="studying_count">{{ course.learnCount }}人正在学习</div>
           </div>
         </div>
+        <!--分页-->
+        <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="queryCoursePageReq.current"
+            :page-size="queryCoursePageReq.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="queryCoursePageResp.totalRecords"
+        >
+        </el-pagination>
       </div>
 
       <div class="hot_class">
@@ -82,7 +91,15 @@ export default {
   },
   data() {
     return {
-      courseList: [],
+      // 课程分页入参
+      queryCoursePageReq: {
+        courseCategoryId: '',
+        current: 1,
+        pageSize: 10,
+      },
+      // 课程分页出参
+      queryCoursePageResp: {},
+      //课程分类
       categoryList: [
         {
           courseCategoryId: '',
@@ -110,10 +127,16 @@ export default {
     },
     // 全部课程数据
     inquireCourseList() {
-      queryOpenCourseList().then((res) => {
-        const {data} = res
-        this.courseList = data
+      queryOpenCourseList(this.queryCoursePageReq).then((res) => {
+        const {current, pageSize, totalRecords, list} = res.data
+        Object.assign(this.queryCoursePageReq, {current, pageSize})
+        this.queryCoursePageResp = {totalRecords, list}
       })
+    },
+    // 课程翻页
+    handleCurrentChange(val) {
+      this.queryCoursePageReq.current = val
+      this.inquireCourseList()
     },
     // 热门课程
     inquireHotCourse() {
@@ -132,9 +155,12 @@ export default {
     // 课程分类切换
     handleCategoryClick(index, courseCategoryId) {
       this.selectedCategory = index;
-      queryOpenCourseList(courseCategoryId).then((res) => {
-        const {data} = res
-        this.courseList = data
+      this.queryCoursePageReq.courseCategoryId = courseCategoryId;
+      this.queryCoursePageReq.current = 1;
+      queryOpenCourseList(this.queryCoursePageReq).then((res) => {
+        const {current, pageSize, totalRecords, list} = res.data
+        Object.assign(this.queryCoursePageReq, {current, pageSize})
+        this.queryCoursePageResp = {totalRecords, list}
       })
     },
   }
@@ -247,6 +273,11 @@ export default {
         }
       }
 
+    }
+
+    .el-pagination {
+      padding-left: 24px;
+      padding-bottom: 10px;
     }
   }
 
