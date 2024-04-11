@@ -38,32 +38,24 @@
 </template>
 
 <script>
-import {queryUserInfo} from "@/api/user";
-
+import { mapState } from 'vuex';
 export default {
   name: "HeaderLayout",
   data() {
     return {
       inquireKey: '',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      loginAvatarUrl: ''
     }
   },
   computed: {
-
+    ...mapState(['userInfo']),
+    loginAvatarUrl() {
+      return this.userInfo.avatar || this.circleUrl; // 如果Vuex中没有头像，则使用默认头像
+    },
   },
   mounted() {
-    this.inquireUserInfo();
   },
   methods: {
-    // 获取当前用户信息（头像）
-    inquireUserInfo() {
-      if (window.localStorage.getItem('accessToken')) {
-        queryUserInfo().then((res) => {
-          this.loginAvatarUrl = res.data.userInfo.avatar
-        })
-      }
-    },
     // 判断登录状态
     accessTokenExists() {
       return !!window.localStorage.getItem("accessToken");
@@ -124,7 +116,7 @@ export default {
 
     .logo_text {
       color: @primaryColor;
-      font-family: HanSansBold;
+      font-family: HanSansBold,serif;
       margin-left: 10px;
       font-size: 40px;
       font-weight: bold;

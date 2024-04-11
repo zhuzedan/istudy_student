@@ -107,6 +107,8 @@ export default {
               this.$message.success('登录成功')
               // token存入缓存中
               window.localStorage.setItem('accessToken', data.token);
+              // 头像存储到vuex
+              this.$store.commit('SET_USER_AVATAR', data.userInfo.avatar);
               const redirect = router.currentRoute.query.redirect;
               if (redirect) {
                 // 存在redirect参数，跳转回之前请求的页面
@@ -181,7 +183,7 @@ export default {
 
     .logo_text {
       color: @primaryColor;
-      font-family: HanSansBold;
+      font-family: HanSansBold,serif;
       margin-left: 10px;
       font-size: 40px;
       font-weight: bold;
@@ -238,7 +240,7 @@ export default {
 
   .welcome_title {
     font-size: 72px;
-    font-family: HanSansBold;
+    font-family: HanSansBold,serif;
     color: rgba(24, 45, 154, 1);
     text-shadow: 4px 3px 0 rgba(0, 0, 0, 0.25);
     text-align: left;

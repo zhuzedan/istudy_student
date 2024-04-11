@@ -23,8 +23,12 @@
           <div class="study_situation_top">
             <div class="situation_top_left">
               <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
-              <div class="course" v-for="(item, index) in courseList"
-                   @click="inquireCourseStarByPassage(item.selectionId)" :key="index">{{ item.courseName }}
+              <div class="course"
+                   v-for="(item, index) in courseList"
+                   :class="{ 'selected': selectedCourseIndex === index }"
+                   @click="inquireCourseStarByPassage(item.selectionId, index)"
+                   :key="index">
+                {{ item.courseName }}
               </div>
             </div>
             <div class="situation_top_right">
@@ -44,7 +48,6 @@
                             disabled
                             :max="3"
                             :value="3"
-                            show-score
                             text-color="#ff9900">
                         </el-rate>
                       </div>
@@ -59,7 +62,6 @@
                             disabled
                             :max="2"
                             :value="2"
-                            show-score
                             text-color="#ff9900">
                         </el-rate>
                       </div>
@@ -74,7 +76,6 @@
                             disabled
                             :max="1"
                             :value="1"
-                            show-score
                             text-color="#ff9900">
                         </el-rate>
                       </div>
@@ -89,7 +90,6 @@
                             disabled
                             :max="0"
                             :value="0"
-                            show-score
                             text-color="#ff9900">
                         </el-rate>
                       </div>
@@ -131,32 +131,40 @@
           <div class="study_situation_bottom">
             <div class="course_process">
               <div class="course_title">课程总体进度</div>
-              <v-chart :option="processOption"/>
+              <div class="course_chart">
+                <v-chart :option="processOption"/>
+              </div>
             </div>
             <div class="course_process">
               <div class="course_title">课程评价</div>
-              <v-chart :option="evaluateOption"></v-chart>
+              <div class="course_chart">
+                <v-chart :option="evaluateOption"></v-chart>
+              </div>
             </div>
           </div>
         </div>
         <!--学习情况结束-->
         <!--个人信息开始-->
         <div class="person_information" v-if="currentMenuIndex==='2'">
+          <!--编辑操作按钮-->
           <div style="display: flex">
             <el-button type="primary" @click.native="editTheAccount = true" v-if="!editTheAccount">编辑</el-button>
             <el-button @click.native="editTheAccount = false" v-if="editTheAccount">取消</el-button>
-            <el-button @click.native="saveOneAccount(userInfo)" v-if="editTheAccount">保存</el-button>
+            <el-button @click.native="saveOneAccount()" v-if="editTheAccount">保存</el-button>
           </div>
           <div style="display: flex">
             <div class="avatar_box">
-              <el-tooltip effect="dark" content="点击更换头像" placement="top">
+              <div v-if="!editTheAccount">
+                <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" alt=""/>
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </div>
+              <el-tooltip effect="dark" content="点击更换头像" placement="top" v-if="editTheAccount">
                 <el-upload
                     action="#"
                     :http-request="handleUpload"
                     class="avatar-uploader"
                     :show-file-list="false"
-                    :before-upload="beforeAvatarUpload"
-                    :on-success="updateAvatar"
+                    :before-upload="handleBeforeUpload"
                 >
                   <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" alt=""/>
                   <i v-else class="el-icon-plus avatar-uploader-icon"/>
@@ -268,6 +276,7 @@ export default {
   },
   data() {
     return {
+      selectedCourseIndex: 0,  //记录选中的课程
       userInfo: {},
       updatePwd: {
         oldPwd: '',
@@ -372,11 +381,13 @@ export default {
       return formatDate(timestamp);
     },
     // 根据学期选择的课程查看星级
-    inquireCourseStarByPassage(selectionId) {
+    inquireCourseStarByPassage(selectionId, index) {
+      this.selectedCourseIndex = index
       queryCourseStar(selectionId)
     },
     onSemesterChangeFromComponent(newSemesterId) {
       this.semesterId = newSemesterId;
+      this.selectedCourseIndex = 0;
       this.loadCourseAndStars(this.semesterId)
       this.inquireCourseProgress()
       this.inquireCourseEvaluate()
@@ -435,25 +446,58 @@ export default {
     updateMyUserInfo(userInfo) {
       updateUserInfo(userInfo);
     },
-    // 更新头像
-    async beforeAvatarUpload(file) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        // 上传文件
-        updateAvatar(formData).then((res) => {
-          this.userInfo.avatar = res.data.filePath
-        })
-      } catch (error) {
-        console.log('头像上传失败', error)
+    // 更新上传头像文件
+    handleUpload(val) {
+      const formData = new FormData()
+      formData.append('file', val.file)
+      // 上传接口
+      updateAvatar(formData).then((res) => {
+        this.userInfo.avatar = res.data.filePath;
+      })
+    },
+    // 判断上传的是否为图片
+    handleBeforeUpload(file) {
+      const img = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const suffix = img === 'jpg'
+      const suffix2 = img === 'png'
+      const suffix3 = img === 'jpeg'
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!suffix && !suffix2 && !suffix3) {
+        this.$message.error("只能上传图片！");
+        return false
       }
+      // 可以限制图片的大小
+      if (!isLt5M) {
+        this.$message.error('上传图片大小不能超过 1MB!');
+      }
+      return suffix || suffix2 || suffix3
     },
-    handleUpload() {
-    },
-    updateAvatar(response) {
-      console.log('onsuccess', response)
-      this.inquireMyUserInfo()
+    // 保存个人信息按钮
+    async saveOneAccount() {
+      const updateInfo = {
+        avatar: this.userInfo.avatar,
+        connectTel: this.userInfo.connectTel,
+        gender: this.userInfo.gender,
+        introduction: this.userInfo.introduction,
+        nickName: this.userInfo.nickName
+      }
+      await this.$confirm('确定保存当前信息吗', '退出提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      try {
+        await updateUserInfo(updateInfo);
+        this.$message.success('成功保存');
+        this.editTheAccount = false;
+      } catch {
+        this.$message.info('取消保存');
+        return;
+      }
+      await queryUserInfo().then((res) => {
+        this.userInfo = res.data.userInfo
+        this.$store.commit('SET_USER_AVATAR', this.userInfo.avatar);
+      });
     },
     // 更新密码
     confirmUpdatePwd(updatePwd) {
@@ -464,23 +508,6 @@ export default {
       })
           .then(() => {
             updatePassword(updatePwd);
-            this.$message.success('成功保存')
-            this.editTheAccount = false
-          })
-          .catch(() => {
-            this.$message.info('取消保存')
-          })
-    },
-    // 保存个人信息按钮
-    saveOneAccount(userInfo) {
-      this.$confirm('确定保存当前信息吗', '退出提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-          .then(() => {
-            this.updateMyUserInfo(userInfo);
-            this.inquireMyUserInfo();
             this.$message.success('成功保存')
             this.editTheAccount = false
           })
@@ -509,6 +536,7 @@ export default {
   .menu_click_operation {
     display: flex;
     margin-top: 20px;
+    margin-bottom: 20px;
 
     .menu_tab {
       width: 260px;
@@ -522,9 +550,10 @@ export default {
       border-radius: 8px;
 
       .study_situation {
+        height: auto;
+
         .study_situation_top {
           display: flex;
-          //height: 550px;
 
           .situation_top_left {
             padding: 10px;
@@ -539,12 +568,16 @@ export default {
               display: flex;
               padding-left: 10px;
               flex-direction: column;
-              border-radius: 4px;
+              border-radius: 8px;
               background-color: #fff;
               justify-content: center;
               margin-top: 10px;
-              box-shadow: 0 2.67px 5.33px rgba(0, 0, 0, 0.25);
+              box-shadow: @primaryBoxShadow;
               cursor: pointer;
+
+              &.selected {
+                background-color: rgba(94, 177, 253, 0.3);
+              }
             }
           }
 
@@ -627,21 +660,24 @@ export default {
         .study_situation_bottom {
           margin-top: 10px;
           display: flex;
-          height: 400px;
-          justify-content: center;
-          margin-bottom: 20px;
+          height: 440px;
+          justify-content: space-between;
 
           .course_process {
-            width: 45%;
+            width: 47%;
             background-color: #fff;
             border-radius: 8px;
             padding: 10px;
-            margin: 0 10px 0 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 
             .course_title {
               font-size: 16px;
               font-family: HanSansBold, serif;
+            }
+
+            .course_chart {
+              width: 100%;
+              height: 400px;
             }
           }
         }
@@ -669,8 +705,8 @@ export default {
           justify-content: center;
 
           img {
-            width: 150px;
-            height: 150px;
+            width: 130px;
+            height: 130px;
           }
 
           .avatar_setting {
