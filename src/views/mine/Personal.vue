@@ -51,7 +51,7 @@
                             text-color="#ff9900">
                         </el-rate>
                       </div>
-                      <div class="star_percent">{{ item.count }} &nbsp; {{item.percentage * 100}}%</div>
+                      <div class="star_percent">{{ item.count }} &nbsp; {{ item.percentage * 100 }}%</div>
                     </div>
                   </div>
                 </div>
@@ -119,8 +119,9 @@
               <el-tooltip effect="dark" content="点击更换头像" placement="top" v-if="editTheAccount">
                 <el-upload
                     action="#"
-                    :http-request="handleUpload"
+                    accept="image/*"
                     class="avatar-uploader"
+                    ref="upload"
                     :show-file-list="false"
                     :before-upload="handleBeforeUpload"
                 >
@@ -128,6 +129,7 @@
                   <i v-else class="el-icon-plus avatar-uploader-icon"/>
                 </el-upload>
               </el-tooltip>
+              <my-cropper ref="myCropper" @getFile="handleGetFile" @upAgain="handleUpAgain"></my-cropper>
             </div>
             <div class="information_list">
               <div class="information">
@@ -225,12 +227,14 @@ import {
   updateUserInfo
 } from "@/api/user";
 import SemesterSelector from "@/components/selector/SemesterSelector";
+import MyCropper from "@/components/cropper/MyCropper";
 import {formatDate} from '@/utils/time'
 
 export default {
   name: "Personal",
   components: {
-    SemesterSelector
+    SemesterSelector,
+    MyCropper
   },
   data() {
     return {
@@ -399,15 +403,6 @@ export default {
         this.userInfo = res.data.userInfo
       })
     },
-    // 更新上传头像文件
-    handleUpload(val) {
-      const formData = new FormData()
-      formData.append('file', val.file)
-      // 上传接口
-      updateAvatar(formData).then((res) => {
-        this.userInfo.avatar = res.data.filePath;
-      })
-    },
     // 判断上传的是否为图片
     handleBeforeUpload(file) {
       const img = file.name.substring(file.name.lastIndexOf('.') + 1)
@@ -423,7 +418,25 @@ export default {
       if (!isLt5M) {
         this.$message.error('上传图片大小不能超过 5MB!');
       }
-      return suffix || suffix2 || suffix3
+      this.$refs.myCropper.open(file);
+      return false; // 阻止默认上传行为
+    },
+    //重新上传
+    handleUpAgain() {
+      this.$refs['upload'].$refs["upload-inner"].handleClick();
+    },
+    // 更新上传头像文件
+    handleGetFile(file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('scene', 1)
+      // 上传接口
+      updateAvatar(formData).then((res) => {
+        if (res.success) {
+          this.userInfo.avatar = res.data.filePath;
+          this.$refs.myCropper.close()
+        }
+      })
     },
     // 保存个人信息按钮
     async saveOneAccount() {

@@ -93,7 +93,7 @@ export const queryCourseStar = (selectionId) => {
 export const updateAvatar = (data) => {
     return request({
         method: 'POST',
-        url: '/oss/upload/avatar',
+        url: '/oss/upload/courseCover',
         headers: {
             'Content-Type': 'multipart/form-data'
         },

@@ -65,7 +65,8 @@
         <div class="hot_class_title">
           热门课程
         </div>
-        <div class="hot_class_concrete" v-for="(item,index) in hotCourseList" @click="gotoCourseIntroduction()">
+        <div class="hot_class_concrete" v-for="(item,index) in hotCourseList"
+             @click="gotoCourseIntroduction(item.scheduleId)">
           <div class="hot_class_num">{{ index + 1 }}</div>
           <img :src="item.courseImg"
                alt="">
