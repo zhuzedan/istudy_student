@@ -12,7 +12,7 @@ export const queryCollectWrongs = (semesterId) => {
 }
 
 // 章节错题
-export const queryAllWrongList = (passageId,selectionId) => {
+export const queryAllWrongList = (passageId, selectionId) => {
     return request({
         method: 'GET',
         url: '/wrong/queryAllWrongList',
