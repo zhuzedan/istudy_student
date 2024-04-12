@@ -51,7 +51,11 @@
               </el-rate>
             </div>
             <div class="commit_content">{{ item.commentContent }}</div>
-            <div class="commit_date"> {{ formatCommitDate(item.createTime) }}</div>
+            <div style="display: flex">
+              <div class="commit_date"> {{ formatCommitDate(item.createTime) }}</div>
+              <el-button type="text" v-if="item.userId === loginUserId" @click="deleteOneComment(item.commentId)">删除
+              </el-button>
+            </div>
           </div>
         </div>
         <!-- 发布评论 -->
@@ -90,6 +94,7 @@
 
 <script>
 import {
+  deleteComment,
   insertComment,
   insertSelectionForOpenCourse,
   queryOpenCourseComment,
@@ -97,6 +102,7 @@ import {
   queryPassageList
 } from "@/api"
 import {formatTimestamp} from '@/utils/time'
+import {mapState} from 'vuex';
 
 export default {
   name: "CourseIntroduction",
@@ -124,6 +130,13 @@ export default {
         starLevel: 5
       }
     };
+  },
+  computed: {
+    ...mapState(['userInfo']),
+    loginUserId() {
+      return parseInt(this.userInfo.userId);
+    },
+
   },
   created() {
     const scheduleId = this.$route.query.scheduleId;
@@ -216,6 +229,24 @@ export default {
             this.$message.info('取消发送')
           })
     },
+    deleteOneComment(commentId) {
+      this.$confirm('是否添删除这条评论', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+          .then(() => {
+            //删除评论接口
+            deleteComment(commentId).then((res) => {
+              if (res.success) {
+                this.$message.success('删除成功')
+              }
+            })
+          })
+          .then(this.inquireCourseCommit)
+          .catch(() => {
+            this.$message.info('取消删除')
+          })
+    },
     addCourse() {
       this.$confirm('是否添加本课程', '提示', {
         confirmButtonText: '确定',
@@ -247,8 +278,7 @@ export default {
     formatCommitDate(timestamp) {
       return formatTimestamp(timestamp);
     },
-  },
-  computed: {}
+  }
 }
 </script>
 
@@ -392,6 +422,7 @@ export default {
           .commit_date {
             margin-top: 10px;
             color: @primaryNoSelected;
+            margin-right: 10px;
           }
         }
       }

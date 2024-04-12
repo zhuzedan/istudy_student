@@ -44,6 +44,16 @@ export const queryOpenCourseDetail = (scheduleId) => {
     })
 }
 
+// 删除评论
+export const deleteComment = (commentId) => {
+    return request({
+        method: 'DELETE',
+        url: '/index/deleteComment',
+        params: {
+            commentId
+        }
+    })
+}
 // 首页课程类别
 export const queryOpenCourseCategory = () => {
     return request({

@@ -9,6 +9,9 @@
             :default-expand-all="true"
             :props="directoryTreeProps"
             node-key="passageId"
+            :current-node-key="currentPassageId"
+            ref="treeSelect"
+            :highlight-current="true"
             :render-content="renderTreeNode"
             @node-click="onNodeClick"
         />
@@ -57,6 +60,10 @@ export default {
           this.noteDirectory = res.data;
           this.currentPassageId = res.data[0].subPassageList[0].passageId;
           this.currentPassageTitle = res.data[0].subPassageList[0].passageTitle;
+          //把当前选择的key设置到el-tree中
+          this.$nextTick(function () {
+            this.$refs['treeSelect'].setCurrentKey(this.currentPassageId)
+          })
           resolve();
         }).catch(reject);
       });
@@ -101,12 +108,16 @@ export default {
     .left_category {
       width: 280px;
       background-color: #fff;
-      padding: 20px;
 
       .category_name {
         font-size: 16px;
         margin: 10px;
         font-family: HanSansBold, serif;
+      }
+
+      // tree 的高度和宽度重新定义
+      ::v-deep.el-tree .el-tree-node > .el-tree-node__content {
+        height: 34px;
       }
     }
 

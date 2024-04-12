@@ -9,6 +9,9 @@
             :default-expand-all="true"
             :props="directoryTreeProps"
             node-key="passageId"
+            :current-node-key="currentPassageId"
+            ref="treeSelect"
+            :highlight-current="true"
             :render-content="renderTreeNode"
             @node-click="onNodeClick"
         />
@@ -25,7 +28,7 @@
           <div class="one_note_bottom">
             <div class="release_time">{{ formatCommitDate(item.createTime) }}</div>
             <el-button type="text" @click="updateOneNote(item)">编辑</el-button>
-            <el-button type="text" v-if="item.userId === loginUserId" @click="deleteOneNote(item.id)">删除</el-button>
+            <el-button type="text" @click="deleteOneNote(item.id)">删除</el-button>
             <div class="icon_button">
               <el-tooltip class="item" effect="dark" content="添加书签" placement="top-start">
                 <i @click="updateBookMark(item.id,item.bookmark)" :class="{ 'bookmarked-icon': item.bookmark === 1 }"
@@ -110,7 +113,6 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex';
 import {
   deleteNote,
   insertNote,
@@ -155,11 +157,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userInfo']),
-    loginUserId() {
-      return parseInt(this.userInfo.userId);
-    },
-
   },
   created() {
     this.selectionId = this.$route.query.selectionId
@@ -177,6 +174,10 @@ export default {
           this.noteDirectory = res.data;
           this.currentPassageId = res.data[0].subPassageList[0].passageId;
           this.currentPassageTitle = res.data[0].subPassageList[0].passageTitle;
+          //把当前选择的key设置到el-tree中
+          this.$nextTick(function () {
+            this.$refs['treeSelect'].setCurrentKey(this.currentPassageId)
+          })
           resolve();
         }).catch(reject);
       });
@@ -251,7 +252,7 @@ export default {
           if (res.success) {
             this.$message({
               type: 'success',
-              message: '修改成功!'
+              message: '删除成功!'
             });
           }
         }).then(() => {
@@ -352,10 +353,10 @@ export default {
       }
 
       //点击时的样式
-      .el-tree ::v-deep.el-tree-node:focus > .el-tree-node__content {
-        background-color: @primaryBackgroundColor !important;
-        border-radius: 8px;
-      }
+      //.el-tree ::v-deep.el-tree-node:focus > .el-tree-node__content {
+      //  background-color: @primaryBackgroundColor !important;
+      //  border-radius: 8px;
+      //}
 
       // tree 的高度和宽度重新定义
       ::v-deep.el-tree .el-tree-node > .el-tree-node__content {
