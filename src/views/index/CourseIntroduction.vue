@@ -36,6 +36,7 @@
       </div>
       <!--课程评价-->
       <div class="course_commit_list" v-if="activeTab === 'commit'">
+        <el-empty v-if="queryCommitPageResp.list && queryCommitPageResp.list.length === 0" description="暂无数据"></el-empty>
         <!--评论列表-->
         <div class="commit_detail" v-for="item in queryCommitPageResp.list">
           <img :src="item.avatar" alt="">
@@ -386,7 +387,6 @@ export default {
       margin-bottom: 40px;
       background-color: @primaryBackgroundColor;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-      display: flex;
     }
 
     .course_commit_list {

@@ -38,59 +38,27 @@
             <i :class="iconClass"></i>
           </div>
         </div>
-        <!--选择题-->
-        <div v-if="selectedType === 1">
-          <div class="homework_list">
-            <div class="homework_box">
-              <div class="title_name">题目：{{ wrongInfo.questionContent }}</div>
-              <el-radio-group v-model="selectedOption">
-                <div class="radio_box">
-                  <el-radio v-for="option in wrongInfo.options">
-                    {{ option }}
-                  </el-radio>
-                </div>
-              </el-radio-group>
-              <div class="title_name">解析：{{ wrongInfo.questionAnalysis }}</div>
-              <i class="el-icon-star-off star-off"></i>
-            </div>
-          </div>
-        </div>
-        <div v-if="selectedType === 3">
+        <div>
           <!--题目-->
-          <div class="homework_list" v-for="(number, index) in 1" :key="index">
-            <div class="answer_questions" v-for="(number, index) in 1" :key="index">
-              <div class="title_name"> 设0< X1 <3 , Xn+1=Xn(3-Xn)^1/2 (n=1、2...) 证明数列{Xn} 的极限存在，并求此极限.
-              </div>
+          <div class="homework_list">
+            <div class="answer_questions">
+              <div class="title_name">{{ wrongInfo.questionContent }}</div>
               <div class="answer_area">
                 <div class="analysis_name">解析</div>
-                <div class="analysis">由题干易知数列有界，因此可使用单调有界数列必有极限来证明数列极限存在，再将题干求极限即可得到数列极限．
-                </div>
+                <div class="analysis">{{ wrongInfo.questionAnalysis }}</div>
               </div>
               <div class="answer_area">
+                <!--课程讨论-->
                 <div class="analysis_name">讨论</div>
                 <div class="course_commit_list">
-                  <div class="commit_detail">
-                    <img src="https://img.js.design/assets/smartFill/img264164da72e058.jpeg" alt="">
+                  <div class="commit_detail" v-for="item in wrongDiscussList">
+                    <img :src="item.avatar" alt="">
                     <div class="commit_detail_box">
                       <div style="display: flex">
-                        <div class="commentator_name">张大伟</div>
+                        <div class="commentator_name">{{ item.nickName }}</div>
                       </div>
-                      <div class="commit_content">
-                        本题考查数列极限的判定及求解．对于给出递推关系的数列，一般利用“单调有界数列必有极限”来判断极限的存在性．
-                      </div>
-                      <div class="commit_date">2024年3月24日13:25:00</div>
-                    </div>
-                  </div>
-                  <div class="commit_detail">
-                    <img src="https://img.js.design/assets/smartFill/img264164da72e058.jpeg" alt="">
-                    <div class="commit_detail_box">
-                      <div style="display: flex">
-                        <div class="commentator_name">张大伟</div>
-                      </div>
-                      <div class="commit_content">
-                        函数极限存在性的判别和证明综合．
-                      </div>
-                      <div class="commit_date">2024年3月24日13:25:00</div>
+                      <div class="commit_content">{{ item.discussContent }}</div>
+                      <div class="commit_date">{{ formatCommitDate(item.pushTime) }}</div>
                     </div>
                   </div>
                   <!-- 添加操作区域 -->
@@ -100,12 +68,12 @@
                         ref="textareaInput"
                         type="textarea"
                         placeholder="请输入评论"
-                        v-model="textarea"
+                        v-model="insertDiscussReq.discussContent"
                         autosize
                         minRows="2"
                         maxRows="6">
                     </el-input>
-                    <el-button type="primary" @click="handleCommit()">发送</el-button>
+                    <el-button type="primary" @click="handleQuestionDiscuss()">发送</el-button>
                   </div>
                 </div>
               </div>
@@ -143,7 +111,8 @@
 <script>
 import WrongTitle from "@/views/course/WrongTitle.vue";
 import {queryNoteDirectory} from "@/api/note";
-import {queryAllWrongList} from "@/api/mistake";
+import {insertQuestionDiscuss, queryAllWrongList, queryQuestionDiscuss} from "@/api/mistake";
+import {formatTimestamp} from '@/utils/time'
 
 export default {
   name: "MistakeNoteDetail",
@@ -170,12 +139,10 @@ export default {
       selectedWrong: 0,
       unfoldStatus: true,
       iconClass: 'el-icon-arrow-up',
-      selectedOption: 'option1', // 初始选择为空或预设值
-      options: [
-        {label: 'A = E', value: 'option1'},
-        {label: 'B = E', value: 'option2'},
-        {label: 'A = B', value: 'option3'},
-      ],
+      insertDiscussReq: {
+        discussContent: ''
+      }, //添加讨论入参
+      wrongDiscussList: []  //错题讨论
     }
   },
   created() {
@@ -183,6 +150,9 @@ export default {
     this.inquireNoteDirectory().then(() => this.inquireWrongListByPassage());
   },
   methods: {
+    formatCommitDate(timestamp) {
+      return formatTimestamp(timestamp);
+    },
     // 目录
     inquireNoteDirectory() {
       return new Promise((resolve, reject) => {
@@ -206,16 +176,41 @@ export default {
           if (obj.questionType === this.selectedType) {
             // 当前题目类型的错题
             this.wrongInfoList = obj.wrongInfoList;
-            console.log('wrongInfoList', this.wrongInfoList)
             //当前题目类型下的第一道错题
             this.wrongInfo = obj.wrongInfoList[0]
             const info = obj.wrongInfoList[0]
             if (info.questionType === 1) {
               this.wrongInfo.options = info.option.split(";")
             }
-            console.log('wronginfo', this.wrongInfo)
+            //错题讨论接口
+            this.inquireQuestionDiscus();
           }
         }
+      })
+    },
+    //添加错题讨论
+    handleQuestionDiscuss() {
+      this.$confirm('是否发送讨论', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+          .then(() => {
+            insertQuestionDiscuss(this.insertDiscussReq.discussContent, this.wrongInfo.questionId, this.wrongInfo.wrongId).then((res) => {
+              if (res.success) {
+                this.$message.success('发送成功')
+                this.insertDiscussReq.discussContent = ''
+              }
+            })
+          })
+          .then(this.inquireQuestionDiscus)
+          .catch(() => {
+            this.$message.info('取消发送')
+          })
+    },
+    //错题讨论接口查询
+    inquireQuestionDiscus() {
+      queryQuestionDiscuss(this.wrongInfo.questionId, this.wrongInfo.wrongId).then((res) => {
+        this.wrongDiscussList = res.data
       })
     },
     // 点击左侧章小节
@@ -243,6 +238,7 @@ export default {
     selectQuestion(index) {
       this.selectedWrong = index
       this.wrongInfo = this.wrongInfoList[index]
+      this.inquireQuestionDiscus()
     },
     unOrUpload() {
       this.unfoldStatus = !this.unfoldStatus;
@@ -418,7 +414,6 @@ export default {
 
             //评论
             .course_commit_list {
-              padding: 20px;
               display: flex;
               position: relative;
               justify-content: center;
@@ -459,12 +454,13 @@ export default {
                 align-items: flex-end;
                 margin-top: 20px;
                 width: 100%;
+                text-align: center;
 
-                //.el-input {
-                //  width: calc(100% - 100px); /* 确保输入框宽度减去按钮宽度 */
-                //  flex-grow: 1;
-                //}
-
+                .el-button {
+                  margin: 0 !important;
+                  background-color: @primaryColor;
+                  border-color: @primaryColor;
+                }
 
                 .input-with-rating-container {
                   display: flex;

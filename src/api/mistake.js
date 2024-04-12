@@ -33,3 +33,28 @@ export const queryWrongDetail = (wrongId) => {
         }
     })
 }
+
+//错题讨论
+export const queryQuestionDiscuss = (questionId, wrongId) => {
+    return request({
+        method: 'GET',
+        url: '/wrong/queryQuestionDiscuss',
+        params: {
+            questionId,
+            wrongId
+        }
+    })
+}
+
+//添加错题讨论
+export const insertQuestionDiscuss = (discussContent, questionId, wrongId) => {
+    return request({
+        method: 'POST',
+        url: '/wrong/insertQuestionDiscuss',
+        data: {
+            discussContent,
+            questionId,
+            wrongId
+        }
+    })
+}
