@@ -2,9 +2,9 @@
   <div class="video_course">
     <!--视频播放-->
     <div class="left_layout">
-      <div class="chapter">第一章 线性代数基础 > 1.1 向量与向量空间</div>
+      <div class="chapter">{{ videoDetail.videoName }}</div>
       <div class="teacher_and_date">
-        <div class="teacher">发布日期：2024 年 03 月 27日</div>
+        <div class="teacher">发布日期：{{ formatCommitDate(videoDetail.createTime) }}</div>
       </div>
 
       <div class="input_video">
@@ -45,6 +45,7 @@
             :props="videoProps"
             node-key="id"
             :render-content="videoCourseTreeNode"
+            @node-click="onVideoClick"
         />
       </div>
       <!--笔记-->
@@ -93,6 +94,7 @@
 <script>
 import ChatExample from "@/components/chat/ChatExample.vue";
 import {queryVideoDetail, queryVideoDirectory} from "@/api/course";
+import {formatTimestamp} from '@/utils/time'
 
 export default {
   name: "VideoCourse",
@@ -108,6 +110,7 @@ export default {
         children: 'subPassageList',
         label: 'passageTitle',
       },
+      videoDetail: {},
       isVideoEnded: false,
       rating: 3,
       radio: '1',
@@ -126,10 +129,10 @@ export default {
         sources: [
           {
             type: "",
-            src: "https://v.itheima.net/LapADhV6.mp4", //url地址
+            src: "", //url地址
           },
         ],
-        poster: "https://img.js.design/assets/img/65dda9b6a5ebb5733fbb26f0.jpg#5371dbbe49adb62060e4b6ca06942cd1", //你的封面地址
+        poster: "", //你的封面地址
         // width: document.documentElement.clientWidth,
         notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
         controlBar: {
@@ -147,8 +150,13 @@ export default {
     this.selectionId = this.$route.query.selectionId
     this.uniqueId = this.$route.query.uniqueId
     this.inquireVideoDirectory()
+    this.inquireVideoDetail()
   },
   methods: {
+    // 日期格式转换
+    formatCommitDate(timestamp) {
+      return formatTimestamp(timestamp);
+    },
     //获取视频目录
     inquireVideoDirectory() {
       queryVideoDirectory(this.selectionId).then((res) => {
@@ -183,10 +191,18 @@ export default {
          </span>
       );
     },
+    //根据右面目录选择视频
+    onVideoClick(node) {
+      if (node.videoId != null) {
+        this.uniqueId = node.videoId
+        this.inquireVideoDetail()
+      }
+    },
     //获取视频详情
     inquireVideoDetail() {
       queryVideoDetail(this.uniqueId).then((res) => {
-        console.log(res.data)
+        this.videoDetail = res.data
+        this.playerOptions.sources[0].src = res.data.videoUrl
       })
     },
     // 视频播放完成弹窗

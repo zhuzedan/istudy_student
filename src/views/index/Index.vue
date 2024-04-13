@@ -18,6 +18,10 @@
             {{ name.categoryName }}
           </div>
         </div>
+        <!--空状态-->
+        <el-empty v-if="queryCoursePageResp.list && queryCoursePageResp.list.length === 0"
+                  description="暂无数据"></el-empty>
+        <!--课程数据-->
         <div class="discipline_list">
           <div
               class="discipline_class"

@@ -298,23 +298,33 @@ export default {
       }
     },
     handleNodeClick(data) {
+      //跳转到视频页
       if (data.type === 'video') {
         const params = {
           selectionId: this.selectionId,
-          uniqueId: data.uniqueId,
+          uniqueId: data.uniqueId.replace(/^video/, '')
         };
         this.$router.push({
           name: 'videoCourse',
           query: params
         })
       }
+      //跳转到作业页
       if (data.type === 'homework') {
-        this.$router.push('/courseDetail/homework')
+        const params = {
+          selectionId: this.selectionId,
+          uniqueId: data.uniqueId.replace(/^homework/, '')
+        };
+        this.$router.push({
+          name: 'homework',
+          query: params
+        })
       }
       if (data.type === 'wrongTitle') {
         this.$router.push('/courseDetail/wrongTitle')
       }
-      if (data.type === 'recourses') {
+      //打开资源
+      if (data.type === 'information') {
         window.open('https://view.xdocin.com/view?src=' + data.tenantId)
       }
     },

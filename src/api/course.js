@@ -89,3 +89,15 @@ export const queryVideoDetail = (videoId) => {
         }
     })
 }
+
+//作业列表
+export const queryQuestionByHid = (homeworkId) => {
+    return request({
+        method: 'GET',
+        url: '/homework/queryQuestionByHid',
+        params: {
+            homeworkId
+        }
+    })
+}
+
