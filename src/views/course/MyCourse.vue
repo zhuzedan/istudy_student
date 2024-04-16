@@ -5,8 +5,7 @@
       <el-row :gutter="20">
         <el-col :span="6" :offset="18">
           <div class="grid-content">
-            <!-- 替换为 SemesterSelector 组件 -->
-            <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent" />
+            <semester-selector :initial-semester-id="semesterId" @semester-change="onSemesterChangeFromComponent"/>
           </div>
         </el-col>
       </el-row>
@@ -37,6 +36,7 @@
 <script>
 import {queryMyCourseList} from "@/api/course";
 import SemesterSelector from "@/components/selector/SemesterSelector";
+
 export default {
   name: "MyCourse",
   components: {
@@ -125,7 +125,7 @@ export default {
 
             .course_name {
               font-size: 16px;
-              font-family: HanSansBold,serif;
+              font-family: HanSansBold, serif;
             }
 
             .course_teacher {

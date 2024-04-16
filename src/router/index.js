@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layout/BasicLayout.vue'
-import NProgress from "@/utils/nprogess.js";//引入进度条插件
+import NProgress from "@/utils/nprogess.js"; //引入进度条插件
 
 Vue.use(VueRouter)
 
@@ -18,7 +18,8 @@ const routes = [
                 name: 'index',
                 component: () => import("@/views/index/Index.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '首页'
                 }
             },
             {
@@ -26,7 +27,8 @@ const routes = [
                 name: 'introduction',
                 component: () => import("@/views/index/CourseIntroduction.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '课程介绍'
                 }
             },
             {
@@ -34,7 +36,8 @@ const routes = [
                 name: 'myCourse',
                 component: () => import("@/views/course/MyCourse.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '我的课程'
                 }
             },
             {
@@ -42,7 +45,8 @@ const routes = [
                 name: 'courseDetail',
                 component: () => import("@/views/course/CourseDetail.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '课程详情'
                 },
                 children: [
                     {
@@ -83,20 +87,25 @@ const routes = [
                 name: 'notebooks',
                 component: () => import("@/views/note/MyNotes.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '笔记全集'
                 }
             },
             {
                 path: 'noteDetail',
                 name: 'noteDetail',
-                component: () => import("@/views/note/NoteDetail.vue")
+                component: () => import("@/views/note/NoteDetail.vue"),
+                meta: {
+                    title: '笔记详情'
+                }
             },
             {
                 path: 'mistakes',
                 name: 'mistakes',
                 component: () => import("@/views/mistakes/MistakeNotes.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '错题小本'
                 }
             },
             {
@@ -104,7 +113,8 @@ const routes = [
                 name: 'mistakeDetail',
                 component: () => import("@/views/mistakes/MistakeNoteDetail.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '错题详情'
                 }
             },
             {
@@ -112,7 +122,8 @@ const routes = [
                 name: 'mine',
                 component: () => import("@/views/mine/Personal.vue"),
                 meta: {
-                    requireAuth: true
+                    requireAuth: true,
+                    title: '个人中心'
                 }
             }]
     },
@@ -120,11 +131,17 @@ const routes = [
         path: '/login',
         name: 'login',
         component: () => import("@/views/login/Login.vue"),
+        meta: {
+            title: '登录'
+        }
     },
     {
         path: '*',
         name: '404',
-        component: () => import("@/views/exception/404.vue")
+        component: () => import("@/views/exception/404.vue"),
+        meta: {
+            title: '页面不见啦'
+        }
     }
 ]
 
@@ -142,6 +159,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     //页面跳转之前，开启进度条
     NProgress.start()
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
     next()
 });
 

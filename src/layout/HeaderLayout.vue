@@ -13,11 +13,11 @@
         <router-link to="/mistakes" class="header_tab_name" active-class="header_tab_name_active">错题小本</router-link>
       </div>
       <div class="other">
-        <el-input
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            v-model="inquireKey">
-        </el-input>
+        <!--        <el-input-->
+        <!--            placeholder="请输入内容"-->
+        <!--            prefix-icon="el-icon-search"-->
+        <!--            v-model="inquireKey">-->
+        <!--        </el-input>-->
         <!--未登录状态头像为默认-->
         <div class="avatar" @click="gotoLogin" v-if="!accessTokenExists()">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
@@ -28,7 +28,7 @@
             <el-avatar :size="50" :src="loginAvatarUrl"></el-avatar>
           </div>
           <el-dropdown-menu>
-            <el-dropdown-item @click.native="gotoPersonal">个人</el-dropdown-item>
+            <el-dropdown-item @click.native="gotoPersonal">个人中心</el-dropdown-item>
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -38,7 +38,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import {mapState} from 'vuex';
+
 export default {
   name: "HeaderLayout",
   data() {

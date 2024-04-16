@@ -9,6 +9,7 @@
           </div>
         </el-col>
       </el-row>
+      <!--空状态-->
       <el-empty v-if="noteList && noteList.length === 0" description="暂无数据"></el-empty>
       <!--全部笔记列表-->
       <div class="discipline_list" v-if="noteList">
