@@ -162,11 +162,7 @@ export default {
       this.selectedCategory = index;
       this.queryCoursePageReq.courseCategoryId = courseCategoryId;
       this.queryCoursePageReq.current = 1;
-      queryOpenCourseList(this.queryCoursePageReq).then((res) => {
-        const {current, pageSize, totalRecords, list} = res.data
-        Object.assign(this.queryCoursePageReq, {current, pageSize})
-        this.queryCoursePageResp = {totalRecords, list}
-      })
+      this.inquireCourseList()
     },
   }
 }

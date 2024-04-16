@@ -195,17 +195,21 @@ export default {
         cancelButtonText: '取消',
       })
           .then(() => {
-            insertQuestionDiscuss(this.insertDiscussReq.discussContent, this.wrongInfo.questionId, this.wrongInfo.wrongId).then((res) => {
-              if (res.success) {
-                this.$message.success('发送成功')
-                this.insertDiscussReq.discussContent = ''
-              }
-            })
+            this.addQuestionDiscuss()
           })
           .then(this.inquireQuestionDiscus)
           .catch(() => {
             this.$message.info('取消发送')
           })
+    },
+    // 发布错题讨论
+    addQuestionDiscuss() {
+      insertQuestionDiscuss(this.insertDiscussReq.discussContent, this.wrongInfo.questionId, this.wrongInfo.wrongId).then((res) => {
+        if (res.success) {
+          this.$message.success('发送成功')
+          this.insertDiscussReq.discussContent = ''
+        }
+      })
     },
     //错题讨论接口查询
     inquireQuestionDiscus() {
@@ -222,10 +226,10 @@ export default {
     renderTreeNode(h, {node}) {
       return (
           <span>
-          {node.level === 1 && (<i class="el-icon-folder-opened"/>)}
+            {node.level === 1 && (<i class="el-icon-folder-opened"/>)}
             {node.level === 2 && (<i class="el-icon-document"/>)}
             {node.label}
-        </span>
+          </span>
       );
     },
     // 选择错题类型
