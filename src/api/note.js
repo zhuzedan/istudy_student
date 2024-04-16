@@ -78,13 +78,13 @@ export const likeNote = (noteId, selectionId, hasLikeStatus) => {
 }
 
 // 公开分享笔记
-export const updateOpenNote = (noteId, selectionId) => {
+export const updateOpenNote = (noteId, open) => {
     return request({
         method: 'PUT',
         url: '/note/updateOpenNote',
         data: {
             noteId,
-            selectionId
+            open
         }
     })
 }

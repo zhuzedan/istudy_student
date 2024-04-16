@@ -35,7 +35,7 @@
                    class="el-icon-s-management"></i>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="分享笔记" placement="top-start">
-                <i @click="shareNote(item.id)" class="el-icon-share"></i>
+                <i @click="shareNote(item.id,item.open)" class="el-icon-share"></i>
               </el-tooltip>
             </div>
           </div>
@@ -156,8 +156,7 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     }
   },
-  computed: {
-  },
+  computed: {},
   created() {
     this.selectionId = this.$route.query.selectionId
     this.inquireNoteDirectory().then(() => this.inquireNoteListByPassage());
@@ -284,24 +283,25 @@ export default {
       likeNote(noteId, this.selectionId, hasLikeStatus)
       this.wonderfulNote()
     },
-    // 分享笔记接口方法
-    updateNoteToOpen(noteId) {
-      updateOpenNote(noteId, this.selectionId);
-    },
-    shareNote(noteId) {
+    // 分享笔记
+    shareNote(noteId, openStatus) {
       this.$confirm('此操作将会把笔记分享给其他用户，是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(() => {
-        this.updateNoteToOpen(noteId)
-        this.$message({
-          type: 'success',
-          message: '分享成功!'
-        });
+        updateOpenNote(noteId, openStatus).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.inquireNoteListByPassage()
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消分享'
+          message: '取消操作'
         });
       });
     },
@@ -435,8 +435,6 @@ export default {
         display: flex;
 
         .note_avatar {
-          width: 100px;
-          margin-right: 10px;
           text-align: center;
           align-items: center;
           display: flex;

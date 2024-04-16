@@ -83,7 +83,7 @@ request.interceptors.response.use(
                         });
                     }
                 });
-            }, 5000); // 这里设置一个延迟时间，例如500毫秒，可以根据实际情况调整
+            }, 500); // 这里设置一个延迟时间，例如500毫秒，可以根据实际情况调整
         } else {
             // 对响应错误进行处理，如：提示友好错误信息、重试等
             Message.error(error.response.data.errMsg);
