@@ -197,7 +197,6 @@ export default {
           .then(() => {
             this.addQuestionDiscuss()
           })
-          .then(this.inquireQuestionDiscus)
           .catch(() => {
             this.$message.info('取消发送')
           })
@@ -208,6 +207,7 @@ export default {
         if (res.success) {
           this.$message.success('发送成功')
           this.insertDiscussReq.discussContent = ''
+          this.inquireQuestionDiscus()
         }
       })
     },
