@@ -36,7 +36,8 @@
       </div>
       <!--课程评价-->
       <div class="course_commit_list" v-if="activeTab === 'commit'">
-        <el-empty v-if="queryCommitPageResp.list && queryCommitPageResp.list.length === 0" description="暂无数据"></el-empty>
+        <el-empty v-if="queryCommitPageResp.list && queryCommitPageResp.list.length === 0"
+                  description="暂无数据"></el-empty>
         <!--评论列表-->
         <div class="commit_detail" v-for="item in queryCommitPageResp.list">
           <img :src="item.avatar" alt="">
@@ -200,12 +201,21 @@ export default {
           </span>
       );
     },
-    // 课程评论
+    // 课程评论列表
     inquireCourseCommit() {
       queryOpenCourseComment(this.scheduleId, this.queryCommitPageReq.current, this.queryCommitPageReq.pageSize).then((res) => {
         const {current, pageSize, totalRecords, list} = res.data
         Object.assign(this.queryCommitPageReq, {current, pageSize})
         this.queryCommitPageResp = {totalRecords, list}
+      })
+    },
+    // 发布课程评论
+    addCourseComment(commentData) {
+      insertComment(commentData).then((res) => {
+        if (res.success) {
+          this.$message.success('发送成功')
+          this.commentData.commentContent = ''
+        }
       })
     },
     // 翻页
@@ -221,15 +231,14 @@ export default {
       })
           .then(() => {
             commentData.scheduleId = this.scheduleId;
-            insertComment(commentData)
-            this.$message.success('发送成功')
-            this.commentData.commentContent = ''
+            this.addCourseComment(commentData)
           })
           .then(this.inquireCourseCommit)
           .catch(() => {
             this.$message.info('取消发送')
           })
     },
+    // 删除评论
     deleteOneComment(commentId) {
       this.$confirm('是否添删除这条评论', '提示', {
         confirmButtonText: '确定',
@@ -248,6 +257,7 @@ export default {
             this.$message.info('取消删除')
           })
     },
+    // 添加课程
     addCourse() {
       this.$confirm('是否添加本课程', '提示', {
         confirmButtonText: '确定',

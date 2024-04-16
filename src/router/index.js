@@ -19,7 +19,7 @@ const routes = [
                 component: () => import("@/views/index/Index.vue"),
                 meta: {
                     requireAuth: true,
-                    title: '首页'
+                    title: 'iStudy学生端'
                 }
             },
             {
@@ -147,7 +147,7 @@ const routes = [
 
 const router = new VueRouter({
     routes,
-    mode: 'hash',
+    mode: 'history',
     scrollBehavior(to, from, savedPosition) {
         // 滚动到顶部
         return {x: 0, y: 0}

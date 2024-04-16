@@ -1,7 +1,7 @@
 const {defineConfig} = require('@vue/cli-service')
 const path = require("path");
 module.exports = defineConfig({
-    publicPath:'./',
+    publicPath: './',
     pluginOptions: {
         "style-resources-loader": {
             preProcessor: "less",
@@ -13,6 +13,7 @@ module.exports = defineConfig({
     },
     devServer: {
         client: {overlay: false},
+        historyApiFallback: true,
         open: true,
         port: 8024,
         proxy: {
